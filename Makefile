@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-
-                          
-                          
-                          
-                          
-                          
-                          
-                          
-                          
-                          
-
-=======
 #SILENCE THE ENTERING/LEAVING DIRECTORY MESSAGE
 MAKEFLAGS += --no-print-directory
 
@@ -93,4 +80,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
->>>>>>> 55873b64ec59f44c5f06e0910324a737f23da9b2
