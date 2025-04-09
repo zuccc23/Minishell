@@ -1,5 +1,11 @@
 {
 	"files.associations": {
+<<<<<<< HEAD
+		"parser.h": "c",
+		"libft.h": "c",
+		"readline.h": "c"
+=======
 		"ft_printf.h": "c"
+>>>>>>> 55873b64ec59f44c5f06e0910324a737f23da9b2
 	}
 }
