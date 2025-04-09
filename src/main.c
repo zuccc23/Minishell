@@ -1,20 +1,12 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mdodevsk <mdodevsk@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 18:06:00 by mdodevsk          #+#    #+#             */
-/*   Updated: 2025/04/09 18:06:25 by mdodevsk         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../include/minishell.h"
 
 int	main(int ac, char **av, char **envp)
 {
 	char	*input;
-	
-	// Initialisation du shell 
+	(void)ac;
+	(void)av;
+	(void)envp;
+	// Initialisation du shell
 
 	while (1)
 	{
@@ -23,9 +15,13 @@ int	main(int ac, char **av, char **envp)
 		if (!input) // ctrl + D ou EOF
 		{
 			write (1, "exit\n", 5);
-			break;		
+			break;
 		}
 		// si l'input n'est pas vide on le traite
+		if (*input)
+		{
+
+		}
 	}
 	return (0);
 }
