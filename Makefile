@@ -16,10 +16,10 @@ CYAN = \033[36m
 #COMPILER AND FLAGS
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+R_FLAG = -lreadline
 
 #SOURCE FILES
-SRC =	./src/main.c \
-		./src/parser/test.c
+SRC =	./src/main.c 
 
 #DIRECTORIES
 OBJ_DIR = obj
