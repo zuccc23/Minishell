@@ -3,17 +3,12 @@
 int	main(int ac, char **av, char **envp)
 {
 	char	*input;
-	struct sigaction sa;
 	(void)ac;
 	(void)av;
 	(void)envp;
-	// Configuration de la structure 
-	sa.sa_handler = handle_sigint;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-	rl_catch_signals = 0;
+	
+	// Signaux 
+	handle_signal();
 
 	// Initialisation du shell
 

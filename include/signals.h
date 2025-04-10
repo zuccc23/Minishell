@@ -1,6 +1,8 @@
 #ifndef SIGNALS_H
 # define SIGNALS_H
 
-void    handle_sigint(int sig);
+typedef struct sigaction	t_sa;
+
+void	handle_signal(void);
 
 #endif

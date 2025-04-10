@@ -19,7 +19,7 @@ CFLAGS = -Wall -Wextra -Werror
 R_FLAG = -lreadline
 
 #SOURCE FILES
-SRC =	./src/main.c 
+SRC =	./src/main.c ./src/signals/signals.c \
 
 #DIRECTORIES
 OBJ_DIR = obj

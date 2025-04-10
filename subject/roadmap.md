@@ -22,7 +22,7 @@
 
 ### 3. 🧩 Parser
 - Construire une **structure de commandes**
-- Gérer les erreurs de syntaxe (ex: `||`, `|>`)
+- Gérer les erreurs de syntaxe (ex: `|>`)
 - Identifier les **pipelines** et structurer les nœuds de commandes
 
 ### 4. 💵 Expansion de Variables
