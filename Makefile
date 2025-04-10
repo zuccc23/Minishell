@@ -1,4 +1,4 @@
-#SILENCE THE ENTERING/LEAVING DIRECTORY MESSAGE
+#SILENCE THE 'ENTERING/LEAVING DIRECTORY' MESSAGE
 MAKEFLAGS += --no-print-directory
 
 #DEFINE COLOR AND STYLE CODES
@@ -27,7 +27,6 @@ LIBFT_DIR = libft
 
 #DEFINE OBJECTS
 OBJ = $(patsubst src/%.c, $(OBJ_DIR)/%.o, $(SRC))
-#OBJ += $(patsubst src/parser/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
 LIBFT_OBJ = $(LIBFT_DIR)/libft.a
 
@@ -37,11 +36,10 @@ NAME = minishell
 #DEFAULT TARGET
 all: $(NAME)
 	@echo "${BOLD}${GREEN}Minishell built ✅${RESET}"
-	
 
-#LINKING EXECUTABLE !!!FLAGS
+#LINKING EXECUTABLEs !!!FLAGS
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_OBJ)
-	@${CC} ${CFLAGS} $(R_FLAG) $(OBJ) $(GNL_OBJ) $(LIBFT_OBJ) $(PRINTF_OBJ) $(MINILIBIX_OBJ) $(MLX_FLAGS) -o $(NAME)
+	@${CC} ${CFLAGS} ${R_FLAG} $(OBJ) $(LIBFT_OBJ) -o $(NAME)
 	@echo "${ITALIC}Building Minishell...🔨${RESET}"
 
 #BUILD LIBRARIES
