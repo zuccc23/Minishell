@@ -1,0 +1,15 @@
+total 12
+drwxr-xr-x 2 dahmane 2024_paris  207 Apr 10 13:57 include
+drwxr-xr-x 4 dahmane 2024_paris 4096 Apr 10 14:23 libft
+-rw-r--r-- 1 dahmane 2024_paris 2696 Apr 10 13:57 Makefile
+-rw-r--r-- 1 dahmane 2024_paris    0 Apr 10 15:27 outfile
+-rw-r--r-- 1 dahmane 2024_paris   39 Apr  3 13:34 README.md
+drwxr-xr-x 9 dahmane 2024_paris  118 Apr 10 13:57 src
+drwxr-xr-x 2 dahmane 2024_paris   65 Apr 10 13:57 subject
+include
+libft
+Makefile
+outfile
+README.md
+src
+subject

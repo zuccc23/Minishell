@@ -4,7 +4,6 @@
 typedef enum token_type
 {
 	TOKEN_WORD,
-	TOKEN_OPERATOR,
 	TOKEN_PIPE,
 	TOKEN_REDIRECT_IN,
 	TOKEN_REDIRECT_OUT,
