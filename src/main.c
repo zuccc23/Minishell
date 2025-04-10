@@ -6,6 +6,10 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	(void)envp;
+	
+	// Signaux 
+	handle_signal();
+
 	// Initialisation du shell
 
 	while (1)
@@ -20,7 +24,7 @@ int	main(int ac, char **av, char **envp)
 		// si l'input n'est pas vide on le traite
 		if (*input)
 		{
-
+			add_history(input);
 		}
 	}
 	return (0);
