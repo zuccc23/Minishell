@@ -20,4 +20,6 @@ typedef struct s_token
 	struct s_token			*next;
 }	t_token;
 
+t_token	*tokenize(char *input);
+
 #endif

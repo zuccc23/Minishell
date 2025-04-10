@@ -6,12 +6,10 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	(void)envp;
-	
-	// Signaux 
-	handle_signal();
 
 	// Initialisation du shell
-
+	//setup_env(envp); --> pour avoir lenvironnement
+	handle_signal();
 	while (1)
 	{
 		// Affichage du prompt et recuperation de l'input
@@ -25,6 +23,7 @@ int	main(int ac, char **av, char **envp)
 		if (*input)
 		{
 			add_history(input);
+			//t_token	*head = tokenize(input);
 		}
 	}
 	return (0);

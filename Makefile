@@ -20,6 +20,7 @@ R_FLAG = -lreadline
 
 #SOURCE FILES
 SRC =	./src/main.c ./src/signals/signals.c \
+		./src/lexer/lexer.c ./src/lexer/token.c \
 
 #DIRECTORIES
 OBJ_DIR = obj
