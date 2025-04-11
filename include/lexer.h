@@ -10,7 +10,5 @@ typedef struct	s_lexer
 }	t_lexer;
 
 t_lexer	*init_lexer(char *input);
-char	*preprocess_input(char *input);
-char	*remove_extra_spaces(char *str);
 
 #endif

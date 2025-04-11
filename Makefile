@@ -14,7 +14,7 @@ MAGENTA = \033[35m
 CYAN = \033[36m
 
 #COMPILER AND FLAGS
-CC = cc
+CC = gcc -g
 CFLAGS = -Wall -Wextra -Werror
 R_FLAG = -lreadline
 
