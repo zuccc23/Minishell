@@ -22,4 +22,12 @@ typedef struct s_spacer
 char	*preprocess_input(char *input);
 char	*remove_extra_spaces(char *str);
 
+// UTILS
+
+void	process_quote(t_process *p);
+void	add_space_before(t_process *p);
+void	update_quote(char c, char *quote);
+void	handle_quote_in_remove(t_spacer *s);
+void	handle_space(t_spacer *s);
+
 #endif
