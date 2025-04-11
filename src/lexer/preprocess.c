@@ -1,5 +1,30 @@
 #include "../../include/minishell.h"
 
+static void	update_quote(char c, char *quote)
+{
+	if (*quote == 0)
+		*quote = c;
+	else if (*quote == c)
+		*quote = 0;
+}
+
+static void	handle_quote_in_remove(t_spacer *s)
+{
+	update_quote(s->str[s->i], &s->quote);
+	s->str[s->j++] = s->str[s->i++];
+}
+
+static void	handle_space(t_spacer *s)
+{
+	if (!s->space_found)
+	{
+		s->str[s->j++] = s->str[s->i++];
+		s->space_found = 1;
+	}
+	else
+		s->i++;
+}
+
 static char	*add_spaces_around_delimiters(char *input)
 {
 	int		i;
@@ -44,50 +69,77 @@ static char	*add_spaces_around_delimiters(char *input)
 
 char	*remove_extra_spaces(char *str)
 {
-	int		i;
-	int		j;
-	int		space_found;
-	char	quote;
+	t_spacer	s;
 
-	j = 0;
-	i = 0;
-	space_found = 0;
-	quote = 0;
-	while (str[i])
+	s.str = str;
+	s.i = 0;
+	s.j = 0;
+	s.space_found = 0;
+	s.quote = 0;
+	while (str[s.i])
 	{
-		if (is_quote(str[i]))
-		{
-			if (quote == 0)
-				quote = str[i];
-			else if (quote == str[i])
-				quote = 0;
-			str[j++] = str[i++];
-			continue;
-		}
-		if (quote)
-		{
-			str[j++] = str[i++];
-			continue;
-		}
-		if (str[i] == ' ')
-		{
-			if (!space_found)
-			{
-				str[j++] = str[i++];
-				space_found = 1;
-			}
-			else
-				i++;
-		}
+		if (is_quote(str[s.i]))
+			handle_quote_in_remove(&s);
+		else if (s.quote)
+			s.str[s.j++] = s.str[s.i++];
+		else if (str[s.i] == ' ')
+			handle_space(&s);
 		else
 		{
-			space_found = 0;
-			str[j++] = str[i++];
+			s.space_found = 0;
+			s.str[s.j++] = s.str[s.i++];
 		}
 	}
-	str[j] = '\0';
-	return (str);
+	s.str[s.j] = '\0';
+	return (s.str);
 }
+
+// char	*remove_extra_spaces(char *str)
+// {
+// 	int		i;
+// 	int		j;
+// 	int		space_found;
+// 	char	quote;
+
+// 	j = 0;
+// 	i = 0;
+// 	space_found = 0;
+// 	quote = 0;
+// 	while (str[i])
+// 	{
+// 		if (is_quote(str[i]))
+// 		{
+// 			if (quote == 0)
+// 				quote = str[i];
+// 			else if (quote == str[i])
+// 				quote = 0;
+// 			str[j++] = str[i++];
+// 			continue;
+// 		}
+// 		if (quote)
+// 		{
+// 			str[j++] = str[i++];
+// 			continue;
+// 		}
+// 		if (str[i] == ' ')
+// 		{
+// 			if (!space_found)
+// 			{
+// 				str[j++] = str[i++];
+// 				space_found = 1;
+// 			}
+// 			else
+// 				i++;
+// 		}
+// 		else
+// 		{
+// 			space_found = 0;
+// 			str[j++] = str[i++];
+// 		}
+// 	}
+// 	str[j] = '\0';
+// 	return (str);
+// }
 
 char	*preprocess_input(char *input)
 {
