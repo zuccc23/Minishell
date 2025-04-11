@@ -25,31 +25,42 @@ t_token	*temp_tokens(void) // fonction temporaire
 	token = new_token("ls", TOKEN_WORD, 0);
 	head = token;
 
-	token->next = new_token("-l", TOKEN_WORD, 0);
-	token = token->next;
-
-	token->next = new_token("infile", TOKEN_WORD, 0);
+	token->next = new_token("|", TOKEN_PIPE, 0);
 	token = token->next;
 
 	token->next = new_token("|", TOKEN_PIPE, 0);
 	token = token->next;
 
-	token->next = new_token("wc", TOKEN_WORD, 0);
-	token = token->next;
+	// token->next = new_token("|", TOKEN_PIPE, 0);
+	// token = token->next;
 
-	token->next = new_token("-w", TOKEN_WORD, 0);
-	token = token->next;
+	// token->next = new_token("wc", TOKEN_WORD, 0);
+	// token = token->next;
 
-	token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
-	token = token->next;
+	// token->next = new_token("-w", TOKEN_WORD, 0);
+	// token = token->next;
 
-	token->next = new_token("outfile", TOKEN_WORD, 0);
-	token = token->next;
+	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	// token = token->next;
+
+	// token->next = new_token("outfile", TOKEN_WORD, 0);
+	// token = token->next;
 
 	token = head;
 	return (token);
 }
 
+void	print_line_tokens(t_token *token) // fonction temporaire 
+{
+	//print the token list in a single line
+	ft_printf("----------------------------\n");
+	while (token)
+	{
+		ft_printf("%s ", token->value);
+		token = token->next;
+	}
+	ft_printf("\n");
+}
 
 void	print_tokens(t_token *token) // fonction temporaire 
 {
@@ -65,6 +76,19 @@ void	print_tokens(t_token *token) // fonction temporaire
 		token = token->next;
 	}
 }
+
+// void	print_error(int er_code)
+// {
+// 	if (er_code == ER_PIPE_SYNTAX)
+// 		ft_printf("idk");
+	
+// }
+
+// void	return_error(t_token *token, int er_code)
+// {
+// 	//print errors
+// 	//free tokens
+// }
 
 int	main(int ac, char **av, char **envp)
 {
@@ -94,10 +118,22 @@ int	main(int ac, char **av, char **envp)
 	// 	}
 	// }
 
-	//analyse des tokens
+	//cree des tokens temporaires pr les tests
 	t_token	*token = NULL;
+	int		er_code = 0;
 
 	token = temp_tokens();
 	print_tokens(token);
+	print_line_tokens(token);
+
+	//parse les erreurs de syntaxe
+	er_code = check_single_operator(token);
+	// ft_printf("%d\n", er_code);
+
+	er_code = check_content_before_pipe(token);
+	// ft_printf("%d\n", er_code);
+
+	er_code = check_content_after_operator(token);
+	// ft_printf("%d\n", er_code);
 	return (0);
 }
