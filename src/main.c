@@ -23,6 +23,8 @@ int	main(int ac, char **av, char **envp)
 		if (*input)
 		{
 			add_history(input);
+			char *test = preprocess_input(input);
+			printf("%s\n", test);
 			//t_token	*head = tokenize(input);
 		}
 	}

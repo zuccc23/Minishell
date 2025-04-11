@@ -1,13 +1,15 @@
 #include "../../include/minishell.h"
 
-t_token	*tokenize(char *input)
-{
-	t_lexer	*lexer;
-	t_token	*head;
+// t_token	*tokenize(char *input)
+// {
+// 	t_lexer	*lexer;
+// 	t_token	*head;
+// 	char	*processed_input;
 
-	lexer = init_lexer(input);
-	if (!lexer)
-		return (NULL);
+// 	processed_input = preprocess_input(input);
+// 	lexer = init_lexer(input);
+// 	if (!lexer)
+// 		return (NULL);
 
-	return (head);
-}
+// 	return (head);
+// }

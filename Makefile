@@ -20,7 +20,8 @@ R_FLAG = -lreadline
 
 #SOURCE FILES
 SRC =	./src/main.c ./src/signals/signals.c \
-		./src/lexer/lexer.c ./src/lexer/token.c \
+		./src/lexer/lexer.c ./src/lexer/token.c ./src/lexer/token_utils.c \
+		./src/lexer/preprocess.c ./src/utils/lexer_utils.c \
 
 #DIRECTORIES
 OBJ_DIR = obj
@@ -38,7 +39,7 @@ NAME = minishell
 #DEFAULT TARGET
 all: $(NAME)
 	@echo "${BOLD}${GREEN}Minishell built ✅${RESET}"
-	
+
 
 #LINKING EXECUTABLE !!!FLAGS
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_OBJ)
