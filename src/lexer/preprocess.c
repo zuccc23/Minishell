@@ -71,10 +71,16 @@ char	*preprocess_input(char *input)
 {
 	char	*step1;
 	char	*step2;
+	int		error_code;
 
 	if (!input)
 		return (NULL);
-	// ajouter une fonction qui verifie si les ' " ont bien des paires sinon invalide;
+	error_code = has_valid_quote(input);
+	if (error_code != 0)
+	{
+		write (2, "Quote problem\n", 15);
+		return (NULL);
+	}
 	step1 = add_spaces_around_delimiters(input);
 	printf("step 1 : %s\n", step1);
 	if (!step1)

@@ -29,5 +29,8 @@ void	add_space_before(t_process *p);
 void	update_quote(char c, char *quote);
 void	handle_quote_in_remove(t_spacer *s);
 void	handle_space(t_spacer *s);
+int		is_quote(char c);
+int		is_delimiter_start(char c);
+int		has_valid_quote(char *input);
 
 #endif
