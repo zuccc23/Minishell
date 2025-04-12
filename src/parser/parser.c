@@ -54,7 +54,7 @@ int	check_content_after_operator(t_token *token)
 	t_token	*next;
 	char	*s;
 
-	s = next->value;
+	next = NULL;
 	while (token)
 	{
 		next = token->next;
@@ -66,7 +66,10 @@ int	check_content_after_operator(t_token *token)
 				if (!next)
 					ft_printf("syntax error near unexpected token `newline'\n");
 				else
-				ft_printf("syntax error near unexpected token `%s'\n", s);
+				{
+					s = next->value;
+					ft_printf("syntax error near unexpected token `%s'\n", s);
+				}
 				return (ER_OPERATOR_SYNTAX);
 			}
 		}
@@ -75,18 +78,20 @@ int	check_content_after_operator(t_token *token)
 	return (ER_OK);
 }
 
+//fonction qui parse les erreurs de syntaxe ds les tokens
 int	parse_tokens(t_token *token)
 {
 	int	er_code;
 
 	er_code = 0;
 	er_code = check_single_operator(token);
-	ft_printf("%d\n", er_code);
-
+	if (er_code != ER_OK)
+		return (er_code);
 	er_code = check_content_before_pipe(token);
-	ft_printf("%d\n", er_code);
-
+	if (er_code != ER_OK)
+		return (er_code);
 	er_code = check_content_after_operator(token);
-	ft_printf("%d\n", er_code);
-	return (0);
+	if (er_code != ER_OK)
+		return (er_code);
+	return (ER_OK);
 }

@@ -25,17 +25,17 @@ t_token	*temp_tokens(void) // fonction temporaire
 	token = new_token("ls", TOKEN_WORD, 0);
 	head = token;
 
-	token->next = new_token("|", TOKEN_PIPE, 0);
+	token->next = new_token("-l", TOKEN_WORD, 0);
 	token = token->next;
 
 	token->next = new_token("|", TOKEN_PIPE, 0);
 	token = token->next;
 
-	// token->next = new_token("|", TOKEN_PIPE, 0);
-	// token = token->next;
+	token->next = new_token("wc", TOKEN_WORD, 0);
+	token = token->next;
 
-	// token->next = new_token("wc", TOKEN_WORD, 0);
-	// token = token->next;
+	token->next = new_token("-w", TOKEN_WORD, 0);
+	token = token->next;
 
 	// token->next = new_token("-w", TOKEN_WORD, 0);
 	// token = token->next;
@@ -69,26 +69,13 @@ void	print_tokens(t_token *token) // fonction temporaire
 	{
 		ft_printf("%s ", token->value);
 		if (token->type == 0)
-			ft_printf("--type: word ");
+			ft_printf("        =word ");
 		else 
-			ft_printf("--type: operator ");
-		ft_printf("--expandable: %d\n", token->expandable);
+			ft_printf("       =operator ");
+		ft_printf("=expandable:%d\n", token->expandable);
 		token = token->next;
 	}
 }
-
-// void	print_error(int er_code)
-// {
-// 	if (er_code == ER_PIPE_SYNTAX)
-// 		ft_printf("idk");
-	
-// }
-
-// void	return_error(t_token *token, int er_code)
-// {
-// 	//print errors
-// 	//free tokens
-// }
 
 int	main(int ac, char **av, char **envp)
 {
@@ -126,14 +113,17 @@ int	main(int ac, char **av, char **envp)
 	print_tokens(token);
 	print_line_tokens(token);
 
-	//parse les erreurs de syntaxe
-	er_code = check_single_operator(token);
-	// ft_printf("%d\n", er_code);
+	//parse les erreurs de syntaxe ds les tokens
+	er_code = parse_tokens(token);
+	if (er_code != ER_OK)
+		exit(er_code);
+	
+	//recuperer les commandes et redirections
 
-	er_code = check_content_before_pipe(token);
-	// ft_printf("%d\n", er_code);
-
-	er_code = check_content_after_operator(token);
-	// ft_printf("%d\n", er_code);
 	return (0);
 }
+
+/*THINGS TO FREE
+-tokens linked list
+-
+*/
