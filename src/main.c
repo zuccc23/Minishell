@@ -119,11 +119,12 @@ int	main(int ac, char **av, char **envp)
 		exit(er_code);
 	
 	//recuperer les commandes et redirections
+	ft_printf("command count = %d\n", count_args(token));
 
 	return (0);
 }
 
 /*THINGS TO FREE
 -tokens linked list
--
+-commands linked list
 */

@@ -2,6 +2,7 @@
 # define DEFINES_H
 
 # define ER_OK 0
+# define ER_MALLOC 1
 
 // PARSER ERRORS
 # define ER_PIPE_SYNTAX 2

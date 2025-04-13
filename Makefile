@@ -40,7 +40,7 @@ all: $(NAME)
 
 #LINKING EXECUTABLEs !!!FLAGS
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_OBJ)
-	@${CC} ${CFLAGS} ${R_FLAG} $(OBJ) $(LIBFT_OBJ) -o $(NAME)
+	@${CC} ${CFLAGS} $(OBJ) $(LIBFT_OBJ) ${R_FLAG} -o $(NAME)
 	@echo "${ITALIC}Building Minishell...🔨${RESET}"
 
 #BUILD LIBRARIES
