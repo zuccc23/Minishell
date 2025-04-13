@@ -32,4 +32,3 @@ int	has_valid_quote(char *input)
 		return (0);
 	return (1);
 }
-

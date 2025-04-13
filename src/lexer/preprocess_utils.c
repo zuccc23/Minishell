@@ -8,7 +8,7 @@ void	process_quote(t_process *p)
 
 void	add_space_before(t_process *p)
 {
-	if (p->j > 0 &&p->result[p->j - 1] != ' ')
+	if (p->j > 0 && p->result[p->j - 1] != ' ')
 		p->result[p->j++] = ' ';
 }
 
