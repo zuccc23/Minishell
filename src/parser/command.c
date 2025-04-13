@@ -1,30 +1,31 @@
 #include "../../include/minishell.h"
 
+//recupere toutes les commandes
 t_command	*get_commands(t_token *token)
 {
 	t_command	*commands;
-	int			i;
+	t_command	*head;
 
-	i = 0;
 	commands = NULL;
-	while (token->type != TOKEN_PIPE)
+	commands = new_command(token, count_args(token));
+	head = commands;
+	while (token)
 	{
-		if (token->type == TOKEN_WORD)
-		{
-			commands->args[i] = token->value;
-		}
-		i++;
-		//set redirections to null
-
+		while (token && token->type != TOKEN_PIPE)
+			token = token->next;
+		
 	}
-	return (commands);
+	return (head);
 }
 
 // creer un noeud pour une nouvelle commande
 t_command	*new_command(t_token *token, int command_count)
 {
-	t_command *new = NULL;
+	t_command	*new;
+	int			i;
 
+	new = NULL;
+	i = 0;
 	new = malloc(sizeof(t_command));
 	if (!new)
 		return (NULL);
@@ -33,9 +34,13 @@ t_command	*new_command(t_token *token, int command_count)
 		return (NULL);
 	while (token->type == TOKEN_WORD)
 	{
-		//
+		new->args[i] = ft_strdup(token->value);
+		if (!(new->args[i]))
+			return (NULL);
+		token = token->next;
+		i++;
 	}
-
+	new->args[i] = NULL;
 	new->next = NULL;
 	return (new);
 }
@@ -45,6 +50,8 @@ int	count_args(t_token *token)
 {
 	int count;
 
+	if (!token)
+		return (0);
 	count = 0;
 	while (token->type == TOKEN_WORD)
 	{

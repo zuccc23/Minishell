@@ -38,7 +38,8 @@ int	check_content_before_pipe(t_token *token)
 		{
 			if (prev->type != TOKEN_WORD)
 			{
-				ft_printf("minishell: syntax error near unexpected token `|'\n");
+				ft_printf("minishell: ");
+				ft_printf("syntax error near unexpected token `|'\n");
 				return (ER_PIPE_SYNTAX);
 			}
 		}
