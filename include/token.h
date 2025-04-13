@@ -4,7 +4,6 @@
 typedef enum token_type
 {
 	TOKEN_WORD,
-	TOKEN_OPERATOR,
 	TOKEN_PIPE,
 	TOKEN_REDIRECT_IN,
 	TOKEN_REDIRECT_OUT,
@@ -23,5 +22,7 @@ typedef struct s_token
 t_token	*tokenize(char *input);
 
 // UTILS
+
+t_token_type	get_operator_type(t_lexer *lexer);
 
 #endif
