@@ -12,9 +12,8 @@ int	main(int ac, char **av, char **envp)
 	handle_signal();
 	while (1)
 	{
-		// Affichage du prompt et recuperation de l'input
 		input = readline("minishell> ");
-		if (!input) // ctrl + D ou EOF
+		if (!input)
 		{
 			write (1, "exit\n", 5);
 			break;
@@ -23,13 +22,7 @@ int	main(int ac, char **av, char **envp)
 		if (*input)
 		{
 			add_history(input);
-			char *test = preprocess_input(input);
-			if (test)
-			{
-				printf("%s\n", test);
-				free(test);
-			}
-			//t_token	*head = tokenize(input);
+			t_token	*head = tokenize(input);
 		}
 		free(input);
 	}

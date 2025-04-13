@@ -24,6 +24,4 @@ t_token	*tokenize(char *input);
 
 // UTILS
 
-int	skip_whitespace(char *str, int i);
-
 #endif

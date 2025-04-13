@@ -1,34 +1,27 @@
 #include "../../include/minishell.h"
 
-int	is_quote(char c)
+void	advance(t_lexer *lexer)
 {
-	return (c == '\'' || c == '"');
-}
-
-int	is_delimiter_start(char c)
-{
-	return (c == '|' || c == '>' || c == '<');
-}
-
-int	has_valid_quote(char *input)
-{
-	int		i;
-	char	current_quote;
-
-	i = 0;
-	current_quote = 0;
-	while (input[i])
+	if (lexer->pos < lexer->length)
 	{
-		if (is_quote(input[i]))
-		{
-			if (current_quote == 0)
-				current_quote = input[i];
-			else if (input[i] == current_quote)
-				current_quote = 0;
-		}
-		i++;
+		lexer->pos++;
+		lexer->current = lexer->input[lexer->pos];
 	}
-	if (current_quote == 0)
-		return (0);
-	return (1);
+}
+
+char	peek(t_lexer *lexer)
+{
+	if (lexer->pos + 1 < lexer->length)
+		return (lexer->input[lexer->pos + 1]);
+	return ('\0');
+}
+
+void	skip_whitespace(t_lexer *lexer)
+{
+	while (lexer->pos < lexer->length && (lexer->current == ' '
+			|| lexer->current == '\t'))
+	{
+		lexer->pos++;
+		lexer->current = lexer->input[lexer->pos];
+	}
 }
