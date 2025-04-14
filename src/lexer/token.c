@@ -48,7 +48,7 @@ t_token *tokenize(char *input)
 	lexer = init_lexer(processed_input);
 	if (!lexer)
 	{
-		free(preprocess_input);
+		free(processed_input);
 		return (NULL);
 	}
 	while (lexer->pos < lexer->length)

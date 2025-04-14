@@ -1,6 +1,8 @@
 #ifndef TOKEN_H
 # define TOKEN_H
 
+typedef struct s_lexer t_lexer;
+
 typedef enum token_type
 {
 	TOKEN_WORD,
@@ -19,10 +21,11 @@ typedef struct s_token
 	struct s_token			*next;
 }	t_token;
 
-t_token	*tokenize(char *input);
+t_token			*tokenize(char *input);
 
 // UTILS
 
 t_token_type	get_operator_type(t_lexer *lexer);
+int				is_word_expandable(char *str);
 
 #endif
