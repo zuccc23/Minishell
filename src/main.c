@@ -28,6 +28,9 @@ t_token	*temp_tokens(void) // fonction temporaire
 	token->next = new_token("-l", TOKEN_WORD, 0);
 	token = token->next;
 
+	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	// token = token->next;
+
 	token->next = new_token("infile", TOKEN_WORD, 0);
 	token = token->next;
 
@@ -122,11 +125,18 @@ int	main(int ac, char **av, char **envp)
 	t_command	*command;
 	
 	ft_printf("command count = %d\n", count_args(token));
-	command = new_command(token, 2);
+	// command = new_command(token, 2);
+	command = get_commands(token);
 	ft_printf("%s\n", command->args[0]);
 	ft_printf("%s\n", command->args[1]);
 	ft_printf("%s\n", command->args[2]);
 	ft_printf("%s\n", command->args[3]);
+
+	command = command->next;
+	ft_printf("%s\n", command->args[0]);
+	ft_printf("%s\n", command->args[1]);
+
+	
 	return (0);
 }
 

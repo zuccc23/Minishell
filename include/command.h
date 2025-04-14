@@ -12,8 +12,15 @@ typedef struct s_command
 	struct s_command		*next;
 }	t_command;
 
+// get the commands and their redirections
 t_command	*get_commands(t_token *token);
 t_command	*new_command(t_token *token, int command_count);
 int			count_args(t_token *token);
+t_redirection	*get_redirections(t_token *token);
+
+//check token type
+int	is_operator(t_token *token);
+int	is_pipe(t_token *token);
+int	is_word(t_token *token);
 
 #endif

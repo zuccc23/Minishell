@@ -20,7 +20,8 @@ R_FLAG = -lreadline
 
 #SOURCE FILES
 SRC =	./src/main.c ./src/signals/signals.c \
-		./src/parser/parser.c ./src/parser/command.c
+		./src/parser/parser.c ./src/parser/command.c \
+		./src/parser/analyse_token.c
 
 #DIRECTORIES
 OBJ_DIR = obj
