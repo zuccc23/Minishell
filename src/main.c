@@ -22,7 +22,7 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("ls", TOKEN_WORD, 0);
+	token = new_token(">", TOKEN_HEREDOC, 0);
 	head = token;
 
 	token->next = new_token("-l", TOKEN_WORD, 0);
@@ -108,6 +108,19 @@ int	main(int ac, char **av, char **envp)
 	// 	}
 	// }
 
+	//nettoyage input
+	char	input[] = "'\"'$USER'\"'";
+	char	**strs;
+
+	printf("INPUT:\n");
+	printf("%s\n", input);
+
+	strs = clean(input);
+
+	printf("CLEAN INPUT:\n");
+	strs_print(strs);
+	exit (0);
+
 	//cree des tokens temporaires pr les tests
 	t_token	*token = NULL;
 	int		er_code = 0;
@@ -120,6 +133,15 @@ int	main(int ac, char **av, char **envp)
 	er_code = parse_tokens(token);
 	if (er_code != ER_OK)
 		exit(er_code);
+	
+	// test redirections
+	// t_redirection *redir;
+
+	// redir = get_redirections(&token);
+	// ft_printf("%d\n", redir->type);
+	// ft_printf("%s\n", redir->file);
+	// ft_printf("%s\n", token->value);
+	// exit(0);
 	
 	//recuperer les commandes et redirections
 	t_command	*command;
@@ -136,7 +158,6 @@ int	main(int ac, char **av, char **envp)
 	ft_printf("%s\n", command->args[0]);
 	ft_printf("%s\n", command->args[1]);
 
-	
 	return (0);
 }
 
