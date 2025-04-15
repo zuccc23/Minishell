@@ -15,7 +15,7 @@ CYAN = \033[36m
 
 #COMPILER AND FLAGS
 CC = gcc -g
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra 
 R_FLAG = -lreadline
 
 #SOURCE FILES

@@ -82,7 +82,6 @@ char	*preprocess_input(char *input)
 		return (NULL);
 	}
 	step1 = add_spaces_around_delimiters(input);
-	printf("step 1 : %s\n", step1);
 	if (!step1)
 		return (NULL);
 	step2 = remove_extra_spaces(step1);

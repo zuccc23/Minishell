@@ -10,6 +10,11 @@ typedef struct	s_lexer
 	char	current;// Caractere courant
 }	t_lexer;
 
+typedef struct s_quote_state
+{
+	char	current_quote;
+}	t_quote_state;
+
 t_lexer	*init_lexer(char *input);
 
 // UTILS

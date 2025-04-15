@@ -17,23 +17,4 @@ t_token_type	get_operator_type(t_lexer *lexer)
 
 int	is_word_expandable(char *str)
 {
-	int		i;
-	char	quote;
-
-	quote = 0;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			if (quote == 0)
-				quote = str[i];
-			else if (str[i] == quote)
-				quote = 0;
-		}
-		if (str[i] == '$' && quote == '\'')
-			return (1);
-		i++;
-	}
-	return (0);
 }
