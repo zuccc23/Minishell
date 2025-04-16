@@ -13,4 +13,11 @@ int	parse_tokens(t_token *token);
 char	**clean(char *s);
 void    strs_print(char **strs);
 
+//check characters
+int	is_space(char c);
+int	is_double_quotes(char c);
+int	is_expandable(char c, char next_c);
+int	is_single_quotes(char c);
+int	is_ok_word(char c);
+
 #endif

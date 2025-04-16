@@ -109,14 +109,20 @@ int	main(int ac, char **av, char **envp)
 	// }
 
 	//nettoyage input
-	char	input[] = "'\"'$USER'\"'";
+	// char	input[] = "'\"'$USER'\"'";
+	// char	input[] = "''$USER   'l's    ''";
+	// char	input[] = "\"'\"$USER\"'\"";
+	char	input[] = "\"'\"'$USER'\"'\"";
+
 	char	**strs;
 
+	
 	printf("INPUT:\n");
 	printf("%s\n", input);
 
 	strs = clean(input);
 
+	printf("\n");
 	printf("CLEAN INPUT:\n");
 	strs_print(strs);
 	exit (0);
