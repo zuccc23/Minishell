@@ -19,10 +19,5 @@ t_token *tokenize(char *input)
 		return (NULL);
 	printf("\nPrepro : %s\n", processed_input);
 	head = NULL;
-
-	while (lexer->pos < lexer->length)
-	{
-		
-	}
 	return (head);
 }

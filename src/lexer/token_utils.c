@@ -15,6 +15,6 @@ t_token_type	get_operator_type(t_lexer *lexer)
 	return (TOKEN_WORD);
 }
 
-int	is_word_expandable(char *str)
-{
-}
+// int	is_word_expandable(char *str)
+// {
+// }

@@ -22,8 +22,11 @@ int	main(int ac, char **av, char **envp)
 		if (*input)
 		{
 			add_history(input);
-			t_token	*head = tokenize(input);
-			ft_print_list(head);
+			printf("\n%s\n", input);
+			input = preprocess_input(input);
+			printf("\n%s\n", input);
+			// t_token	*head = tokenize(input);
+			// ft_print_list(head);
 		}
 		free(input);
 	}
