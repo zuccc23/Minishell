@@ -27,5 +27,6 @@ t_token			*tokenize(char *input);
 
 t_token_type	get_operator_type(t_lexer *lexer);
 int				is_word_expandable(char *str);
+int				extract_word_length(t_lexer *lexer);
 
 #endif
