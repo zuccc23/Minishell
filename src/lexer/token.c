@@ -5,6 +5,7 @@ static char	*extract_word_with_quotes(t_lexer *lexer)
 	char	*word;
 	int		i;
 	int		j;
+	char	c;
 
 	i = 0;
 	j = 0;
@@ -13,6 +14,7 @@ static char	*extract_word_with_quotes(t_lexer *lexer)
 		return (NULL);
 	while (lexer->pos < lexer->length)
 	{
+		c = (lexer->input[lexer->pos + i]);
 		
 	}
 	return (word);
