@@ -26,7 +26,7 @@ int extract_word_length(t_lexer *lexer)
 	while (lexer->pos + i < lexer->length)
 	{
 		c = lexer->input[lexer->pos + i];
-		printf("%c | %c\n",c, lexer->input[lexer->pos + 1 + i]);
+		//printf("%c | %c\n",c, lexer->input[lexer->pos + 1 + i]);
 		if (is_quote(c))
 		{
 			if (quote == 0)
@@ -40,7 +40,7 @@ int extract_word_length(t_lexer *lexer)
 			break;
 		i++;
 	}
-	printf("%d\n", i);
+	//printf("%d\n", i);
 	return (i);
 }
 
