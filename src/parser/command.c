@@ -1,6 +1,6 @@
 #include "../../include/minishell.h"
 
-//recupere toutes les commandes
+//recupere toutes les commandes et leurs redirections
 t_command	*get_commands(t_token *token)
 {
 	t_command	*commands;
@@ -11,7 +11,6 @@ t_command	*get_commands(t_token *token)
 	if (!commands)
 		return (NULL);
 	head = commands;
-
 	while (token)
 	{
 		while (token && token->type != TOKEN_PIPE)
@@ -25,51 +24,42 @@ t_command	*get_commands(t_token *token)
 			commands = commands->next;
 		}
 	}
-
 	return (head);
 }
 
 // creer un noeud pour une nouvelle commande
-t_command	*new_command(t_token *token, int command_count)
+t_command	*new_command(t_token *token, int args_count)
 {
-	t_command	*new;
+	t_command	*new_command;
 	int			i;
 
-	new = NULL;
 	i = 0;
-	new = malloc(sizeof(t_command));
-	if (!new)
-		return (NULL);
-	new->args = malloc(sizeof(char *) * command_count + 1);
-	if (!(new->args))
+	new_command = alloc_command(args_count);
+	if (!new_command)
 		return (NULL);
 	while (is_pipe(token) == 0)
 	{
 		while (is_word(token) == 1)
 		{
-			new->args[i] = ft_strdup(token->value);
-			if (!(new->args[i]))
+			new_command->args[i] = ft_strdup(token->value);
+			if (!(new_command->args[i]))
 				return (NULL);
 			token = token->next;
 			i++;
 		}
-		// if (is_operator(token) == 1)
-		// {
-		// 	new->redirections = get_redirections(&token);
-		// }
+		if (is_operator(token) == 1)
+		{
+			new_command->redirections = get_redirections(&token);
+			if (!new_command->redirections)
+				return (NULL);
+		}
 	}
-	// while (is_word(token) == 1)
-	// {
-	// 	new->args[i] = ft_strdup(token->value);
-	// 	if (!(new->args[i]))
-	// 		return (NULL);
-	// 	token = token->next;
-	// 	i++;
-	// }
-	new->args[i] = NULL;
-	new->next = NULL;
-	return (new);
+	if (new_command->args)
+		new_command->args[i] = NULL;
+	new_command->next = NULL;
+	return (new_command);
 }
+
 //check le type de redirection et lui associe le bon fichier
 t_redirection	*get_redirections(t_token **token)
 {
@@ -104,12 +94,39 @@ int	count_args(t_token *token)
 	if (!token)
 		return (0);
 	count = 0;
-	while (is_word(token) == 1)
+	while (is_pipe(token) == 0)
 	{
-		count++;
-		token = token->next;
+		while (is_word(token) == 1)
+		{
+			count++;
+			token = token->next;
+		}
+		if (is_operator(token) == 1)
+		{
+			token = token->next;
+			token = token->next;
+		}
 	}
 	return (count);
+}
+
+t_command	*alloc_command(int args_count)
+{
+	t_command	*command;
+
+	command = NULL;
+	command = malloc(sizeof(t_command));
+	if (!command)
+		return (NULL);
+	if (args_count < 1)
+		command->args = NULL;
+	else
+	{
+		command->args = malloc(sizeof(char *) * args_count + 1);
+		if (!(command->args))
+			return (NULL);
+	}
+	return (command);
 }
 
 // t_command	*idk(t_token *token, int command_count)

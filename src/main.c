@@ -22,11 +22,11 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token(">", TOKEN_HEREDOC, 0);
+	token = new_token(">", TOKEN_REDIRECT_OUT, 0);
 	head = token;
 
-	token->next = new_token("-l", TOKEN_WORD, 0);
-	token = token->next;
+	// token->next = new_token("-l", TOKEN_WORD, 0);
+	// token = token->next;
 
 	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
 	// token = token->next;
@@ -43,11 +43,11 @@ t_token	*temp_tokens(void) // fonction temporaire
 	// token->next = new_token("-w", TOKEN_WORD, 0);
 	// token = token->next;
 
-	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
-	// token = token->next;
+	token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	token = token->next;
 
-	// token->next = new_token("outfile", TOKEN_WORD, 0);
-	// token = token->next;
+	token->next = new_token("outfile", TOKEN_WORD, 0);
+	token = token->next;
 
 	token = head;
 	return (token);
@@ -112,20 +112,20 @@ int	main(int ac, char **av, char **envp)
 	// char	input[] = "'\"'$USER'\"'";
 	// char	input[] = "''$USER   'l's    ''";
 	// char	input[] = "\"'\"$USER\"'\"";
-	char	input[] = "\"'\"'$USER'\"'\"";
+	// char	input[] = "\"'\"'$USER'\"'\"";
 
-	char	**strs;
+	// char	**strs;
 
 	
-	printf("INPUT:\n");
-	printf("%s\n", input);
+	// printf("INPUT:\n");
+	// printf("%s\n", input);
 
-	strs = clean(input);
+	// strs = clean(input);
 
-	printf("\n");
-	printf("CLEAN INPUT:\n");
-	strs_print(strs);
-	exit (0);
+	// printf("\n");
+	// printf("CLEAN INPUT:\n");
+	// strs_print(strs);
+	// exit (0);
 
 	//cree des tokens temporaires pr les tests
 	t_token	*token = NULL;
@@ -142,27 +142,39 @@ int	main(int ac, char **av, char **envp)
 	
 	// test redirections
 	// t_redirection *redir;
+	// t_command	*commands;
 
-	// redir = get_redirections(&token);
-	// ft_printf("%d\n", redir->type);
-	// ft_printf("%s\n", redir->file);
-	// ft_printf("%s\n", token->value);
+	// commands = malloc (sizeof(t_command));
+	// commands->redirections = get_redirections(&token);
+	// ft_printf("%d\n", commands->redirections->type);
+	// ft_printf("%s\n", commands->redirections->file);
+	// if (token)
+	// 	ft_printf("%s\n", token->value);
+	// exit(0);
+
+	//commands count
+	// int	c_count = count_args(token);
+	// ft_printf("%d\n", c_count);
 	// exit(0);
 	
 	//recuperer les commandes et redirections
 	t_command	*command;
 	
-	ft_printf("command count = %d\n", count_args(token));
-	// command = new_command(token, 2);
+	// ft_printf("command count = %d\n", count_args(token));
+	// command = new_command(token, count_args(token));
 	command = get_commands(token);
-	ft_printf("%s\n", command->args[0]);
-	ft_printf("%s\n", command->args[1]);
-	ft_printf("%s\n", command->args[2]);
-	ft_printf("%s\n", command->args[3]);
+	// ft_printf("%s\n", command->args[0]);
+	// ft_printf("%s\n", command->args[1]);
+	ft_printf("%d\n", command->redirections->type);
+	ft_printf("%s\n", command->redirections->file);
+	// ft_printf("%s\n", command->args[2]);
+	// ft_printf("%s\n", command->args[3]);
 
 	command = command->next;
 	ft_printf("%s\n", command->args[0]);
-	ft_printf("%s\n", command->args[1]);
+	ft_printf("%d\n", command->redirections->type);
+	ft_printf("%s\n", command->redirections->file);
+	// ft_printf("%s\n", command->args[1]);
 
 	return (0);
 }
