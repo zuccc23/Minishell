@@ -22,22 +22,28 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	token = new_token("ls", TOKEN_WORD, 0);
 	head = token;
 
-	// token->next = new_token("-l", TOKEN_WORD, 0);
-	// token = token->next;
+	token->next = new_token("-l", TOKEN_WORD, 0);
+	token = token->next;
 
-	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
-	// token = token->next;
+	token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	token = token->next;
 
 	token->next = new_token("infile", TOKEN_WORD, 0);
+	token = token->next;
+
+	token->next = new_token("<", TOKEN_REDIRECT_IN, 0);
+	token = token->next;
+
+	token->next = new_token("test.txt", TOKEN_WORD, 0);
 	token = token->next;
 
 	token->next = new_token("|", TOKEN_PIPE, 0);
 	token = token->next;
 
-	token->next = new_token("-w", TOKEN_WORD, 0);
+	token->next = new_token("wc", TOKEN_WORD, 0);
 	token = token->next;
 
 	// token->next = new_token("-w", TOKEN_WORD, 0);
@@ -47,6 +53,12 @@ t_token	*temp_tokens(void) // fonction temporaire
 	token = token->next;
 
 	token->next = new_token("outfile", TOKEN_WORD, 0);
+	token = token->next;
+
+	token->next = new_token(">>", TOKEN_REDIRECT_APPEND, 0);
+	token = token->next;
+
+	token->next = new_token("file", TOKEN_WORD, 0);
 	token = token->next;
 
 	token = head;
@@ -63,6 +75,7 @@ void	print_line_tokens(t_token *token) // fonction temporaire
 		token = token->next;
 	}
 	ft_printf("\n");
+	ft_printf("----------------------------\n");
 }
 
 void	print_tokens(t_token *token) // fonction temporaire 
@@ -108,7 +121,7 @@ int	main(int ac, char **av, char **envp)
 	// 	}
 	// }
 
-	//nettoyage input
+	//NETTOYAGE INPUT
 	// char	input[] = "'\"'$USER'\"'";
 	// char	input[] = "''$USER   'l's    ''";
 	// char	input[] = "\"'\"$USER\"'\"";
@@ -127,7 +140,7 @@ int	main(int ac, char **av, char **envp)
 	// strs_print(strs);
 	// exit (0);
 
-	//cree des tokens temporaires pr les tests
+	//CREER DES TOKENS TEMPORAIRES POUR LES TESTS
 	t_token	*token = NULL;
 	int		er_code = 0;
 
@@ -135,12 +148,12 @@ int	main(int ac, char **av, char **envp)
 	print_tokens(token);
 	print_line_tokens(token);
 
-	//parse les erreurs de syntaxe ds les tokens
+	//PARSE LES ERREURS DE SYNTAXE DS LES TOKENS
 	er_code = parse_tokens(token);
 	if (er_code != ER_OK)
 		exit(er_code);
 	
-	// test redirections
+	// TEST REDIRECTIONS
 	// t_redirection *redir;
 	// t_command	*commands;
 
@@ -152,29 +165,37 @@ int	main(int ac, char **av, char **envp)
 	// 	ft_printf("%s\n", token->value);
 	// exit(0);
 
-	//commands count
+	//TEST COMMAND COUNT
 	// int	c_count = count_args(token);
 	// ft_printf("%d\n", c_count);
 	// exit(0);
 	
-	//recuperer les commandes et redirections
+	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
 	
-	// ft_printf("command count = %d\n", count_args(token));
-	// command = new_command(token, count_args(token));
 	command = get_commands(token);
-	// ft_printf("%s\n", command->args[0]);
-	// ft_printf("%s\n", command->args[1]);
-	ft_printf("%d\n", command->redirections->type);
-	ft_printf("%s\n", command->redirections->file);
+	
+	ft_printf("command: %s\n", command->args[0]);
+	ft_printf("command: %s\n", command->args[1]);
+	ft_printf("redirect type: %d\n", command->redirections->type);
+	ft_printf("redirect file: %s\n", command->redirections->file);
+
+	ft_printf("redirect type: %d\n", command->redirections->next->type);
+	ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[2]);
 	// ft_printf("%s\n", command->args[3]);
 
 	command = command->next;
-	ft_printf("%s\n", command->args[0]);
-	ft_printf("%d\n", command->redirections->type);
-	ft_printf("%s\n", command->redirections->file);
+	ft_printf("command: %s\n", command->args[0]);
+	// ft_printf("command: %s\n", command->args[1]);
+	ft_printf("redirect type: %d\n", command->redirections->type);
+	ft_printf("redirect file: %s\n", command->redirections->file);
+	ft_printf("redirect type: %d\n", command->redirections->next->type);
+	ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[1]);
+
+	// CLEANING AND FREEING
+
 
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: dahmane <dahmane@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/12 18:37:01 by mdodevsk          #+#    #+#              #
-#    Updated: 2025/04/09 16:21:41 by dahmane          ###   ########.fr        #
+#    Updated: 2025/04/19 19:05:00 by dahmane          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC = ft_atoi.c ft_bzero.c ft_calloc.c \
 	  ft_strjoin.c ft_split.c  \
 	  ft_putchar_fd.c ft_putendl_fd.c ft_putstr_fd.c \
 	  ft_putnbr_fd.c ft_itoa.c ft_strmapi.c ft_striteri.c \
+	  ft_lstlast_bonus.c \
 	  42-Gnl/get_next_line_utils.c 42-Gnl/get_next_line.c \
 	  42-printf/ft_printf.c \
 	  42-printf/ft_ptr.c 42-printf/ft_putlstr.c 42-printf/ft_putnbr_hex.c 42-printf/ft_putnbr_u.c 42-printf/ft_putnbr.c

@@ -6,14 +6,13 @@ t_command	*get_commands(t_token *token)
 	t_command	*commands;
 	t_command	*head;
 
-	commands = NULL;
 	commands = new_command(token, count_args(token));
 	if (!commands)
 		return (NULL);
 	head = commands;
 	while (token)
 	{
-		while (token && token->type != TOKEN_PIPE)
+		while (is_pipe(token) == 0)
 			token = token->next;
 		if (token)
 		{
@@ -47,17 +46,34 @@ t_command	*new_command(t_token *token, int args_count)
 			token = token->next;
 			i++;
 		}
-		if (is_operator(token) == 1)
-		{
-			new_command->redirections = get_redirections(&token);
-			if (!new_command->redirections)
-				return (NULL);
-		}
+		assign_redirections(&token, &new_command);
 	}
 	if (new_command->args)
 		new_command->args[i] = NULL;
 	new_command->next = NULL;
 	return (new_command);
+}
+
+//ajoute les redirections en addback
+int	assign_redirections(t_token **token, t_command **command)
+{
+	t_redirection *redir_tail;
+
+	if (is_operator(*token) == 1)
+	{
+		if (!(*command)->redirections)
+		{
+			(*command)->redirections = get_redirections(&(*token));
+			if (!(*command)->redirections)
+				return (ER_MALLOC);
+			return (0);
+		}
+		redir_tail = lstlast_redir((*command)->redirections);
+		redir_tail->next = get_redirections(&(*token));
+		if (!(redir_tail->next))
+			return (ER_MALLOC);
+	}
+	return (0);
 }
 
 //check le type de redirection et lui associe le bon fichier
@@ -83,10 +99,11 @@ t_redirection	*get_redirections(t_token **token)
 		return (NULL);
 	(*token) = (*token)->next;
 	(*token) = (*token)->next;
+	redir->next = NULL;
 	return (redir);
 }
 
-// compte le nombre d'arguments par commande pour malloc
+// compte le nombre d'arguments par commande pour malloc la commande
 int	count_args(t_token *token)
 {
 	int count;
@@ -110,6 +127,7 @@ int	count_args(t_token *token)
 	return (count);
 }
 
+//malloc une commande
 t_command	*alloc_command(int args_count)
 {
 	t_command	*command;
@@ -129,38 +147,15 @@ t_command	*alloc_command(int args_count)
 	return (command);
 }
 
-// t_command	*idk(t_token *token, int command_count)
-// {
-// 	t_command	*command;
+//retourne le dernier noeud de la liste de redirections
+t_redirection	*lstlast_redir(t_redirection *lst)
+{
+	t_redirection	*tmp;
 
-// 	command = new_command(token, command_count);
-// 	command->redirections =
-
-// 	return (command);
-// }
-
-// t_command	*new_command(t_token *token, int command_count)
-// {
-// 	t_command	*new;
-// 	int			i;
-
-// 	new = NULL;
-// 	i = 0;
-// 	new = malloc(sizeof(t_command));
-// 	if (!new)
-// 		return (NULL);
-// 	new->args = malloc(sizeof(char *) * command_count + 1);
-// 	if (!(new->args))
-// 		return (NULL);
-// 	while (is_word(token) == 1)
-// 	{
-// 		new->args[i] = ft_strdup(token->value);
-// 		if (!(new->args[i]))
-// 			return (NULL);
-// 		token = token->next;
-// 		i++;
-// 	}
-// 	new->args[i] = NULL;
-// 	new->next = NULL;
-// 	return (new);
-// }
+	if (!lst)
+		return (NULL);
+	tmp = lst;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	return (tmp);
+}
