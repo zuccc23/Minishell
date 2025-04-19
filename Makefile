@@ -16,7 +16,7 @@ CYAN = \033[36m
 #COMPILER AND FLAGS
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-R_FLAG = -lreadline
+R_FLAG = -lreadline -lhistory
 
 #SOURCE FILES
 SRC =	./src/main.c ./src/signals/signals.c \
@@ -63,7 +63,7 @@ $(OBJ_DIR):
 
 #COMPILING .c FILES INTO .o FILES (INSIDE OBJ DIR) !!!FLAGS
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
-	@${CC} ${CFLAGS} -c $< -o $@
+	@${CC} ${CFLAGS} ${R_FLAG} -c $< -o $@
 
 #BASIC RULES
 clean:

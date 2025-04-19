@@ -173,7 +173,7 @@ int	main(int ac, char **av, char **envp)
 	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
 	
-	command = get_commands(token);
+	get_commands(token, &command);
 	
 	ft_printf("command: %s\n", command->args[0]);
 	ft_printf("command: %s\n", command->args[1]);

@@ -13,15 +13,15 @@ typedef struct s_command
 }	t_command;
 
 // get the commands and their redirections
-t_command		*get_commands(t_token *token);
-t_command		*new_command(t_token *token, int command_count);
-int				count_args(t_token *token);
-t_command		*alloc_command(int args_count);
+int	get_commands(t_token *token, t_command **commands);
+int	new_command(t_token *token, t_command **command, int args_count);
+int	count_args(t_token *token);
+int	alloc_command(t_command **command, int args_count);
 
 // redirections
 int				assign_redirections(t_token **token, t_command **command);
 t_redirection	*lstlast_redir(t_redirection *lst);
-t_redirection	*get_redirections(t_token **token);
+int	get_redirections(t_token **token, t_redirection **redir);
 
 //check token type
 int	is_operator(t_token *token);
