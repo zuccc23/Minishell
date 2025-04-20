@@ -7,8 +7,7 @@ t_token	*new_token(char *value, t_token_type type, int expandable) // fonction t
 
 	//creating a node with proper values
 	new = malloc(sizeof(t_token));
-	new->value = malloc(sizeof(char) * 100);
-	new->value = value;
+	new->value = ft_strdup(value);
 	new->type = type;
 	new->expandable = expandable;
 	new->next = NULL;
@@ -172,7 +171,7 @@ int	main(int ac, char **av, char **envp)
 	
 	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
-	
+
 	get_commands(token, &command);
 	
 	ft_printf("command: %s\n", command->args[0]);
@@ -185,18 +184,18 @@ int	main(int ac, char **av, char **envp)
 	// ft_printf("%s\n", command->args[2]);
 	// ft_printf("%s\n", command->args[3]);
 
-	command = command->next;
-	ft_printf("command: %s\n", command->args[0]);
-	// ft_printf("command: %s\n", command->args[1]);
-	ft_printf("redirect type: %d\n", command->redirections->type);
-	ft_printf("redirect file: %s\n", command->redirections->file);
-	ft_printf("redirect type: %d\n", command->redirections->next->type);
-	ft_printf("redirect file: %s\n", command->redirections->next->file);
+	// command = command->next;
+	// ft_printf("command: %s\n", command->args[0]);
+	// // ft_printf("command: %s\n", command->args[1]);
+	// ft_printf("redirect type: %d\n", command->redirections->type);
+	// ft_printf("redirect file: %s\n", command->redirections->file);
+	// ft_printf("redirect type: %d\n", command->redirections->next->type);
+	// ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[1]);
 
 	// CLEANING AND FREEING
-
-
+	free_commands(command);
+	free_tokens(token);
 	return (0);
 }
 
