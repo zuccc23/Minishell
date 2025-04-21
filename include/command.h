@@ -17,6 +17,7 @@ int	get_commands(t_token *token, t_command **commands);
 int	new_command(t_token *token, t_command **command, int args_count);
 int	count_args(t_token *token);
 int	alloc_command(t_command **command, int args_count);
+int	assign_args(t_token **token, t_command **new_command, int *i);
 
 // redirections
 int				assign_redirections(t_token **token, t_command **command);

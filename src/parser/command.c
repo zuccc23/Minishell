@@ -4,11 +4,13 @@
 int	get_commands(t_token *token, t_command **commands)
 {
 	t_command	*commands_temp;
+	int			er_code;
 
 	commands_temp = NULL;
-	new_command(token, &commands_temp, count_args(token));
+	er_code = 0;
+	er_code = new_command(token, &commands_temp, count_args(token));
 	*commands = commands_temp;
-	if (!commands_temp)
+	if (!commands_temp || er_code != ER_OK)
 		return (ER_MALLOC);
 	while (token)
 	{
@@ -17,8 +19,8 @@ int	get_commands(t_token *token, t_command **commands)
 		if (token)
 		{
 			token = token->next;
-			new_command(token, &(commands_temp->next), count_args(token));
-			if (!(commands_temp->next))
+			er_code = new_command(token, &(commands_temp->next), count_args(token));
+			if (!(commands_temp->next) || er_code != ER_OK)
 				return (ER_MALLOC);
 			commands_temp = commands_temp->next;
 		}
@@ -31,24 +33,22 @@ int	new_command(t_token *token, t_command **command, int args_count)
 {
 	t_command	*new_command;
 	int			i;
+	int			er_code;
 
 	i = 0;
-	alloc_command(&new_command, args_count);
+	er_code = 0;
+	new_command = NULL;
+	er_code = alloc_command(&new_command, args_count);
 	*command = new_command;
-	if (!new_command)
+	if (!new_command || er_code != ER_OK)
 		return (ER_MALLOC);
 	new_command->redirections = NULL;
 	while (is_pipe(token) == 0)
 	{
-		while (is_word(token) == 1)
-		{
-			new_command->args[i] = ft_strdup(token->value);
-			if (!(new_command->args[i]))
-				return (ER_MALLOC);
-			token = token->next;
-			i++;
-		}
-		assign_redirections(&token, &new_command);
+		if (assign_args(&token, &new_command, &i) != ER_OK)
+			return (ER_MALLOC);
+		if (assign_redirections(&token, &new_command) != ER_OK)
+			return (ER_MALLOC);
 	}
 	if (new_command->args)
 		new_command->args[i] = NULL;
@@ -90,13 +90,29 @@ int	alloc_command(t_command **command, int args_count)
 	*command = temp_command;
 	if (!temp_command)
 		return (ER_MALLOC);
+	temp_command->next = NULL;
+	temp_command->redirections = NULL;
+	temp_command->args = NULL;
 	if (args_count < 1)
 		temp_command->args = NULL;
 	else
 	{
-		temp_command->args = malloc(sizeof(char *) * (args_count + 1));
-		if (!(temp_command->args))
+		// temp_command->args = malloc(sizeof(char *) * (args_count + 1));
+		if ((temp_command->args) == NULL)
 			return (ER_MALLOC);
 	}
+	return (ER_OK);
+}
+
+int	assign_args(t_token **token, t_command **new_command, int *i)
+{
+	while (is_word(*token) == 1)
+		{
+			(*new_command)->args[(*i)] = ft_strdup((*token)->value);
+			if (!((*new_command)->args[(*i)]))
+				return (ER_MALLOC);
+			*token = (*token)->next;
+			(*i)++;
+		}
 	return (ER_OK);
 }

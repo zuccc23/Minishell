@@ -172,7 +172,12 @@ int	main(int ac, char **av, char **envp)
 	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
 
-	get_commands(token, &command);
+	if (get_commands(token, &command) != ER_OK)
+	{
+		free_commands(command);
+		free_tokens(token);
+		exit(1);
+	}
 	
 	ft_printf("command: %s\n", command->args[0]);
 	ft_printf("command: %s\n", command->args[1]);
@@ -186,7 +191,7 @@ int	main(int ac, char **av, char **envp)
 
 	// command = command->next;
 	// ft_printf("command: %s\n", command->args[0]);
-	// // ft_printf("command: %s\n", command->args[1]);
+	// // // ft_printf("command: %s\n", command->args[1]);
 	// ft_printf("redirect type: %d\n", command->redirections->type);
 	// ft_printf("redirect file: %s\n", command->redirections->file);
 	// ft_printf("redirect type: %d\n", command->redirections->next->type);
