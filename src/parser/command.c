@@ -3,14 +3,14 @@
 //recupere toutes les commandes et leurs redirections
 int	get_commands(t_token *token, t_command **commands)
 {
-	t_command	*commands_temp;
+	t_command	*com_temp;
 	int			er_code;
 
-	commands_temp = NULL;
+	com_temp = NULL;
 	er_code = 0;
-	er_code = new_command(token, &commands_temp, count_args(token));
-	*commands = commands_temp;
-	if (!commands_temp || er_code != ER_OK)
+	er_code = new_command(token, &com_temp, count_args(token));
+	*commands = com_temp;
+	if (!com_temp || er_code != ER_OK)
 		return (ER_MALLOC);
 	while (token)
 	{
@@ -19,10 +19,10 @@ int	get_commands(t_token *token, t_command **commands)
 		if (token)
 		{
 			token = token->next;
-			er_code = new_command(token, &(commands_temp->next), count_args(token));
-			if (!(commands_temp->next) || er_code != ER_OK)
+			er_code = new_command(token, &(com_temp->next), count_args(token));
+			if (!(com_temp->next) || er_code != ER_OK)
 				return (ER_MALLOC);
-			commands_temp = commands_temp->next;
+			com_temp = com_temp->next;
 		}
 	}
 	return (ER_OK);
@@ -56,6 +56,49 @@ int	new_command(t_token *token, t_command **command, int args_count)
 	return (ER_OK);
 }
 
+//malloc une commande
+int	alloc_command(t_command **command, int args_count)
+{
+	t_command	*temp_command;
+
+	temp_command = NULL;
+	temp_command = malloc(sizeof(t_command));
+	*command = temp_command;
+	if (!temp_command)
+		return (ER_MALLOC);
+	temp_command->next = NULL;
+	temp_command->redirections = NULL;
+	temp_command->args = NULL;
+	if (args_count < 1)
+		temp_command->args = NULL;
+	else
+	{
+		temp_command->args = malloc(sizeof(char *) * (args_count + 1));
+		if ((temp_command->args) == NULL)
+			return (ER_MALLOC);
+	}
+	return (ER_OK);
+}
+
+int	assign_args(t_token **token, t_command **new_command, int *i)
+{
+	if ((*new_command)->args)
+	{
+		if (*i == 0)
+			(*new_command)->args[(*i)] = NULL;
+		while (is_word(*token) == 1)
+		{
+			(*new_command)->args[(*i)] = ft_strdup((*token)->value);
+			if (!((*new_command)->args[(*i)]))
+				return (ER_MALLOC);
+			*token = (*token)->next;
+			(*i)++;
+		}
+		(*new_command)->args[(*i)] = NULL;
+	}
+	return (ER_OK);
+}
+
 // compte le nombre d'arguments par commande pour malloc la commande
 int	count_args(t_token *token)
 {
@@ -78,41 +121,4 @@ int	count_args(t_token *token)
 		}
 	}
 	return (count);
-}
-
-//malloc une commande
-int	alloc_command(t_command **command, int args_count)
-{
-	t_command	*temp_command;
-
-	temp_command = NULL;
-	temp_command = malloc(sizeof(t_command));
-	*command = temp_command;
-	if (!temp_command)
-		return (ER_MALLOC);
-	temp_command->next = NULL;
-	temp_command->redirections = NULL;
-	temp_command->args = NULL;
-	if (args_count < 1)
-		temp_command->args = NULL;
-	else
-	{
-		// temp_command->args = malloc(sizeof(char *) * (args_count + 1));
-		if ((temp_command->args) == NULL)
-			return (ER_MALLOC);
-	}
-	return (ER_OK);
-}
-
-int	assign_args(t_token **token, t_command **new_command, int *i)
-{
-	while (is_word(*token) == 1)
-		{
-			(*new_command)->args[(*i)] = ft_strdup((*token)->value);
-			if (!((*new_command)->args[(*i)]))
-				return (ER_MALLOC);
-			*token = (*token)->next;
-			(*i)++;
-		}
-	return (ER_OK);
 }

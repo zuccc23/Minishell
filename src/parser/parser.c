@@ -5,12 +5,12 @@ int	check_single_operator(t_token *token)
 {
 	if (!token->next)
 	{
-		if (token->type == TOKEN_PIPE)
+		if (is_pipe(token) == 1)
 		{
 			ft_printf("minishell: syntax error near unexpected token `|'\n");
 			return (ER_SINGLE_OPERATOR);
 		}
-		if (token->type != TOKEN_WORD)
+		if (is_word(token) != 1)
 		{
 			ft_printf("minishell: ");
 			ft_printf("syntax error near unexpected token `newline'\n");
@@ -25,7 +25,7 @@ int	check_content_before_pipe(t_token *token)
 {
 	t_token	*prev;
 
-	if (token->type == TOKEN_PIPE)
+	if (is_pipe(token) == 1)
 	{
 		ft_printf("minishell: syntax error near unexpected token `|'\n");
 		return (ER_PIPE_SYNTAX);
@@ -34,9 +34,9 @@ int	check_content_before_pipe(t_token *token)
 	token = token->next;
 	while (token)
 	{
-		if (token->type == TOKEN_PIPE)
+		if (is_pipe(token) == 1)
 		{
-			if (prev->type != TOKEN_WORD)
+			if (is_word(token) != 1)
 			{
 				ft_printf("minishell: ");
 				ft_printf("syntax error near unexpected token `|'\n");
@@ -59,9 +59,9 @@ int	check_content_after_operator(t_token *token)
 	while (token)
 	{
 		next = token->next;
-		if (token->type != TOKEN_WORD && token->type != TOKEN_PIPE)
+		if (is_operator(token) == 1)
 		{
-			if (!next || next->type != TOKEN_WORD)
+			if (is_word(next) != 1)
 			{
 				ft_printf("minishell: ");
 				if (!next)
@@ -91,8 +91,34 @@ int	parse_tokens(t_token *token)
 	er_code = check_content_before_pipe(token);
 	if (er_code != ER_OK)
 		return (er_code);
+	ft_printf("test\n");
 	er_code = check_content_after_operator(token);
 	if (er_code != ER_OK)
 		return (er_code);
+	er_code = check_content_after_pipe(token);
+	if (er_code != ER_OK)
+		return (er_code);
+	return (ER_OK);
+}
+
+int	check_content_after_pipe(t_token *token)
+{
+	t_token	*next;
+
+	next = NULL;
+	while (token)
+	{
+		next = token->next;
+		if (is_pipe(token) == 1)
+		{
+			if (!next)
+			{
+				ft_printf("minishell: ");
+				ft_printf("syntax error near unexpected token `newline'\n");
+				return (ER_OPERATOR_SYNTAX);
+			}
+		}
+		token = token->next;
+	}
 	return (ER_OK);
 }

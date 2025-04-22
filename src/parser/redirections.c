@@ -4,19 +4,21 @@
 int	assign_redirections(t_token **token, t_command **command)
 {
 	t_redirection	*redir_tail;
+	int				er_code;
 
+	er_code = 0;
 	if (is_operator(*token) == 1)
 	{
 		if (!(*command)->redirections)
 		{
-			get_redirections(&(*token), &(*command)->redirections);
-			if (!(*command)->redirections)
+			er_code = get_redirections(&(*token), &(*command)->redirections);
+			if (er_code != ER_OK || !(*command)->redirections)
 				return (ER_MALLOC);
 			return (0);
 		}
 		redir_tail = lstlast_redir((*command)->redirections);
-		get_redirections(&(*token), &redir_tail->next);
-		if (!(redir_tail->next))
+		er_code = get_redirections(&(*token), &redir_tail->next);
+		if (er_code != ER_OK || !(redir_tail->next))
 			return (ER_MALLOC);
 	}
 	return (0);
@@ -31,6 +33,7 @@ int	get_redirections(t_token **token, t_redirection **redir)
 	*redir = temp_redir;
 	if (!temp_redir)
 		return (ER_MALLOC);
+	temp_redir->next = NULL;
 	if ((*token)->type == TOKEN_REDIRECT_OUT)
 		temp_redir->type = REDIR_OUTPUT;
 	if ((*token)->type == TOKEN_REDIRECT_IN)
@@ -44,7 +47,6 @@ int	get_redirections(t_token **token, t_redirection **redir)
 		return (ER_MALLOC);
 	(*token) = (*token)->next;
 	(*token) = (*token)->next;
-	temp_redir->next = NULL;
 	return (ER_OK);
 }
 

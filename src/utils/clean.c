@@ -6,7 +6,6 @@ void	free_commands(t_command *commands)
 
 	while (commands)
 	{
-		
 		if (commands->args)
 			free_strs(commands->args);
 		if (commands->redirections)
