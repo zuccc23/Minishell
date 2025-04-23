@@ -36,7 +36,7 @@ int	check_content_before_pipe(t_token *token)
 	{
 		if (is_pipe(token) == 1)
 		{
-			if (is_word(token) != 1)
+			if (is_word(prev) != 1)
 			{
 				ft_printf("minishell: ");
 				ft_printf("syntax error near unexpected token `|'\n");
@@ -79,28 +79,6 @@ int	check_content_after_operator(t_token *token)
 	return (ER_OK);
 }
 
-//fonction qui parse les erreurs de syntaxe ds les tokens
-int	parse_tokens(t_token *token)
-{
-	int	er_code;
-
-	er_code = 0;
-	er_code = check_single_operator(token);
-	if (er_code != ER_OK)
-		return (er_code);
-	er_code = check_content_before_pipe(token);
-	if (er_code != ER_OK)
-		return (er_code);
-	ft_printf("test\n");
-	er_code = check_content_after_operator(token);
-	if (er_code != ER_OK)
-		return (er_code);
-	er_code = check_content_after_pipe(token);
-	if (er_code != ER_OK)
-		return (er_code);
-	return (ER_OK);
-}
-
 int	check_content_after_pipe(t_token *token)
 {
 	t_token	*next;
@@ -120,5 +98,26 @@ int	check_content_after_pipe(t_token *token)
 		}
 		token = token->next;
 	}
+	return (ER_OK);
+}
+
+//fonction qui parse les erreurs de syntaxe ds les tokens
+int	parse_tokens(t_token *token)
+{
+	int	er_code;
+
+	er_code = 0;
+	er_code = check_single_operator(token);
+	if (er_code != ER_OK)
+		return (er_code);
+	er_code = check_content_before_pipe(token);
+	if (er_code != ER_OK)
+		return (er_code);
+	er_code = check_content_after_operator(token);
+	if (er_code != ER_OK)
+		return (er_code);
+	er_code = check_content_after_pipe(token);
+	if (er_code != ER_OK)
+		return (er_code);
 	return (ER_OK);
 }

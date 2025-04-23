@@ -21,17 +21,17 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("ls", TOKEN_WORD, 0);
+	token = new_token("cat", TOKEN_WORD, 0);
 	head = token;
 
-	token->next = new_token("-l", TOKEN_WORD, 0);
+	token->next = new_token("<<", TOKEN_HEREDOC, 0);
 	token = token->next;
 
 	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
 	// token = token->next;
 
-	// token->next = new_token("infile", TOKEN_WORD, 0);
-	// token = token->next;
+	token->next = new_token("idk", TOKEN_WORD, 0);
+	token = token->next;
 
 	// token->next = new_token("<", TOKEN_REDIRECT_IN, 0);
 	// token = token->next;
@@ -39,8 +39,8 @@ t_token	*temp_tokens(void) // fonction temporaire
 	// token->next = new_token("test.txt", TOKEN_WORD, 0);
 	// token = token->next;
 
-	token->next = new_token("|", TOKEN_PIPE, 0);
-	token = token->next;
+	// token->next = new_token("|", TOKEN_PIPE, 0);
+	// token = token->next;
 
 	// token->next = new_token("wc", TOKEN_WORD, 0);
 	// token = token->next;
@@ -48,11 +48,11 @@ t_token	*temp_tokens(void) // fonction temporaire
 	// token->next = new_token("-w", TOKEN_WORD, 0);
 	// token = token->next;
 
-	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
-	// token = token->next;
+	token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	token = token->next;
 
-	// token->next = new_token("outfile", TOKEN_WORD, 0);
-	// token = token->next;
+	token->next = new_token("outfile", TOKEN_WORD, 0);
+	token = token->next;
 
 	// token->next = new_token(">>", TOKEN_REDIRECT_APPEND, 0);
 	// token = token->next;
@@ -182,13 +182,13 @@ int	main(int ac, char **av, char **envp)
 		exit(1);
 	}
 	
-	// ft_printf("command: %s\n", command->args[0]);
+	ft_printf("command: %s\n", command->args[0]);
 	// ft_printf("command: %s\n", command->args[1]);
-	// ft_printf("redirect type: %d\n", command->redirections->type);
-	// ft_printf("redirect file: %s\n", command->redirections->file);
+	ft_printf("redirect type: %d\n", command->redirections->type);
+	ft_printf("redirect file: %s\n", command->redirections->file);
 
-	// ft_printf("redirect type: %d\n", command->redirections->next->type);
-	// ft_printf("redirect file: %s\n", command->redirections->next->file);
+	ft_printf("redirect type: %d\n", command->redirections->next->type);
+	ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[2]);
 	// ft_printf("%s\n", command->args[3]);
 
