@@ -10,4 +10,12 @@ t_token	*create_token(t_token_type type, char *value, int expandable);
 char	*extract_operator_value(t_lexer *lexer);
 void	ft_print_list(t_token *token);
 
+
+
+
+
+
+
+int		get_cleaned_word_length(char *input);
+
 #endif
