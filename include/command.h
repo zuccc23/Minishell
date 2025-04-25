@@ -19,11 +19,6 @@ int	count_args(t_token *token);
 int	alloc_command(t_command **command, int args_count);
 int	assign_args(t_token **token, t_command **new_command, int *i);
 
-// redirections
-int				assign_redirections(t_token **token, t_command **command);
-t_redirection	*lstlast_redir(t_redirection *lst);
-int	get_redirections(t_token **token, t_redirection **redir);
-
 //check token type
 int	is_operator(t_token *token);
 int	is_pipe(t_token *token);

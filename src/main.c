@@ -39,20 +39,20 @@ t_token	*temp_tokens(void) // fonction temporaire
 	// token->next = new_token("test.txt", TOKEN_WORD, 0);
 	// token = token->next;
 
-	// token->next = new_token("|", TOKEN_PIPE, 0);
-	// token = token->next;
-
-	// token->next = new_token("wc", TOKEN_WORD, 0);
-	// token = token->next;
-
-	// token->next = new_token("-w", TOKEN_WORD, 0);
-	// token = token->next;
-
-	token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	token->next = new_token("|", TOKEN_PIPE, 0);
 	token = token->next;
 
-	token->next = new_token("outfile", TOKEN_WORD, 0);
+	token->next = new_token("wc", TOKEN_WORD, 0);
 	token = token->next;
+
+	token->next = new_token("$USER", TOKEN_WORD, 1);
+	token = token->next;
+
+	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
+	// token = token->next;
+
+	// token->next = new_token("outfile", TOKEN_WORD, 0);
+	// token = token->next;
 
 	// token->next = new_token(">>", TOKEN_REDIRECT_APPEND, 0);
 	// token = token->next;
@@ -182,13 +182,13 @@ int	main(int ac, char **av, char **envp)
 		exit(1);
 	}
 	
-	ft_printf("command: %s\n", command->args[0]);
+	// ft_printf("command: %s\n", command->args[0]);
 	// ft_printf("command: %s\n", command->args[1]);
-	ft_printf("redirect type: %d\n", command->redirections->type);
-	ft_printf("redirect file: %s\n", command->redirections->file);
+	// ft_printf("redirect type: %d\n", command->redirections->type);
+	// ft_printf("redirect file: %s\n", command->redirections->file);
 
-	ft_printf("redirect type: %d\n", command->redirections->next->type);
-	ft_printf("redirect file: %s\n", command->redirections->next->file);
+	// ft_printf("redirect type: %d\n", command->redirections->next->type);
+	// ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[2]);
 	// ft_printf("%s\n", command->args[3]);
 
@@ -200,6 +200,11 @@ int	main(int ac, char **av, char **envp)
 	// ft_printf("redirect type: %d\n", command->redirections->next->type);
 	// ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[1]);
+
+	// ENV & EXPAND
+	// printf("%s\n", getenv("USER"));
+	strs_print(envp);
+
 
 	// CLEANING AND FREEING
 	free_commands(command);
