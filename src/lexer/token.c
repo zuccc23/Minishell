@@ -40,7 +40,6 @@ t_token *tokenize(char *input)
 	// "ls -la" | wc -l >> outfile "'"$USER"'"
 	printf("\nPrepro : %s\n", processed_input);
 	head = NULL;
-	//char *value = extract_word_with_quotes(lexer);
 	while (lexer->pos < lexer->length)
 	{
 		skip_whitespace(lexer);
@@ -49,15 +48,13 @@ t_token *tokenize(char *input)
 			t_token_type type = get_operator_type(lexer);
 			char *value = extract_operator_value(lexer);
 			new_token = create_token(type, value, 0);
-			printf("\n%s\n", new_token->value);
 		}
 		else
 		{
 			char *value = extract_word_with_quotes(lexer);
 			int expandable = 0;
-			char *cleaned = extract_clean_with_quotes(value, &expandable); 
-			printf("%s\n", value);
-			printf("oui\n");
+			char *cleaned = extract_clean_with_quotes(value, &expandable);
+			new_token = create_token(TOKEN_WORD, cleaned, expandable);
 		}
 		add_token_to_list(&head, new_token);
 	}

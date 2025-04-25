@@ -3,11 +3,14 @@
 //fonction pour nettoyer et recuperer l'input
 char	*extract_clean_with_quotes(char *input, int *expandable)
 {
-	int	i = 0;
+	int		i = 0;
 	char	*word;
+	int		a = 0;
 
 	int len = get_cleaned_word_length(input);
 	word = malloc(sizeof(char) * (len + 1));
+	if (!word)
+		return (NULL);
 	while (input[i])
 	{
 		if (is_double_quotes(input[i]) == 1)
@@ -17,8 +20,7 @@ char	*extract_clean_with_quotes(char *input, int *expandable)
 			{
 				if (is_expandable(input[i], input[i+1]) == 1)
 					*expandable = 1;
-				str[a][j] = input[i];
-				i++;
+				word[a++] = input[i++];
 			}
 			i++;
 		}
@@ -26,18 +28,14 @@ char	*extract_clean_with_quotes(char *input, int *expandable)
 		{
 			i++;
 			while (is_single_quotes(input[i]) == 0)
-			{
-				str[a][j] = input[i];
-				i++;
-			}
+				word[a++] = input[i++];
 			i++;
 		}
 		while (is_ok_word(input[i]) == 1)
 		{
 			if (is_expandable(input[i], input[i+1]) == 1)
-				expand = 1;
-			str[a][j] = input[i];
-				i++;
+				*expandable = 1;
+			word[a++] = input[i++];
 		}
 	}
 	printf("%s\n", word);
