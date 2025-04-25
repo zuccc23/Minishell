@@ -1,95 +1,56 @@
+
 #include "../../include/minishell.h"
 
-//fonction pour nettoyer et recuperer l'input
-char	**clean(char *input)
+int	is_space(char c)
 {
-	int	i = 0; //input[i]
-	int	a = 0;//str ->[a][j]
-	int		expand = 0;
-	char	*word;
-
-	int len = get_cleaned_word_length(input);
-	word = malloc(sizeof(char) * (len + 1));
-	while (input[i])
-	{
-		if (is_double_quotes(input[i]) == 1)
-		{
-			i++;
-			while (is_double_quotes(input[i]) == 0)
-			{
-				if (is_expandable(input[i], input[i+1]) == 1)
-					expand = 1;
-				str[a][j] = input[i];
-				i++;
-			}
-			i++;
-		}
-		if (is_single_quotes(input[i]) == 1)
-		{
-			i++;
-			while (is_single_quotes(input[i]) == 0)
-			{
-				str[a][j] = input[i];
-				i++;
-			}
-			i++;
-		}
-		while (is_ok_word(input[i]) == 1)
-		{
-			if (is_expandable(input[i], input[i+1]) == 1)
-				expand = 1;
-			str[a][j] = input[i];
-				i++;
-		}
-	}
-	printf("%s\n", word);
-	return (word);
+	if (c == '\0')
+		return (-1);
+	if (c == ' ')
+		return (1);
+	else
+		return (0);
 }
 
-static void	check_double_quotes(char *str, int *i, int *count)
+int	is_double_quotes(char c)
 {
-	if (is_double_quotes(str[*i]) == 1)
-	{
-		(*i)++;
-		while (is_double_quotes(str[*i]) == 0)
-		{
-			(*count)++;
-			(*i)++;
-		}
-		(*i)++;
-	}
+	if (c == '\0')
+		return (-1);
+	if (c == '"')
+		return (1);
+	else
+		return (0);
 }
 
-static void	check_single_quotes(char *str, int *i, int *count)
+int	is_expandable(char c, char next_c)
 {
-	if (is_single_quotes(str[*i]) == 1)
-	{
-		(*i)++;
-		while (is_single_quotes(str[*i]) == 0)
-		{
-			(*count)++;
-			(*i)++;
-		}
-		(*i)++;
-	}
+	if (c == '\0')
+		return (-1);
+	if (c == '$' && next_c != '\0')
+		return (1);
+	else
+		return (0);
 }
 
-int	get_cleaned_word_length(char *input)
+int	is_single_quotes(char c)
 {
-	int	i;
-	int	count;
+	if (c == '\0')
+		return (-1);
+	if (c == '\'')
+		return (1);
+	else
+		return (0);
+}
 
-	i = 0;
-	count = 0;
-	while (input[i])
-	{
-		check_double_quotes(input, &i, &count);
-		check_single_quotes(input, &i, &count);
-		while (is_ok_word(input[i]) == 1)
-		{
-			count++;
-			i++;
-		}
-	}
-	return (count);
+int	is_ok_word(char c)
+{
+	if (c == '\0')
+		return (-1);
+	if (c == ' ')
+		return (0);
+	if (c == '"')
+		return (0);
+	if (c == '\'')
+		return (0);
+	else
+		return (1);
 }
