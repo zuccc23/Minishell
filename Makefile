@@ -24,6 +24,7 @@ SRC =	./src/main.c ./src/signals/signals.c \
 		./src/lexer/preprocess.c ./src/utils/lexer_utils.c \
 		./src/lexer/preprocess_utils.c ./src/utils/list_utils.c \
 		./src/lexer/syntax_checks.c ./src/lexer/clean_input_utils.c ./src/lexer/clean_input.c\
+		./src/lexer/clean_input_v2.c ./src/lexer/clean_input_utils_v2.c
 
 #DIRECTORIES
 OBJ_DIR = obj

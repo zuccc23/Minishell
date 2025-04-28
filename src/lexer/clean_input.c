@@ -38,11 +38,12 @@ char	*extract_clean_with_quotes(char *input, int *expandable)
 			word[a++] = input[i++];
 		}
 	}
+	word[a] = '\0';
 	printf("%s\n", word);
 	return (word);
 }
 
-static void	check_double_quotes(char *str, int *i, int *count)
+void	check_double_quotes(char *str, int *i, int *count)
 {
 	if (is_double_quotes(str[*i]) == 1)
 	{
@@ -56,7 +57,7 @@ static void	check_double_quotes(char *str, int *i, int *count)
 	}
 }
 
-static void	check_single_quotes(char *str, int *i, int *count)
+void	check_single_quotes(char *str, int *i, int *count)
 {
 	if (is_single_quotes(str[*i]) == 1)
 	{

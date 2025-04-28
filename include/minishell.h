@@ -21,5 +21,6 @@
 # include "lexer.h"
 # include "signals.h"
 # include "preprocess.h"
+# include "test.h"
 
 #endif

@@ -16,12 +16,19 @@ typedef enum token_type
 typedef struct s_token
 {
 	char					*value;
+	t_word					*word;
 	t_token_type			type;
 	int						expandable;
 	struct s_token			*next;
 }	t_token;
 
+// FONCTION PRINCIPALE
 t_token			*tokenize(char *input);
+
+//FONCTIONS ACCESSOIRES
+int	get_cleaned_word_length(char *input);
+void	check_single_quotes(char *str, int *i, int *count);
+void	check_double_quotes(char *str, int *i, int *count);
 
 // UTILS
 
