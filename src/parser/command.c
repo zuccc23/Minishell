@@ -88,8 +88,7 @@ int	assign_args(t_token **token, t_command **new_command, int *i)
 			(*new_command)->args[(*i)] = NULL;
 		while (is_word(*token) == 1)
 		{
-			// (*new_command)->args[(*i)] = ft_strdup((*token)->value);
-			if (get_words(*token, &(*new_command), &(*i)) != ER_OK);
+			if (get_words(*token, &(*new_command), &(*i)) != ER_OK)
 				return (ER_MALLOC);
 			*token = (*token)->next;
 			(*i)++;

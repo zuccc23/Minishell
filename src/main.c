@@ -180,25 +180,31 @@ int	main(int ac, char **av, char **envp)
 	// int	c_count = count_args(token);
 	// ft_printf("%d\n", c_count);
 	// exit(0);
-	
+
+	// ENV & EXPAND
+	printf("%s\n", getenv("abc"));
+	// strs_print(envp);
+	printf("%s\n", ft_getenv("abc", envp));
+
+	exit(0);
 	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
 	int i = 0;
 
 	command = malloc(sizeof(t_command));
 	command->args = malloc(sizeof(char) * 3);
-	get_words(token, &command, &i);
+	assign_args(&token, &command, &i);
 	printf("%s\n", command->args[0]);
 	// get_words(token->next, &command, &i);
-	// printf("%s\n", command->args[0]);
-	exit (0);
+	printf("%s\n", command->args[1]);
+	// exit (0);
 
-	if (get_commands(token, &command) != ER_OK)
-	{
-		free_commands(command);
-		free_tokens(token);
-		exit(1);
-	}
+	// if (get_commands(token, &command) != ER_OK)
+	// {
+	// 	free_commands(command);
+	// 	free_tokens(token);
+	// 	exit(1);
+	// }
 	
 	// ft_printf("command: %s\n", command->args[0]);
 	// ft_printf("command: %s\n", command->args[1]);
@@ -218,10 +224,6 @@ int	main(int ac, char **av, char **envp)
 	// ft_printf("redirect type: %d\n", command->redirections->next->type);
 	// ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[1]);
-
-	// ENV & EXPAND
-	// printf("%s\n", getenv("USER"));
-	// strs_print(envp);
 
 
 	// CLEANING AND FREEING

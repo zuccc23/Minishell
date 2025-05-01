@@ -22,7 +22,8 @@ R_FLAG = -lreadline -lhistory
 SRC =	./src/main.c ./src/signals/signals.c \
 		./src/parser/parser.c ./src/parser/command.c \
 		./src/parser/analyse_token.c ./src/parser/clean_input.c \
-		./src/parser/redirections.c ./src/utils/clean.c
+		./src/parser/redirections.c ./src/utils/clean.c \
+		./src/parser/expand.c 
 
 #DIRECTORIES
 OBJ_DIR = obj
