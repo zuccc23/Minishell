@@ -1,13 +1,20 @@
 #include "../include/minishell.h"
 
 
-t_token	*new_token(char *value, t_token_type type, int expandable) // fonction temporaire 
+t_token	*new_token(char *value1, char *value2, t_token_type type, int expandable) // fonction temporaire 
 {
 	t_token *new = NULL;
 
 	//creating a node with proper values
 	new = malloc(sizeof(t_token));
-	new->value = ft_strdup(value);
+
+	new->word = malloc(sizeof(t_word));
+	new->word->value = ft_strdup(value1);
+
+	new->word->next = malloc(sizeof(t_word));
+	new->word->next->value = ft_strdup(value2);
+	new->word->next->next = NULL;
+
 	new->type = type;
 	new->expandable = expandable;
 	new->next = NULL;
@@ -21,17 +28,17 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("cat", TOKEN_WORD, 0);
+	token = new_token("l", "s", TOKEN_WORD, 0);
 	head = token;
 
-	token->next = new_token("<<", TOKEN_HEREDOC, 0);
+	token->next = new_token("-", "l", TOKEN_WORD, 0);
 	token = token->next;
 
 	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
 	// token = token->next;
 
-	token->next = new_token("idk", TOKEN_WORD, 0);
-	token = token->next;
+	// token->next = new_token("idk", TOKEN_WORD, 0);
+	// token = token->next;
 
 	// token->next = new_token("<", TOKEN_REDIRECT_IN, 0);
 	// token = token->next;
@@ -39,14 +46,14 @@ t_token	*temp_tokens(void) // fonction temporaire
 	// token->next = new_token("test.txt", TOKEN_WORD, 0);
 	// token = token->next;
 
-	token->next = new_token("|", TOKEN_PIPE, 0);
-	token = token->next;
+	// token->next = new_token("|", TOKEN_PIPE, 0);
+	// token = token->next;
 
-	token->next = new_token("wc", TOKEN_WORD, 0);
-	token = token->next;
+	// token->next = new_token("wc", TOKEN_WORD, 0);
+	// token = token->next;
 
-	token->next = new_token("$USER", TOKEN_WORD, 1);
-	token = token->next;
+	// token->next = new_token("$USER", TOKEN_WORD, 1);
+	// token = token->next;
 
 	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
 	// token = token->next;
@@ -70,7 +77,9 @@ void	print_line_tokens(t_token *token) // fonction temporaire
 	ft_printf("----------------------------\n");
 	while (token)
 	{
-		ft_printf("%s ", token->value);
+		ft_printf("%s", token->word->value);
+		ft_printf("%s", token->word->next->value);
+		ft_printf(" ");
 		token = token->next;
 	}
 	ft_printf("\n");
@@ -144,7 +153,7 @@ int	main(int ac, char **av, char **envp)
 	int		er_code = 0;
 
 	token = temp_tokens();
-	print_tokens(token);
+	// print_tokens(token);
 	print_line_tokens(token);
 
 	//PARSE LES ERREURS DE SYNTAXE DS LES TOKENS
@@ -174,6 +183,15 @@ int	main(int ac, char **av, char **envp)
 	
 	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
+	int i = 0;
+
+	command = malloc(sizeof(t_command));
+	command->args = malloc(sizeof(char) * 3);
+	get_words(token, &command, &i);
+	printf("%s\n", command->args[0]);
+	// get_words(token->next, &command, &i);
+	// printf("%s\n", command->args[0]);
+	exit (0);
 
 	if (get_commands(token, &command) != ER_OK)
 	{
@@ -203,7 +221,7 @@ int	main(int ac, char **av, char **envp)
 
 	// ENV & EXPAND
 	// printf("%s\n", getenv("USER"));
-	strs_print(envp);
+	// strs_print(envp);
 
 
 	// CLEANING AND FREEING

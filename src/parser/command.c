@@ -29,7 +29,7 @@ int	get_commands(t_token *token, t_command **commands)
 }
 
 // creer un noeud pour une nouvelle commande
-int	new_command(t_token *token, t_command **command, int args_count)
+int	 new_command(t_token *token, t_command **command, int args_count)
 {
 	t_command	*new_command;
 	int			i;
@@ -56,7 +56,7 @@ int	new_command(t_token *token, t_command **command, int args_count)
 	return (ER_OK);
 }
 
-//malloc une commande
+//malloc une commande et ses args
 int	alloc_command(t_command **command, int args_count)
 {
 	t_command	*temp_command;
@@ -88,10 +88,8 @@ int	assign_args(t_token **token, t_command **new_command, int *i)
 			(*new_command)->args[(*i)] = NULL;
 		while (is_word(*token) == 1)
 		{
-			// if ((*token)->expandable == 1)
-			// 	ft_printf("test\n");
-			(*new_command)->args[(*i)] = ft_strdup((*token)->value);
-			if (!((*new_command)->args[(*i)]))
+			// (*new_command)->args[(*i)] = ft_strdup((*token)->value);
+			if (get_words(*token, &(*new_command), &(*i)) != ER_OK);
 				return (ER_MALLOC);
 			*token = (*token)->next;
 			(*i)++;
@@ -100,6 +98,30 @@ int	assign_args(t_token **token, t_command **new_command, int *i)
 	}
 	return (ER_OK);
 }
+
+int	get_words(t_token *token, t_command **new_command, int *i)
+{
+	char	*tmp;
+
+	tmp = token->word->value;
+	if (!token->word->next)
+	{
+		(*new_command)->args[(*i)] = ft_strdup(tmp);
+		if (!(*new_command)->args[(*i)])
+			return (ER_MALLOC);
+	}
+	while (token->word->next)
+	{
+		(*new_command)->args[(*i)] = ft_strjoin(tmp, token->word->next->value);
+		if (!(*new_command)->args[(*i)])
+			return (ER_MALLOC);
+		token->word = token->word->next;
+		free(tmp);
+		tmp = (*new_command)->args[(*i)];
+	}
+	return (ER_OK);
+}
+
 
 // compte le nombre d'arguments par commande pour malloc la commande
 int	count_args(t_token *token)
@@ -114,7 +136,7 @@ int	count_args(t_token *token)
 		while (is_word(token) == 1)
 		{
 			count++;
-			token = token->next;
+			token = token->next; 
 		}
 		if (is_operator(token) == 1)
 		{

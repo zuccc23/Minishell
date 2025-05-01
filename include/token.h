@@ -11,9 +11,17 @@ typedef enum token_type
 	TOKEN_HEREDOC
 }	t_token_type;
 
+typedef struct s_word
+{
+	char					*value;
+	int						expandable;
+	struct s_word			*next;
+}	t_word;
+
 typedef struct s_token
 {
 	char					*value;
+	t_word					*word;
 	t_token_type			type;
 	int						expandable;
 	struct s_token			*next;
