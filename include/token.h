@@ -2,6 +2,7 @@
 # define TOKEN_H
 
 typedef struct s_lexer t_lexer;
+typedef struct s_word t_word;
 
 typedef enum token_type
 {
