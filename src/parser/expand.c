@@ -1,5 +1,6 @@
 #include "../../include/minishell.h"
 
+//g refait la fonction getenv pour recupere le bon environnement
 char	*ft_getenv(char *str, char **envp)
 {
 	int		i;
@@ -20,6 +21,7 @@ char	*ft_getenv(char *str, char **envp)
 	return (expand);
 }
 
+//strdup du bon chemin pour la var d'env
 char	*copy_path(const char *s1, int start)
 {
 	int		i;
@@ -45,6 +47,7 @@ char	*copy_path(const char *s1, int start)
 	return (dest);
 }
 
+//expand les variables expandables
 int	expand_vars(t_token **token)
 {
 	t_token	*head;
@@ -66,3 +69,96 @@ int	expand_vars(t_token **token)
 	return (ER_OK);
 }
 
+//echange la variable avec l'expand qui correspond
+int	replace_expands(t_word **word)
+{
+	t_word	*head;
+
+	head = (*word);
+	while ((*word))
+	{
+		if ((*word)->expandable == 1)
+		{
+
+		}
+		(*word) = (*word)->next;
+	}
+	(*word) = head;
+	return (ER_OK);
+}
+
+// recupere le nom de la variable a expand (=$USER)
+char	*get_var_name(char **value, int *i)
+{
+	char	*varname;
+	size_t		j;
+
+	j = 0;
+	varname = malloc(sizeof(char) * ft_strlen(&(*value)[*i]));
+	if (!varname)
+		return (NULL);
+	(*i)++;
+	if ((*value)[(*i)] == '\0')
+		return (NULL);
+	while (ft_isalnum((*value)[(*i)]) == 1 || (*value)[(*i)] == '_')
+	{
+		varname[j] = (*value)[(*i)];
+		(*i)++;
+		j++;
+	}
+	while (j < ft_strlen(&(*value)[*i]))
+	{
+		varname[j] = '\0';
+		j++;
+	}
+	return (varname);
+}
+
+char	*get_expand(char *varname, char **envp)
+{
+	char	*expand;
+
+	expand = NULL;
+	expand = ft_getenv(varname, envp);
+	free(varname);
+	if (!expand)
+		return (NULL);
+	return (expand);
+}
+
+char	*get_leftover(char **value, int *i)
+{
+	char	*leftover;
+	size_t		j;
+
+	j = 0;
+	leftover = NULL;
+	leftover = malloc(sizeof(char) * ft_strlen(&(*value)[*i]));
+	if (!leftover)
+		return (NULL);
+	while ((*value)[(*i)] != '$')
+	{
+		leftover[j] = (*value)[(*i)];
+		(*i)++;
+		j++;
+	}
+	while (j < ft_strlen(&(*value)[*i]))
+	{
+		leftover[j] = '\0';
+		j++;
+	}
+	return (leftover);
+}
+
+char	*join_expand(char *s1, char *s2)
+{
+	char	*res;
+
+	res = NULL;
+	res = ft_strjoin(s1, s2);
+	free(s1);
+	free(s2);
+	if (!res)
+		return (NULL);
+	return (res);
+}

@@ -28,7 +28,7 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("l", "s", TOKEN_WORD, 0);
+	token = new_token("abc$LOGNAME, ll$PATH", "s", TOKEN_WORD, 0);
 	head = token;
 
 	token->next = new_token("-", "l", TOKEN_WORD, 0);
@@ -182,22 +182,40 @@ int	main(int ac, char **av, char **envp)
 	// exit(0);
 
 	// ENV & EXPAND
-	printf("%s\n", getenv("abc"));
+	// printf("%s\n", getenv("PATH"));
 	// strs_print(envp);
-	printf("%s\n", ft_getenv("abc", envp));
+	// printf("%s\n", ft_getenv("PATH", envp));
+
+	int	i = 0;
+	char *leftover;
+	char *varname;
+	char *expand;
+	char *res;
+
+	printf("%s\n", token->word->value);
+
+	leftover = get_leftover(&(token->word->value), &i);
+	printf("%s\n", leftover);
+	varname = get_var_name(&(token->word->value), &i);
+	printf("%s\n", varname);
+	expand = get_expand(varname, envp);
+	printf("%s\n", expand);
+	res = join_expand(leftover, expand);
+	printf("%s\n", res);
 
 	exit(0);
+
 	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
-	int i = 0;
-
+	
+	i = 0;
 	command = malloc(sizeof(t_command));
 	command->args = malloc(sizeof(char) * 3);
 	assign_args(&token, &command, &i);
-	printf("%s\n", command->args[0]);
+	ft_printf("%s\n", command->args[0]);
 	// get_words(token->next, &command, &i);
-	printf("%s\n", command->args[1]);
-	// exit (0);
+	ft_printf("%s\n", command->args[1]);
+	exit (0);
 
 	// if (get_commands(token, &command) != ER_OK)
 	// {
