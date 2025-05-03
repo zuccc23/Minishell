@@ -1,7 +1,7 @@
 #include "../include/minishell.h"
 
 
-t_token	*new_token(char *value1, char *value2, t_token_type type, int expandable) // fonction temporaire 
+t_token	*new_token(char *value1, char *value2, t_token_type type, int expandable, int expandable2) // fonction temporaire 
 {
 	t_token *new = NULL;
 
@@ -16,7 +16,8 @@ t_token	*new_token(char *value1, char *value2, t_token_type type, int expandable
 	new->word->next->next = NULL;
 
 	new->type = type;
-	new->expandable = expandable;
+	new->word->expandable = expandable;
+	new->word->next->expandable = expandable2;
 	new->next = NULL;
 
 	return (new);
@@ -28,10 +29,10 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("abc$LOGNAME, ll$PATH", "s", TOKEN_WORD, 0);
+	token = new_token("abc$LOGNAME_, ll$PATH", "$_", TOKEN_WORD, 1, 1);
 	head = token;
 
-	token->next = new_token("-", "l", TOKEN_WORD, 0);
+	token->next = new_token("-", "$_", TOKEN_WORD, 0, 1);
 	token = token->next;
 
 	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
@@ -187,23 +188,33 @@ int	main(int ac, char **av, char **envp)
 	// printf("%s\n", ft_getenv("PATH", envp));
 
 	int	i = 0;
-	char *leftover;
-	char *varname;
-	char *expand;
-	char *res;
+	// char *leftover;
+	// char *varname;
+	// char *expand;
+	// char *res;
 
-	printf("%s\n", token->word->value);
+	// printf("%s\n", token->word->value);
+	// replace_expands(&token->word, envp);
+	expand_vars(&token, envp);
+	// printf("%s\n", token->word->value);
+	// printf("%s\n", token->word->next->value);
+	// printf("-------\n");
+	// printf("%s\n", token->next->word->value);
+	// printf("%s\n", token->next->word->next->value);
 
-	leftover = get_leftover(&(token->word->value), &i);
-	printf("%s\n", leftover);
-	varname = get_var_name(&(token->word->value), &i);
-	printf("%s\n", varname);
-	expand = get_expand(varname, envp);
-	printf("%s\n", expand);
-	res = join_expand(leftover, expand);
-	printf("%s\n", res);
+	// replace_value(&(token->word->value), envp);
+	// printf("%s\n", token->word->value);
 
-	exit(0);
+	// exit(0);
+
+	// leftover = get_leftover(&(token->word->value), &i);
+	// printf("%s\n", leftover);
+	// varname = get_var_name(&(token->word->value), &i);
+	// printf("%s\n", varname);
+	// expand = get_expand(varname, envp);
+	// printf("%s\n", expand);
+	// res = join_expand(leftover, expand);
+	// printf("%s\n", res);
 
 	//RECUP LES COMMANDES ET REDIRECTIONS
 	t_command	*command;
