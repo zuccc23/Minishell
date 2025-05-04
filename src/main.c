@@ -29,10 +29,10 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("abc$LOGNAME_, ll$PATH", "$_", TOKEN_WORD, 1, 1);
+	token = new_token("$USER", "$PATH", TOKEN_REDIRECT_APPEND, 0, 0);
 	head = token;
 
-	token->next = new_token("-", "$_", TOKEN_WORD, 0, 1);
+	token->next = new_token("$USER", "abc", TOKEN_WORD, 1, 0);
 	token = token->next;
 
 	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
@@ -225,7 +225,7 @@ int	main(int ac, char **av, char **envp)
 	assign_args(&token, &command, &i);
 	ft_printf("%s\n", command->args[0]);
 	// get_words(token->next, &command, &i);
-	ft_printf("%s\n", command->args[1]);
+	// ft_printf("%s\n", command->args[1]);
 	exit (0);
 
 	// if (get_commands(token, &command) != ER_OK)

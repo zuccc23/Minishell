@@ -121,7 +121,6 @@ int	get_words(t_token *token, t_command **new_command, int *i)
 	return (ER_OK);
 }
 
-
 // compte le nombre d'arguments par commande pour malloc la commande
 int	count_args(t_token *token)
 {

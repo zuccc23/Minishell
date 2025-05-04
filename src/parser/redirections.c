@@ -42,11 +42,35 @@ int	get_redirections(t_token **token, t_redirection **redir)
 		temp_redir->type = REDIR_APPEND;
 	if ((*token)->type == TOKEN_HEREDOC)
 		temp_redir->type = REDIR_HEREDOC;
-	temp_redir->file = ft_strdup((*token)->next->value);
-	if (!temp_redir->file)
-		return (ER_MALLOC);
+	temp_redir->file = ft_strdup((*token)->next->value);//
+	if (!temp_redir->file)//
+		return (ER_MALLOC);//
 	(*token) = (*token)->next;
 	(*token) = (*token)->next;
+	return (ER_OK);
+}
+
+// recupere le fichier de redirection
+int	get_redir_file(t_token *token, t_redirection **redir)
+{
+	char	*tmp;
+
+	tmp = token->word->value;
+	if (!token->word->next)
+	{
+		(*redir)->file = ft_strdup(tmp);
+		if (!(*redir)->file)
+			return (ER_MALLOC);
+	}
+	while (token->word->next)
+	{
+		(*redir)->file = ft_strjoin(tmp, token->word->next->value);
+		if (!(*redir)->file)
+			return (ER_MALLOC);
+		token->word = token->word->next;
+		free(tmp);
+		tmp = (*redir)->file;
+	}
 	return (ER_OK);
 }
 
