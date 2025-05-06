@@ -226,3 +226,41 @@ char	*dup_value(char *s1)
 	free(s1);
 	return (dest);
 }
+
+//efface les noeuds avec des valeurs vides
+void	delete_empty_values(t_word **word)
+{
+	t_word	*head;
+	t_word	*body;
+	t_word	*tmp;
+
+	head = NULL;
+	while (*word && !(*word)->value)
+	{
+		tmp = (*word);
+		(*word) = (*word)->next;
+		free(tmp);
+	}
+	if (*word && (*word)->value)
+	{
+		head = word;
+		body = head;
+		while (body->next)
+		{
+			if (!body->next->value)
+				del_node(&(*word));
+			body = body->next;
+		}
+	}
+	*word = head;
+}
+
+//efface un seul noeud
+void	del_node(t_word **word)
+{
+	t_word	*tmp;
+
+	tmp = (*word)->next;
+	(*word)->next = (*word)->next->next;
+	free(tmp);
+}

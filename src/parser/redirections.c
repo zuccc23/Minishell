@@ -28,7 +28,9 @@ int	assign_redirections(t_token **token, t_command **command)
 int	get_redirections(t_token **token, t_redirection **redir)
 {
 	t_redirection	*temp_redir;
+	int				er_code;
 
+	er_code = 0;
 	temp_redir = malloc(sizeof(t_redirection));
 	*redir = temp_redir;
 	if (!temp_redir)
@@ -42,9 +44,9 @@ int	get_redirections(t_token **token, t_redirection **redir)
 		temp_redir->type = REDIR_APPEND;
 	if ((*token)->type == TOKEN_HEREDOC)
 		temp_redir->type = REDIR_HEREDOC;
-	temp_redir->file = ft_strdup((*token)->next->value);//
-	if (!temp_redir->file)//
-		return (ER_MALLOC);//
+	er_code = get_redir_file(*token, &temp_redir);
+	if (er_code != ER_OK)
+		return (ER_MALLOC);
 	(*token) = (*token)->next;
 	(*token) = (*token)->next;
 	return (ER_OK);

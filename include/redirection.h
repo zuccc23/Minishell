@@ -23,5 +23,6 @@ typedef struct s_redirection
 int				assign_redirections(t_token **token, t_command **command);
 int				get_redirections(t_token **token, t_redirection **redir);
 t_redirection	*lstlast_redir(t_redirection *lst);
+int		get_redir_file(t_token *token, t_redirection **redir);
 
 #endif

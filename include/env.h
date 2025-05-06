@@ -23,4 +23,7 @@ char	*join_expand(char *s1, char *s2); //step 4
 char	*dup_value(char *s1);
 int	replace_value(char **value, char **envp);
 
+void	delete_empty_values(t_word **word);
+void	del_node(t_word **word);
+
 #endif

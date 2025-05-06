@@ -29,10 +29,10 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("$USER", "$PATH", TOKEN_REDIRECT_APPEND, 0, 0);
+	token = new_token("$LOGNAME", "$PATH", TOKEN_WORD, 1, 0);
 	head = token;
 
-	token->next = new_token("$USER", "abc", TOKEN_WORD, 1, 0);
+	token->next = new_token("$LOGNAME", "abc", TOKEN_WORD, 1, 0);
 	token = token->next;
 
 	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
@@ -183,11 +183,11 @@ int	main(int ac, char **av, char **envp)
 	// exit(0);
 
 	// ENV & EXPAND
+	expand_vars(&token, envp);
 	// printf("%s\n", getenv("PATH"));
 	// strs_print(envp);
 	// printf("%s\n", ft_getenv("PATH", envp));
 
-	int	i = 0;
 	// char *leftover;
 	// char *varname;
 	// char *expand;
@@ -195,7 +195,7 @@ int	main(int ac, char **av, char **envp)
 
 	// printf("%s\n", token->word->value);
 	// replace_expands(&token->word, envp);
-	expand_vars(&token, envp);
+	
 	// printf("%s\n", token->word->value);
 	// printf("%s\n", token->word->next->value);
 	// printf("-------\n");
@@ -217,15 +217,21 @@ int	main(int ac, char **av, char **envp)
 	// printf("%s\n", res);
 
 	//RECUP LES COMMANDES ET REDIRECTIONS
-	t_command	*command;
-	
-	i = 0;
-	command = malloc(sizeof(t_command));
-	command->args = malloc(sizeof(char) * 3);
+	t_command	*command = malloc (sizeof(t_command));
+	command->args = malloc(sizeof(char *) * (count_args(token) + 1));
+	int i = 0;
+	// t_redirection *redir = malloc (sizeof(t_redirection));
+
+	// get_commands(token, &command);
+	// new_command(token, &command, count_args(token));
+	// command = malloc(sizeof(t_command));
+	// command->args = malloc(sizeof(char) * 3);
 	assign_args(&token, &command, &i);
-	ft_printf("%s\n", command->args[0]);
-	// get_words(token->next, &command, &i);
-	// ft_printf("%s\n", command->args[1]);
+	// printf("%s\n", token->word->value);
+	// get_redir_file(token, &redir);
+	// get_redirections(&token, &redir);
+	
+	// ft_printf("%s\n", redir->file);
 	exit (0);
 
 	// if (get_commands(token, &command) != ER_OK)
