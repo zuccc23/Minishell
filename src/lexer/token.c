@@ -23,6 +23,17 @@ static char	*extract_word_with_quotes(t_lexer *lexer)
 	return (word);
 }
 
+int	init_lexer_preprocess(t_lexer **lexer, char **processed_input ,char *input)
+{
+	*lexer = init_lexer(input);
+	if (!*lexer)
+		return (0);
+	*processed_input = preprocess_input(input);
+	if (!*processed_input)
+		return (0);
+	return (1);
+}
+
 t_token *tokenize(char *input)
 {
 	t_lexer *lexer;
@@ -30,14 +41,8 @@ t_token *tokenize(char *input)
 	t_token *new_token;
 	char 	*processed_input;
 
-	lexer = init_lexer(input);
-	if (!lexer)
+	if (!init_lexer_preprocess(&lexer, &processed_input, input))
 		return (NULL);
-	processed_input = preprocess_input(input);
-	if (!processed_input)
-		return (NULL);
-
-	// "ls -la" | wc -l >> outfile "'"$USER"'"
 	printf("\nPrepro : %s\n", processed_input);
 	head = NULL;
 	while (lexer->pos < lexer->length)
@@ -55,7 +60,7 @@ t_token *tokenize(char *input)
 			int expandable = 0;
 			char *cleaned = extract_clean_with_quotes(value, &expandable);
 			new_token = create_token(TOKEN_WORD, cleaned, expandable);
-		
+
 			printf("\n-----------TEST------------\n");
 			t_word	*word = NULL;
 			clean_words(value, &word);
