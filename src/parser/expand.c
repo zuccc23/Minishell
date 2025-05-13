@@ -243,7 +243,7 @@ void	delete_empty_values(t_word **word)
 	}
 	if (*word && (*word)->value)
 	{
-		head = word;
+		head = *word;
 		body = head;
 		while (body->next)
 		{

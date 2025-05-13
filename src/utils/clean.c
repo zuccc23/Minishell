@@ -51,6 +51,7 @@ void	free_redirections(t_redirection *redir)
 void	free_tokens(t_token *token)
 {
 	t_token	*temp;
+	t_word	*wrd_tmp;
 
 	if (!token)
 		return ;
@@ -58,6 +59,13 @@ void	free_tokens(t_token *token)
 	{
 		if (token->value)
 			free(token->value);
+		while (token->word)
+		{
+			wrd_tmp = token->word;
+			free(token->word->value);
+			token->word = token->word->next;
+			free(wrd_tmp);
+		}
 		temp = token;
 		token = token->next;
 		free(temp);

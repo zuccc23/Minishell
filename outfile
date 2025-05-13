@@ -1,12 +1,13 @@
-total 44
-drwxr-xr-x 2 dahmane 2024_paris   207 May  1 11:14 include
--rw-r--r-- 1 dahmane 2024_paris     0 May  1 11:14 infile
-drwxr-xr-x 5 dahmane 2024_paris  4096 May  1 11:36 libft
--rw-r--r-- 1 dahmane 2024_paris  2875 May  1 11:14 Makefile
--rwxr-xr-x 1 dahmane 2024_paris 26776 May  1 11:41 minishell
-drwxr-xr-x 2 dahmane 2024_paris     6 May  1 11:08 obj
--rw-r--r-- 1 dahmane 2024_paris     0 May  1 14:15 outfile
--rw-r--r-- 1 dahmane 2024_paris    39 Apr  3 13:34 README.md
-drwxr-xr-x 9 dahmane 2024_paris   118 May  1 11:14 src
-drwxr-xr-x 2 dahmane 2024_paris    65 Apr 28 11:28 subject
--rw-r--r-- 1 dahmane 2024_paris   617 May  1 11:14 test.txt
+cat
+include
+infile
+libft
+ls
+Makefile
+minishell
+obj
+outfile
+README.md
+src
+subject
+test.txt

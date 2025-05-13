@@ -43,7 +43,6 @@ int	 new_command(t_token *token, t_command **command, int args_count)
 	if (!new_command || er_code != ER_OK)
 		return (ER_MALLOC);
 	new_command->redirections = NULL;
-	// printf("test\n");
 	while (is_pipe(token) == 0)
 	{
 		if (assign_args(&token, &new_command, &i) != ER_OK)
@@ -93,7 +92,7 @@ int	assign_args(t_token **token, t_command **new_command, int *i)
 			if (get_words(*token, &(*new_command), &(*i)) != ER_OK)
 				return (ER_MALLOC);
 			*token = (*token)->next;
-			printf("test %s\n", (*new_command)->args[(*i)]);
+			// printf("args %d: %s\n", *i, (*new_command)->args[(*i)]);
 			(*i)++;
 		}
 		(*new_command)->args[(*i)] = NULL;
@@ -105,25 +104,32 @@ int	assign_args(t_token **token, t_command **new_command, int *i)
 int	get_words(t_token *token, t_command **new_command, int *i)
 {
 	char	*tmp;
+	t_word	*head;
+	char	*tmp2;
 
+	head = token->word;
 	while (token->word && !token->word->value)
 		token->word = token->word->next;
-	tmp = token->word->value;
+	tmp = ft_strdup(token->word->value);//
 	if (!token->word->next && token->word->value)
 	{
-		(*new_command)->args[(*i)] = ft_strdup(tmp);
+		(*new_command)->args[(*i)] = ft_strdup(tmp); //
+		free(tmp);
 		if (!(*new_command)->args[(*i)])
 			return (ER_MALLOC);
 	}
 	while (token->word && token->word->next)
 	{
-		(*new_command)->args[(*i)] = ft_strjoin(tmp, token->word->next->value);
+		tmp2 = ft_strdup(token->word->next->value);
+		(*new_command)->args[(*i)] = ft_strjoin(tmp, tmp2);//
 		if (!(*new_command)->args[(*i)])
 			return (ER_MALLOC);
 		token->word = token->word->next;
 		free(tmp);
+		free(tmp2);
 		tmp = (*new_command)->args[(*i)];
 	}
+	token->word = head; 
 	return (ER_OK);
 }
 

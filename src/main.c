@@ -1,27 +1,37 @@
 #include "../include/minishell.h"
 
-
-t_token	*new_token(char *value1, char *value2, t_token_type type, int expandable, int expandable2) // fonction temporaire 
+//creating a node with proper values
+t_token	*new_token(char *value1, char *value2, char *operator, t_token_type type, int expandable, int expandable2) // fonction temporaire 
 {
 	t_token *new = NULL;
 
-	//creating a node with proper values
 	new = malloc(sizeof(t_token));
+	new->word = NULL;
+	// new->value = NULL;
 
-	new->word = malloc(sizeof(t_word));
-	new->word->value = ft_strdup(value1);
-
-	new->word->next = malloc(sizeof(t_word));
-	new->word->next->value = ft_strdup(value2);
-	new->word->next->next = NULL;
-
+	if (operator)
+		new->value = ft_strdup(operator);
 	new->type = type;
-	new->word->expandable = expandable;
-	new->word->next->expandable = expandable2;
+
+	if (value1)
+	{
+		new->word = malloc(sizeof(t_word));
+		new->word->value = ft_strdup(value1);
+
+		new->word->next = malloc(sizeof(t_word));
+		// new->word->value = NULL;
+		new->word->next->value = ft_strdup(value2);
+		new->word->next->next = NULL;
+
+		new->word->expandable = expandable;
+		new->word->next->expandable = expandable2;
+	}
+
 	new->next = NULL;
 
 	return (new);
 }
+
 
 t_token	*temp_tokens(void) // fonction temporaire 
 {
@@ -29,67 +39,56 @@ t_token	*temp_tokens(void) // fonction temporaire
 	t_token *head = NULL;
 	t_token *token = NULL;
 
-	token = new_token("$LOGNAME", "$PATH", TOKEN_WORD, 1, 0);
+	token = new_token("l", "s", NULL, TOKEN_WORD, 0, 0);
 	head = token;
 
-	token->next = new_token("$LOGNAME", "abc", TOKEN_WORD, 1, 0);
+	token->next = new_token("-", "l", NULL, TOKEN_WORD, 0, 0);
 	token = token->next;
 
-	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
-	// token = token->next;
+	token->next = new_token(NULL, NULL, ">", TOKEN_REDIRECT_OUT, 0, 0);
+	token = token->next;
 
-	// token->next = new_token("idk", TOKEN_WORD, 0);
-	// token = token->next;
+	token->next = new_token("out", "file", NULL, TOKEN_WORD, 0, 0);
+	token = token->next;
 
-	// token->next = new_token("<", TOKEN_REDIRECT_IN, 0);
-	// token = token->next;
+	token->next = new_token(NULL, NULL, ">>", TOKEN_REDIRECT_APPEND, 0, 0);
+	token = token->next;
 
-	// token->next = new_token("test.txt", TOKEN_WORD, 0);
-	// token = token->next;
+	token->next = new_token("test", "file", NULL, TOKEN_WORD, 0, 0);
+	token = token->next;
 
-	// token->next = new_token("|", TOKEN_PIPE, 0);
-	// token = token->next;
-
-	// token->next = new_token("wc", TOKEN_WORD, 0);
-	// token = token->next;
-
-	// token->next = new_token("$USER", TOKEN_WORD, 1);
-	// token = token->next;
-
-	// token->next = new_token(">", TOKEN_REDIRECT_OUT, 0);
-	// token = token->next;
-
-	// token->next = new_token("outfile", TOKEN_WORD, 0);
-	// token = token->next;
-
-	// token->next = new_token(">>", TOKEN_REDIRECT_APPEND, 0);
-	// token = token->next;
-
-	// token->next = new_token("file", TOKEN_WORD, 0);
+	// token->next = new_token("-", "l", TOKEN_WORD, 0, 0);
 	// token = token->next;
 
 	token = head;
 	return (token);
 }
 
+//print the token list in a single line
 void	print_line_tokens(t_token *token) // fonction temporaire 
 {
-	//print the token list in a single line
 	ft_printf("----------------------------\n");
 	while (token)
 	{
-		ft_printf("%s", token->word->value);
-		ft_printf("%s", token->word->next->value);
-		ft_printf(" ");
+		if (token->word)
+		{
+			ft_printf("%s", token->word->value);
+			ft_printf("%s", token->word->next->value);
+			ft_printf(" ");
+		}
+		if (token->value)
+		{
+			ft_printf("%s ", token->value);
+		}
 		token = token->next;
 	}
 	ft_printf("\n");
 	ft_printf("----------------------------\n");
 }
 
+//print the token list
 void	print_tokens(t_token *token) // fonction temporaire 
 {
-	//print the token list
 	while (token)
 	{
 		ft_printf("%s ", token->value);
@@ -155,7 +154,7 @@ int	main(int ac, char **av, char **envp)
 
 	token = temp_tokens();
 	// print_tokens(token);
-	print_line_tokens(token);
+	// print_line_tokens(token);
 
 	//PARSE LES ERREURS DE SYNTAXE DS LES TOKENS
 	er_code = parse_tokens(token);
@@ -164,7 +163,7 @@ int	main(int ac, char **av, char **envp)
 		free_tokens(token);
 		exit(er_code);
 	}
-
+	
 	// TEST REDIRECTIONS
 	// t_redirection *redir;
 	// t_command	*commands;
@@ -183,7 +182,7 @@ int	main(int ac, char **av, char **envp)
 	// exit(0);
 
 	// ENV & EXPAND
-	expand_vars(&token, envp);
+	// expand_vars(&token, envp);
 	// printf("%s\n", getenv("PATH"));
 	// strs_print(envp);
 	// printf("%s\n", ft_getenv("PATH", envp));
@@ -217,22 +216,24 @@ int	main(int ac, char **av, char **envp)
 	// printf("%s\n", res);
 
 	//RECUP LES COMMANDES ET REDIRECTIONS
-	t_command	*command = malloc (sizeof(t_command));
-	command->args = malloc(sizeof(char *) * (count_args(token) + 1));
-	int i = 0;
+	t_command	*command;
+	// command = malloc (sizeof(t_command));
+	// command->args = malloc(sizeof(char *) * (count_args(token) + 1));
+	// int i = 0;
 	// t_redirection *redir = malloc (sizeof(t_redirection));
-
-	// get_commands(token, &command);
+	
+	get_commands(token, &command);
+	printf("%s\n", token->word->value);
 	// new_command(token, &command, count_args(token));
 	// command = malloc(sizeof(t_command));
 	// command->args = malloc(sizeof(char) * 3);
-	assign_args(&token, &command, &i);
+	// assign_args(&token, &command, &i);
 	// printf("%s\n", token->word->value);
 	// get_redir_file(token, &redir);
 	// get_redirections(&token, &redir);
 	
 	// ft_printf("%s\n", redir->file);
-	exit (0);
+	
 
 	// if (get_commands(token, &command) != ER_OK)
 	// {
@@ -246,6 +247,7 @@ int	main(int ac, char **av, char **envp)
 	// ft_printf("redirect type: %d\n", command->redirections->type);
 	// ft_printf("redirect file: %s\n", command->redirections->file);
 
+	
 	// ft_printf("redirect type: %d\n", command->redirections->next->type);
 	// ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[2]);
@@ -259,9 +261,10 @@ int	main(int ac, char **av, char **envp)
 	// ft_printf("redirect type: %d\n", command->redirections->next->type);
 	// ft_printf("redirect file: %s\n", command->redirections->next->file);
 	// ft_printf("%s\n", command->args[1]);
-
+	// exit (0);
 
 	// CLEANING AND FREEING
+	printf("%s\n", token->word->value);
 	free_commands(command);
 	free_tokens(token);
 	return (0);

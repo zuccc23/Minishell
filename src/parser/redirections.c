@@ -44,9 +44,10 @@ int	get_redirections(t_token **token, t_redirection **redir)
 		temp_redir->type = REDIR_APPEND;
 	if ((*token)->type == TOKEN_HEREDOC)
 		temp_redir->type = REDIR_HEREDOC;
-	er_code = get_redir_file(*token, &temp_redir);
+	er_code = get_redir_file((*token)->next, &temp_redir);
 	if (er_code != ER_OK)
 		return (ER_MALLOC);
+	// printf("%s\n", temp_redir->file);
 	(*token) = (*token)->next;
 	(*token) = (*token)->next;
 	return (ER_OK);
