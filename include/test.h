@@ -1,12 +1,7 @@
 #ifndef TEST_H
 # define TEST_H
 
-typedef struct s_word
-{
-	char					*value;
-	int						expandable;
-	struct s_word			*next;
-}	t_word;
+
 
 // CLEAN QUOTES, GET WORDS IN A LINKED LIST, CHECK EXPAND
 int		clean_words(char *input, t_word **final_word);

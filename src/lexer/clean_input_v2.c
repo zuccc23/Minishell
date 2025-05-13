@@ -3,11 +3,11 @@
 //fonction pour nettoyer et recuperer l'input dans une liste chainee
 int	clean_words(char *input, t_word **word)
 {
-	int		i = 0;
-	t_word	*head = NULL;
+	int		i;
+	t_word	*head;
 
 	printf("original input: %s\n", input);
-
+	i = 0;
 	get_partial_value(input, &(*word), &i); //protect mallocs
 	head = (*word);
 	while (input[i])
@@ -15,8 +15,8 @@ int	clean_words(char *input, t_word **word)
 		get_partial_value(input, &(*word)->next, &i); //protect mallocs
 		(*word) = (*word)->next;
 	}
-	printf("clean input: %s %d\n", head->value, head->expandable);
-	printf("clean input: %s %d\n", head->next->value, head->next->expandable);
+	// printf("clean input: %s %d\n", head->value, head->expandable);
+	// printf("clean input: %s %d\n", head->next->value, head->next->expandable);
 	// printf("clean input: %s %d\n", head->next->next->value, head->next->next->expandable);
 	return (0);
 }

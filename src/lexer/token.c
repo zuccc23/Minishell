@@ -43,6 +43,7 @@ t_token *tokenize(char *input)
 
 	if (!init_lexer_preprocess(&lexer, &processed_input, input))
 		return (NULL);
+
 	printf("\nPrepro : %s\n", processed_input);
 	head = NULL;
 	while (lexer->pos < lexer->length)
@@ -59,12 +60,13 @@ t_token *tokenize(char *input)
 			char *value = extract_word_with_quotes(lexer);
 			int expandable = 0;
 			char *cleaned = extract_clean_with_quotes(value, &expandable);
-			new_token = create_token(TOKEN_WORD, cleaned, expandable);
-
 			printf("\n-----------TEST------------\n");
 			t_word	*word = NULL;
 			clean_words(value, &word);
 			printf("---------FIN TEST---------\n");
+			new_token = create_token(TOKEN_WORD, cleaned, expandable);
+			//modifier la fonction pour quelle cree un nouveau token avec word 
+
 		}
 		add_token_to_list(&head, new_token);
 	}
