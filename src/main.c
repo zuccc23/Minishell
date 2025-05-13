@@ -23,12 +23,14 @@ int	main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 			printf("\n%s\n", input);
-			t_token	*head = tokenize(input);
+			t_token *head = NULL;
+			head = tokenize(input);
 			printf("\n");
 			printf("\n");
 			printf("\n");
 			printf("\n");
 			ft_print_list(head);
+			ft_free_list(head);
 		}
 		free(input);
 	}

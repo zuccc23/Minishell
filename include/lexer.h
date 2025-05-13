@@ -22,6 +22,5 @@ t_lexer	*init_lexer(char *input);
 void	advance(t_lexer *lexer);
 char	peek(t_lexer *lexer);
 void	skip_whitespace(t_lexer *lexer);
-char	*extract_clean_with_quotes(char *input, int *expandable);
 
 #endif

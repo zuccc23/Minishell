@@ -26,17 +26,31 @@ void	skip_whitespace(t_lexer *lexer)
 	}
 }
 
-t_token	*create_token(t_token_type type, char *value, int expandable)
+t_token	*create_operator_token(t_token_type type, char *value)
 {
 	t_token	*token;
 
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->expandable = expandable;
 	token->type = type;
 	token->next = NULL;
+	token->word = NULL;
 	token->value = value;
+	return (token);
+}
+
+t_token	*create_word_token(t_token_type type, t_word *word)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = type;
+	token->next = NULL;
+	token->word = word;
+	token->value = word->value;
 	return (token);
 }
 

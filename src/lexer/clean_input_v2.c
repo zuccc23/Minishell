@@ -8,16 +8,16 @@ int	clean_words(char *input, t_word **word)
 
 	printf("original input: %s\n", input);
 	i = 0;
-	get_partial_value(input, &(*word), &i); //protect mallocs
+	if (get_partial_value(input, &(*word), &i) == -1)
+		return (-1);
 	head = (*word);
 	while (input[i])
 	{
-		get_partial_value(input, &(*word)->next, &i); //protect mallocs
+		if (get_partial_value(input, &(*word)->next, &i) == -1)
+			return (-1);
 		(*word) = (*word)->next;
 	}
-	// printf("clean input: %s %d\n", head->value, head->expandable);
-	// printf("clean input: %s %d\n", head->next->value, head->next->expandable);
-	// printf("clean input: %s %d\n", head->next->next->value, head->next->next->expandable);
+	*word = head;
 	return (0);
 }
 

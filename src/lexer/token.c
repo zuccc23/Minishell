@@ -53,22 +53,19 @@ t_token *tokenize(char *input)
 		{
 			t_token_type type = get_operator_type(lexer);
 			char *value = extract_operator_value(lexer);
-			new_token = create_token(type, value, 0);
+			new_token = create_operator_token(type, value);
 		}
 		else
 		{
 			char *value = extract_word_with_quotes(lexer);
-			int expandable = 0;
-			char *cleaned = extract_clean_with_quotes(value, &expandable);
-			printf("\n-----------TEST------------\n");
 			t_word	*word = NULL;
 			clean_words(value, &word);
-			printf("---------FIN TEST---------\n");
-			new_token = create_token(TOKEN_WORD, cleaned, expandable);
-			//modifier la fonction pour quelle cree un nouveau token avec word 
-
+			free(value);
+			new_token = create_word_token(TOKEN_WORD, word);
 		}
 		add_token_to_list(&head, new_token);
 	}
+	free(lexer);
+	free(processed_input);
 	return (head);
 }

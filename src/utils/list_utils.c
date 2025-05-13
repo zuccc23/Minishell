@@ -43,12 +43,45 @@ const char	*token_type_to_str(t_token_type type)
 
 void	ft_print_list(t_token *token)
 {
+	int		token_index = 0;
+	t_word	*word;
+
 	while (token)
 	{
-		printf("value: %-15s | type: %-15s | expandable: %d\n",
-			token->value,
-			token_type_to_str(token->type),
-			token->expandable);
+		printf("=== Token #%d ===\n", token_index++);
+		printf("Raw value     : %s\n", token->value);
+		printf("Type          : %s\n", token_type_to_str(token->type));
+		word = token->word;
+		int word_index = 0;
+		if (word == NULL)
+			printf("No words linked to this token.\n");
+		while (word)
+		{
+			printf("  └─ Word #%d: %s (expandable: ", word_index++, word->value);
+			if (word->expandable == 1)
+				printf("yes)\n");
+			else
+				printf("no)\n");
+			word = word->next;
+		}
+		printf("\n\n");
 		token = token->next;
+	}
+}
+
+void	ft_free_list(t_token *token)
+{
+	t_token *tmp;
+
+	while (token)
+	{
+		tmp = token->next;
+		if (token->word)
+		{
+			free(token->word->value);
+			free(token->word);
+		}
+		free(token);
+		token = tmp;
 	}
 }

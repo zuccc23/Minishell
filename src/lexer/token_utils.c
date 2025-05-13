@@ -42,6 +42,4 @@ int extract_word_length(t_lexer *lexer)
 	return (i);
 }
 
-// int	is_word_expandable(char *str)
-// {
-// }
+
