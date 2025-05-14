@@ -50,11 +50,9 @@ int	get_word_nq(t_word **word, char *input, int *i)
 	int	a;
 
 	a = 0;
-	//MALLOC
 	(*word) = new_word(count_word_size(input, *i));
 	if (!(*word))
 		return (-1);
-	//ASSIGN VALUE
 	(*word)->expandable = 0;
 	while (is_ok_word(input[*i]) == 1)
 	{

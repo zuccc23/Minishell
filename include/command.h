@@ -7,7 +7,7 @@ typedef struct s_command
 {
 	char					**args;	//Tableau d'arguments. args[0] c'est le nom de la commande
 	t_redirection			*redirections; // Liste chainee des redirections associees a la commande
-	struct s_command		*next;
+	struct s_command		*next;// on passe a next quand on otmbe sur un pipe ou la fin 
 }	t_command;
 
 #endif

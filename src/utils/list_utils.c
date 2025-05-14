@@ -49,23 +49,41 @@ void	ft_print_list(t_token *token)
 	while (token)
 	{
 		printf("=== Token #%d ===\n", token_index++);
-		printf("Raw value     : %s\n", token->value);
 		printf("Type          : %s\n", token_type_to_str(token->type));
-		word = token->word;
-		int word_index = 0;
-		if (word == NULL)
-			printf("No words linked to this token.\n");
-		while (word)
+		if (token->type == TOKEN_WORD && token->word)
 		{
-			printf("  └─ Word #%d: %s (expandable: ", word_index++, word->value);
-			if (word->expandable == 1)
-				printf("yes)\n");
-			else
-				printf("no)\n");
-			word = word->next;
+			printf("Raw value     : %s\n", token->word->value);
+			int word_index = 0;
+			word = token->word;
+			while (word)
+			{
+				printf("  └─ Word #%d: %s (expandable: ", word_index++, word->value);
+				if (word->expandable == 1)
+					printf("yes)\n");
+				else
+					printf("no)\n");
+				word = word->next;
+			}
+		}
+		else
+		{
+			printf("Operator is a %s\n", token_type_to_str(token->type));
 		}
 		printf("\n\n");
 		token = token->next;
+	}
+}
+
+void	free_word_list(t_word *word)
+{
+	t_word	*tmp;
+
+	while (word)
+	{
+		tmp = word->next;
+		free(word->value);
+		free(word);
+		word = tmp;
 	}
 }
 
@@ -77,10 +95,7 @@ void	ft_free_list(t_token *token)
 	{
 		tmp = token->next;
 		if (token->word)
-		{
-			free(token->word->value);
-			free(token->word);
-		}
+			free_word_list(token->word);
 		free(token);
 		token = tmp;
 	}

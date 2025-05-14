@@ -26,7 +26,7 @@ void	skip_whitespace(t_lexer *lexer)
 	}
 }
 
-t_token	*create_operator_token(t_token_type type, char *value)
+t_token	*create_operator_token(t_token_type type)
 {
 	t_token	*token;
 
@@ -36,7 +36,7 @@ t_token	*create_operator_token(t_token_type type, char *value)
 	token->type = type;
 	token->next = NULL;
 	token->word = NULL;
-	token->value = value;
+	//token->value = value;
 	return (token);
 }
 
@@ -50,24 +50,24 @@ t_token	*create_word_token(t_token_type type, t_word *word)
 	token->type = type;
 	token->next = NULL;
 	token->word = word;
-	token->value = word->value;
+	//token->value = word->value;
 	return (token);
 }
 
-char	*extract_operator_value(t_lexer *lexer)
+void	extract_operator_value(t_lexer *lexer)
 {
 	t_token_type	type;
 	char			*value;
 
 	type = get_operator_type(lexer);
 	if (!type)
-		return (NULL);
+		return ;
 	if (type == TOKEN_HEREDOC || type == TOKEN_REDIRECT_APPEND)
 		value = malloc(sizeof(char) * 3);
 	else
 		value = malloc(sizeof(char) * 2);
 	if (!value)
-		return (NULL);
+		return ;
 	value[0] = lexer->current;
 	advance(lexer);
 	if (type == TOKEN_HEREDOC || type == TOKEN_REDIRECT_APPEND)
@@ -78,5 +78,5 @@ char	*extract_operator_value(t_lexer *lexer)
 	}
 	else
 		value[1] = '\0';
-	return (value);
+	// return (value);
 }

@@ -44,7 +44,7 @@ t_token *tokenize(char *input)
 	if (!init_lexer_preprocess(&lexer, &processed_input, input))
 		return (NULL);
 
-	printf("\nPrepro : %s\n", processed_input);
+	//printf("\nPrepro : %s\n", processed_input);
 	head = NULL;
 	while (lexer->pos < lexer->length)
 	{
@@ -52,8 +52,8 @@ t_token *tokenize(char *input)
 		if (is_delimiter_start(lexer->current))
 		{
 			t_token_type type = get_operator_type(lexer);
-			char *value = extract_operator_value(lexer);
-			new_token = create_operator_token(type, value);
+			extract_operator_value(lexer);
+			new_token = create_operator_token(type);
 		}
 		else
 		{
@@ -63,6 +63,7 @@ t_token *tokenize(char *input)
 			free(value);
 			new_token = create_word_token(TOKEN_WORD, word);
 		}
+		//new_token->next = NULL;
 		add_token_to_list(&head, new_token);
 	}
 	free(lexer);
