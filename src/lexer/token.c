@@ -1,5 +1,6 @@
 #include "../../include/minishell.h"
 
+// Extrait un mot du lexer, en gardant les quotes, et retourne une chaîne allouée.
 static char	*extract_word_with_quotes(t_lexer *lexer)
 {
 	char	*word;
@@ -23,6 +24,7 @@ static char	*extract_word_with_quotes(t_lexer *lexer)
 	return (word);
 }
 
+// Initialise le lexer et traite une premiere fois la chaine
 int	init_lexer_preprocess(t_lexer **lexer, char **processed_input ,char *input)
 {
 	*lexer = init_lexer(input);
@@ -33,7 +35,7 @@ int	init_lexer_preprocess(t_lexer **lexer, char **processed_input ,char *input)
 		return (0);
 	return (1);
 }
-
+// Transforme l’entrée utilisateur en tokens distincts en traitant opérateurs, mots, espaces et quotes
 t_token *tokenize(char *input)
 {
 	t_lexer *lexer;
@@ -43,7 +45,6 @@ t_token *tokenize(char *input)
 
 	if (!init_lexer_preprocess(&lexer, &processed_input, input))
 		return (NULL);
-
 	//printf("\nPrepro : %s\n", processed_input);
 	head = NULL;
 	while (lexer->pos < lexer->length)

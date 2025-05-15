@@ -1,5 +1,6 @@
 #include "../../include/minishell.h"
 
+// Initialise les valeurs du lexer
 t_lexer	*init_lexer(char *input)
 {
 	t_lexer	*lexer;

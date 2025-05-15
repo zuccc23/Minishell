@@ -1,5 +1,6 @@
 #include "../../include/minishell.h"
 
+// Faire avancer le lexer
 void	advance(t_lexer *lexer)
 {
 	if (lexer->pos < lexer->length)
@@ -9,6 +10,7 @@ void	advance(t_lexer *lexer)
 	}
 }
 
+// Pour verifier le caractere suivant du lexer
 char	peek(t_lexer *lexer)
 {
 	if (lexer->pos + 1 < lexer->length)
@@ -16,6 +18,7 @@ char	peek(t_lexer *lexer)
 	return ('\0');
 }
 
+// Saute les espaces
 void	skip_whitespace(t_lexer *lexer)
 {
 	while (lexer->pos < lexer->length && (lexer->current == ' '
@@ -26,6 +29,7 @@ void	skip_whitespace(t_lexer *lexer)
 	}
 }
 
+// Creation du token pour les types OPERATOR
 t_token	*create_operator_token(t_token_type type)
 {
 	t_token	*token;
@@ -40,6 +44,7 @@ t_token	*create_operator_token(t_token_type type)
 	return (token);
 }
 
+// Creation du token pour les types WORD
 t_token	*create_word_token(t_token_type type, t_word *word)
 {
 	t_token	*token;
@@ -54,6 +59,7 @@ t_token	*create_word_token(t_token_type type, t_word *word)
 	return (token);
 }
 
+//Permet de faire avancer le lexer de la taille de loperateur
 void	extract_operator_value(t_lexer *lexer)
 {
 	t_token_type	type;
@@ -78,5 +84,5 @@ void	extract_operator_value(t_lexer *lexer)
 	}
 	else
 		value[1] = '\0';
-	// return (value);
+	free(value);
 }
