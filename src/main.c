@@ -12,7 +12,8 @@ int	main(int ac, char **av, char **envp)
 	handle_signal();
 	while (1)
 	{
-		input = readline("minishell> ");
+		input = "ls -l |wc-l>>outfile $USER'PATH'";
+		//input = readline("minishell> ");
 		if (!input)
 		{
 			write (1, "exit\n", 5);
@@ -21,13 +22,13 @@ int	main(int ac, char **av, char **envp)
 		// si l'input n'est pas vide on le traite
 		if (*input)
 		{
-			add_history(input);
+			//add_history(input);
 			printf("\n%s\n", input);
 			t_token *head = NULL;
 			head = tokenize(input);
 			if (!head)
 			{
-				free(input);
+				//free(input);
 				return (1);
 			}
 			printf("\n");
