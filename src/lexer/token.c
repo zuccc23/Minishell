@@ -35,6 +35,9 @@ int init_lexer_preprocess(t_lexer **lexer, char **p_input, char *input)
 		return (0);
 	return (1);
 }
+
+
+
 // Transforme l’entrée utilisateur en tokens distincts en traitant opérateurs, mots, espaces et quotes
 t_token *tokenize(char *input)
 {
@@ -45,11 +48,9 @@ t_token *tokenize(char *input)
 
 	if (!init_lexer_preprocess(&lexer, &processed_input, input))
 	{
-		if (lexer)
-			free(lexer);
+		free_tok_error(lexer, head, NULL, processed_input);
 		return (NULL);
 	}
-	// printf("\nPrepro : %s\n", processed_input);
 	head = NULL;
 	while (lexer->pos < lexer->length)
 	{
@@ -78,20 +79,20 @@ t_token *tokenize(char *input)
 				return (NULL);
 			}
 			t_word *word = NULL;
-			clean_words(value, &word); // proteger en cas dechec
+			clean_words(value, &word);
 			if (!word)
 			{
 				free_tok_error(lexer, head, value, processed_input);
 				return (NULL);
 			}
 			free(value);
-			new_token = create_word_token(TOKEN_WORD, word); // proteger en cas dechec
+			new_token = create_word_token(TOKEN_WORD, word);
+			if (!new_token)
 			{
 				free_tok_error(lexer, head, value, processed_input);
 				return (NULL);
 			}
 		}
-		// new_token->next = NULL;
 		add_token_to_list(&head, new_token);
 	}
 	free(lexer);

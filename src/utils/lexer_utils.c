@@ -35,7 +35,6 @@ t_token	*create_operator_token(t_token_type type)
 	t_token	*token;
 
 	token = malloc(sizeof(t_token));
-	//token = NULL;
 	if (!token)
 		return (NULL);
 	token->type = type;
