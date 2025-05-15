@@ -53,7 +53,6 @@ int	check_content_before_pipe(t_token *token)
 int	check_content_after_operator(t_token *token)
 {
 	t_token	*next;
-	char	*s;
 
 	next = NULL;
 	while (token)
@@ -68,8 +67,8 @@ int	check_content_after_operator(t_token *token)
 					ft_printf("syntax error near unexpected token `newline'\n");
 				else
 				{
-					s = next->value;
-					ft_printf("syntax error near unexpected token `%s'\n", s);
+					ft_printf("syntax error near unexpected token ");
+					print_token_value(token->next->word, token->next);
 				}
 				return (ER_OPERATOR_SYNTAX);
 			}
@@ -120,4 +119,28 @@ int	parse_tokens(t_token *token)
 	if (er_code != ER_OK)
 		return (er_code);
 	return (ER_OK);
+}
+
+//imprime la valeur entiere du token (localisee dans t_word)
+void	print_token_value(t_word *word, t_token *token)
+{
+	t_word	*head;
+
+	head = word;
+	ft_printf("`");
+	while (word)
+	{
+		ft_printf("%s", word->value);
+		word = word->next;
+	}
+	if (token->type == TOKEN_REDIRECT_IN)
+		ft_printf("<");
+	if (token->type == TOKEN_REDIRECT_OUT)
+		ft_printf(">");
+	if (token->type == TOKEN_HEREDOC)
+		ft_printf("<<");
+	if (token->type == TOKEN_REDIRECT_APPEND)
+		ft_printf(">>");
+	ft_printf("'\n");
+	word = head;
 }

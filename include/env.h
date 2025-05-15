@@ -12,18 +12,4 @@ typedef struct s_env
 char	*ft_getenv(char *str, char **envp);
 char	*copy_path(const char *s1, int start);
 
-//expand les variables
-int	expand_vars(t_token **token, char **envp); //step 1
-int	replace_expands(t_word **word, char **envp); //step 2
-
-char	*get_var_name(char **value, int *i); //step 3
-char	*get_expand(char *varname, char **envp);//step 3,5
-char	*get_leftover(char **value, int *i);//step 3
-char	*join_expand(char *s1, char *s2); //step 4
-char	*dup_value(char *s1);
-int	replace_value(char **value, char **envp);
-
-void	delete_empty_values(t_word **word);
-void	del_node(t_word **word);
-
 #endif

@@ -15,10 +15,13 @@ typedef struct s_command
 // get the commands and their redirections
 int	get_commands(t_token *token, t_command **commands);
 int	new_command(t_token *token, t_command **command, int args_count);
-int	count_args(t_token *token);
 int	alloc_command(t_command **command, int args_count);
 int	assign_args(t_token **token, t_command **new_command, int *i);
+
+//commands utils
+int	count_args(t_token *token);
 int	get_words(t_token *token, t_command **new_command, int *i);
+int	join_words(t_word *word, t_command **new_command, char *tmp, int *i);
 
 //check token type
 int	is_operator(t_token *token);

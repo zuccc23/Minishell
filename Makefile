@@ -23,7 +23,8 @@ SRC =	./src/main.c ./src/signals/signals.c \
 		./src/parser/parser.c ./src/parser/command.c \
 		./src/parser/analyse_token.c ./src/parser/clean_input.c \
 		./src/parser/redirections.c ./src/utils/clean.c \
-		./src/parser/expand.c 
+		./src/parser/expand.c ./src/parser/command_utils.c \
+		./src/env/env_init.c ./src/parser/expand_utils.c
 
 #DIRECTORIES
 OBJ_DIR = obj

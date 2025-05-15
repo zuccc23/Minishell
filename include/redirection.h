@@ -19,10 +19,11 @@ typedef struct s_redirection
 	struct s_redirection	*next;
 }	t_redirection;
 
-// redirections
+// recupere les redirections
 int				assign_redirections(t_token **token, t_command **command);
 int				get_redirections(t_token **token, t_redirection **redir);
+int				get_redir_file(t_token *token, t_redirection **redir);
+int				join_redir_words(t_word *word, t_redirection **redir, char *tmp);
 t_redirection	*lstlast_redir(t_redirection *lst);
-int		get_redir_file(t_token *token, t_redirection **redir);
 
 #endif

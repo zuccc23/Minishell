@@ -36,6 +36,7 @@ int	get_redirections(t_token **token, t_redirection **redir)
 	if (!temp_redir)
 		return (ER_MALLOC);
 	temp_redir->next = NULL;
+	temp_redir->file = NULL;
 	if ((*token)->type == TOKEN_REDIRECT_OUT)
 		temp_redir->type = REDIR_OUTPUT;
 	if ((*token)->type == TOKEN_REDIRECT_IN)
@@ -47,7 +48,6 @@ int	get_redirections(t_token **token, t_redirection **redir)
 	er_code = get_redir_file((*token)->next, &temp_redir);
 	if (er_code != ER_OK)
 		return (ER_MALLOC);
-	// printf("%s\n", temp_redir->file);
 	(*token) = (*token)->next;
 	(*token) = (*token)->next;
 	return (ER_OK);
@@ -58,22 +58,46 @@ int	get_redir_file(t_token *token, t_redirection **redir)
 {
 	char	*tmp;
 
-	tmp = token->word->value;
+	if (!token->word)
+		return (0);
+	tmp = ft_strdup(token->word->value);
+	if (!tmp)
+		return (ER_MALLOC);
 	if (!token->word->next)
 	{
 		(*redir)->file = ft_strdup(tmp);
+		free(tmp);
 		if (!(*redir)->file)
 			return (ER_MALLOC);
 	}
-	while (token->word->next)
+	join_redir_words(token->word, &(*redir), tmp);
+	return (ER_OK);
+}
+
+//joint les mots du fichier de redirection
+int	join_redir_words(t_word *word, t_redirection **redir, char *tmp)
+{
+	char	*tmp2;
+	t_word	*head;
+
+	head = word;
+	while (word->next)
 	{
-		(*redir)->file = ft_strjoin(tmp, token->word->next->value);
+		tmp2 = ft_strdup(word->next->value);
+		if (!tmp2)
+		{
+			free(tmp);
+			return (ER_MALLOC);
+		}
+		(*redir)->file = ft_strjoin(tmp, tmp2);
+		free(tmp);
+		free(tmp2);
 		if (!(*redir)->file)
 			return (ER_MALLOC);
-		token->word = token->word->next;
-		free(tmp);
+		word = word->next;
 		tmp = (*redir)->file;
 	}
+	word = head;
 	return (ER_OK);
 }
 

@@ -92,67 +92,9 @@ int	assign_args(t_token **token, t_command **new_command, int *i)
 			if (get_words(*token, &(*new_command), &(*i)) != ER_OK)
 				return (ER_MALLOC);
 			*token = (*token)->next;
-			// printf("args %d: %s\n", *i, (*new_command)->args[(*i)]);
 			(*i)++;
 		}
 		(*new_command)->args[(*i)] = NULL;
 	}
 	return (ER_OK);
-}
-
-//assemble chaque arg individuel a partir de la liste t_word
-int	get_words(t_token *token, t_command **new_command, int *i)
-{
-	char	*tmp;
-	t_word	*head;
-	char	*tmp2;
-
-	head = token->word;
-	while (token->word && !token->word->value)
-		token->word = token->word->next;
-	tmp = ft_strdup(token->word->value);//
-	if (!token->word->next && token->word->value)
-	{
-		(*new_command)->args[(*i)] = ft_strdup(tmp); //
-		free(tmp);
-		if (!(*new_command)->args[(*i)])
-			return (ER_MALLOC);
-	}
-	while (token->word && token->word->next)
-	{
-		tmp2 = ft_strdup(token->word->next->value);
-		(*new_command)->args[(*i)] = ft_strjoin(tmp, tmp2);//
-		if (!(*new_command)->args[(*i)])
-			return (ER_MALLOC);
-		token->word = token->word->next;
-		free(tmp);
-		free(tmp2);
-		tmp = (*new_command)->args[(*i)];
-	}
-	token->word = head; 
-	return (ER_OK);
-}
-
-// compte le nombre d'arguments par commande pour malloc la commande
-int	count_args(t_token *token)
-{
-	int	count;
-
-	if (!token)
-		return (0);
-	count = 0;
-	while (is_pipe(token) == 0)
-	{
-		while (is_word(token) == 1)
-		{
-			count++;
-			token = token->next; 
-		}
-		if (is_operator(token) == 1)
-		{
-			token = token->next;
-			token = token->next;
-		}
-	}
-	return (count);
 }

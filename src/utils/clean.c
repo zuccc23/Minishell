@@ -57,8 +57,6 @@ void	free_tokens(t_token *token)
 		return ;
 	while (token)
 	{
-		if (token->value)
-			free(token->value);
 		while (token->word)
 		{
 			wrd_tmp = token->word;

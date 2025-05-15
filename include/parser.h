@@ -21,4 +21,7 @@ int	is_expandable(char c, char next_c);
 int	is_single_quotes(char c);
 int	is_ok_word(char c);
 
+//print the token's full value
+void	print_token_value(t_word *word, t_token *token);
+
 #endif

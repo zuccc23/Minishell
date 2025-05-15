@@ -20,7 +20,6 @@ typedef struct s_word
 
 typedef struct s_token
 {
-	char					*value;
 	t_word					*word;
 	t_token_type			type;
 	int						expandable;
