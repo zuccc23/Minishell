@@ -25,6 +25,11 @@ int	main(int ac, char **av, char **envp)
 			printf("\n%s\n", input);
 			t_token *head = NULL;
 			head = tokenize(input);
+			if (!head)
+			{
+				free(input);
+				return (1);
+			}
 			printf("\n");
 			printf("\n");
 			printf("\n");
