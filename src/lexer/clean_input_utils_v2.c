@@ -6,11 +6,9 @@ int	get_word_dq(t_word **word, char *input, int *i)
 	int	a;
 
 	a = 0;
-	//MALLOC
 	(*word) = new_word(count_word_size(input, *i));
 	if (!(*word))
 		return (-1);
-	//ASSIGN VALUE
 	(*word)->expandable = 0;
 	(*i)++;
 	while (is_double_quotes(input[*i]) == 0)

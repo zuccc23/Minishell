@@ -42,4 +42,16 @@ int extract_word_length(t_lexer *lexer)
 	return (i);
 }
 
+// Fonction qui centralise la liberation de memoire pour tokenize
+void	free_tok_error(t_lexer *lexer, t_token *head, char *value, char *p_input)
+{
+	if (lexer)
+		free(lexer);
+	if (head)
+		ft_free_list(head);
+	if (p_input)
+		free(p_input);
+	if (value)
+		free(value);
+}
 
