@@ -68,7 +68,7 @@ int	count_args(t_token *token)
 		while (is_word(token) == 1)
 		{
 			count++;
-			token = token->next; 
+			token = token->next;
 		}
 		if (is_operator(token) == 1)
 		{

@@ -1,22 +1,20 @@
 #include "../../include/minishell.h"
 
-//g refait la fonction getenv pour recupere le bon environnement
-char	*ft_getenv(char *str, char **envp)
+//recree la fonction getenv pour recuperer le bon environnement
+char	*ft_getenv(char *str, t_env *env)
 {
-	int		i;
 	char	*expand;
 
-	i = 0;
 	expand = NULL;
-	while (envp[i])
+	while (env)
 	{
-		if (ft_strncmp(str, envp[i], ft_strlen(str)) == 0)
+		if (ft_strncmp(str, env->value, ft_strlen(str)) == 0)
 		{
-			expand = copy_path(envp[i], ft_strlen(str) + 1);
+			expand = copy_path(env->value, ft_strlen(str) + 1);
 			if (!expand)
 				return (NULL);
 		}
-		i++;
+		env = env->next;
 	}
 	return (expand);
 }
@@ -45,4 +43,45 @@ char	*copy_path(const char *s1, int start)
 	}
 	dest[j] = '\0';
 	return (dest);
+}
+
+//initialise l'env a partir de l'env de base
+int	init_env(t_env **env, char **envp)
+{
+	int	i;
+	t_env	*head;
+
+	*env = create_env_node(envp[0]);
+	if (!*env)
+		return (ER_MALLOC);
+	head = *env;
+	i = 1;
+	while (envp[i])
+	{
+		(*env)->next = create_env_node(envp[i]);
+		if (!*env)
+			return (ER_MALLOC);
+		*env = (*env)->next;
+		i++;
+	}
+	*env = head;
+	return (ER_OK);
+}
+
+//cree un nouveau noeud pour l'env
+t_env	*create_env_node(char *value)
+{
+	t_env	*env;
+
+	env = malloc(sizeof(t_env));
+	if (!env)
+		return (NULL);
+	env->next = NULL;
+	env->value = ft_strdup(value);
+	if (!env->value)
+	{
+		free(env);
+		return (NULL);
+	}
+	return (env);
 }

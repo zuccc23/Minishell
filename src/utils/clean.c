@@ -1,5 +1,6 @@
 #include "../../include/minishell.h"
 
+//free les commandes
 void	free_commands(t_command *commands)
 {
 	t_command	*temp;
@@ -31,6 +32,7 @@ void	free_strs(char **strs)
 	strs = NULL;
 }
 
+//free les redirs
 void	free_redirections(t_redirection *redir)
 {
 	t_redirection	*temp;
@@ -48,6 +50,7 @@ void	free_redirections(t_redirection *redir)
 	}
 }
 
+//free les tokens
 void	free_tokens(t_token *token)
 {
 	t_token	*temp;
@@ -68,5 +71,20 @@ void	free_tokens(t_token *token)
 		token = token->next;
 		free(temp);
 		temp = NULL;
+	}
+}
+
+//free la liste chainee t_env
+void	free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env;
+		if (env->value)
+			free(env->value);
+		env = env->next;
+		free(tmp);
 	}
 }

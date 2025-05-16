@@ -1,7 +1,7 @@
 #include "../../include/minishell.h"
 
 //expand les variables expandables
-int	expand_vars(t_token **token, char **envp)
+int	expand_vars(t_token **token, t_env *env)
 {
 	t_token	*head;
 
@@ -12,7 +12,7 @@ int	expand_vars(t_token **token, char **envp)
 			*token = (*token)->next->next;
 		if (is_word(*token) == 1)
 		{
-			if (replace_expands(&(*token)->word, envp) != ER_OK)
+			if (replace_expands(&(*token)->word, env) != ER_OK)
 				return (ER_MALLOC);
 			delete_empty_values(&(*token)->word);
 		}
@@ -24,7 +24,7 @@ int	expand_vars(t_token **token, char **envp)
 }
 
 //remplace les expands de toute la liste chainee
-int	replace_expands(t_word **word, char **envp)
+int	replace_expands(t_word **word, t_env *env)
 {
 	t_word	*head;
 
@@ -33,7 +33,7 @@ int	replace_expands(t_word **word, char **envp)
 	{
 		if ((*word)->expandable == 1)
 		{
-			if (replace_value(&(*word)->value, envp) != ER_OK)
+			if (replace_value(&(*word)->value, env) != ER_OK)
 				return (ER_MALLOC);
 		}
 		(*word) = (*word)->next;
@@ -43,9 +43,9 @@ int	replace_expands(t_word **word, char **envp)
 }
 
 //change l'ancienne value en son expand
-int	replace_value(char **value, char **envp)
+int	replace_value(char **value, t_env *env)
 {
-	int	i;
+	int		i;
 	char	*leftover;
 	char	*varname;
 	char	*expand;
@@ -57,7 +57,7 @@ int	replace_value(char **value, char **envp)
 	{
 		leftover = get_leftover(&(*value), &i);
 		varname = get_var_name(&(*value), &i);
-		expand = get_expand(varname, envp);
+		expand = get_expand(varname, env);
 		if (res && leftover)
 			res = join_expand(res, leftover);
 		if (!res && leftover)
@@ -92,11 +92,9 @@ void	delete_empty_values(t_word **word)
 		body = head;
 		while (body && body->next)
 		{
-			// ft_printf("test %s\n",body->value);
 			if (!body->next->value)
 				del_node(&(*word));
 			body = body->next;
-			// ft_printf("test %s\n", body->value);
 		}
 	}
 	*word = head;

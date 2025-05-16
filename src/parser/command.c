@@ -29,7 +29,7 @@ int	get_commands(t_token *token, t_command **commands)
 }
 
 // creer un noeud pour une nouvelle commande
-int	 new_command(t_token *token, t_command **command, int args_count)
+int	new_command(t_token *token, t_command **command, int args_count)
 {
 	t_command	*new_command;
 	int			i;

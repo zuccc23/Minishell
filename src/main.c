@@ -49,7 +49,7 @@ t_token	*temp_tokens(void) // fonction temporaire
 		return (NULL);
 	head = token;
 
-	token->next = new_token("$USER", "$PATHf", TOKEN_WORD, 1, 1);
+	token->next = new_token("$LOGNAME", "$PATHf", TOKEN_WORD, 1, 1);
 	if (!token->next)
 		return (NULL);
 	token = token->next;
@@ -59,7 +59,7 @@ t_token	*temp_tokens(void) // fonction temporaire
 		return (NULL);
 	token = token->next;
 
-	token->next = new_token("$USER", "$_", TOKEN_WORD, 1, 1);
+	token->next = new_token("$LOGNAME", "$_", TOKEN_WORD, 1, 1);
 	if (!token->next)
 		return (NULL);
 	token = token->next;
@@ -138,6 +138,25 @@ int	main(int ac, char **av, char **envp)
 	// 	}
 	// }
 
+	// INIT ENV
+	t_env	*env = NULL;
+	// int	i = 0;
+
+	init_env(&env, envp);
+	// ft_printf("%s\n", ft_getenv("LOGNAME", env));
+	// while (env)
+	// {
+	// 	printf("%s\n", env->value);
+	// 	env = env->next;
+	// }
+	// printf("----------\n");
+	// while (envp[i])
+	// {
+	// 	printf("%s\n", envp[i]);
+	// 	i++;
+	// }
+	// exit(0);
+
 	//NETTOYAGE INPUT
 	// char	input[] = "'\"'$USER'\"'";
 	// char	input[] = "''$USER   'l's    ''";
@@ -194,7 +213,7 @@ int	main(int ac, char **av, char **envp)
 	// exit(0);
 
 	// ENV & EXPAND
-	if (expand_vars(&token, envp) != 0)
+	if (expand_vars(&token, env) != 0)
 		return (1);
 	// printf("%s\n", getenv("PATH"));
 	// strs_print(envp);
@@ -282,6 +301,7 @@ int	main(int ac, char **av, char **envp)
 	// CLEANING AND FREEING
 	free_commands(command);
 	free_tokens(token);
+	free_env(env);
 	return (0);
 }
 

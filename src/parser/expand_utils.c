@@ -3,7 +3,7 @@
 // recupere le nom de la variable a expand (=$USER)
 char	*get_var_name(char **value, int *i)
 {
-	char	*varname;
+	char		*varname;
 	size_t		j;
 
 	if ((*value)[(*i)] != '$')
@@ -31,14 +31,14 @@ char	*get_var_name(char **value, int *i)
 }
 
 // recupere le resultat de l'expansion
-char	*get_expand(char *varname, char **envp)
+char	*get_expand(char *varname, t_env *env)
 {
 	char	*expand;
 
 	if (!varname)
 		return (NULL);
 	expand = NULL;
-	expand = ft_getenv(varname, envp);
+	expand = ft_getenv(varname, env);
 	free(varname);
 	if (!expand)
 		return (NULL);
@@ -48,7 +48,7 @@ char	*get_expand(char *varname, char **envp)
 // recupere les morceaux de la chaine qui ne sont pas expandables
 char	*get_leftover(char **value, int *i)
 {
-	char	*leftover;
+	char		*leftover;
 	size_t		j;
 
 	if ((*value)[(*i)] == '$')
