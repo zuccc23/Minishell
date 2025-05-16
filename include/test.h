@@ -1,8 +1,6 @@
 #ifndef TEST_H
 # define TEST_H
 
-
-
 // CLEAN QUOTES, GET WORDS IN A LINKED LIST, CHECK EXPAND
 int		clean_words(char *input, t_word **final_word);
 t_word	*new_word(int size);

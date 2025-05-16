@@ -2,12 +2,12 @@
 # define LEXER_H
 
 // Garder un etat courant pendant qu'on scanne l'input
-typedef struct	s_lexer
+typedef struct s_lexer
 {
-	char	*input; // input complet
-	int		pos;    // Position actuelle dans la chaine
-	int		length; // Longueur totale de l'input
-	char	current;// Caractere courant
+	char	*input;
+	int		pos;
+	int		length;
+	char	current;
 }	t_lexer;
 
 typedef struct s_quote_state
