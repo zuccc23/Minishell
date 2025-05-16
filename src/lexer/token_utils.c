@@ -47,10 +47,38 @@ void	free_tok_error(t_lexer *lexer, t_token *h, char *value, char *p_input)
 {
 	if (lexer)
 		free(lexer);
-	if (head)
+	if (h)
 		ft_free_list(h);
 	if (p_input)
 		free(p_input);
 	if (value)
 		free(value);
+}
+
+// Creation du token pour les types OPERATOR
+t_token	*create_operator_token(t_token_type type)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = type;
+	token->next = NULL;
+	token->word = NULL;
+	return (token);
+}
+
+// Creation du token pour les types WORD
+t_token	*create_word_token(t_token_type type, t_word *word)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = type;
+	token->next = NULL;
+	token->word = word;
+	return (token);
 }

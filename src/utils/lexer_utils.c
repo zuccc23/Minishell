@@ -29,35 +29,6 @@ void	skip_whitespace(t_lexer *lexer)
 	}
 }
 
-// Creation du token pour les types OPERATOR
-t_token	*create_operator_token(t_token_type type)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = type;
-	token->next = NULL;
-	token->word = NULL;
-	return (token);
-}
-
-// Creation du token pour les types WORD
-t_token	*create_word_token(t_token_type type, t_word *word)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = type;
-	token->next = NULL;
-	token->word = word;
-	//token->value = word->value;
-	return (token);
-}
-
 //Permet de faire avancer le lexer de la taille de loperateur
 int	extract_operator_value(t_lexer *lexer)
 {

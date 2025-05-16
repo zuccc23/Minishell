@@ -24,7 +24,7 @@ t_token	*ft_token_last(t_token *token)
 	return (tmp);
 }
 
-// Facilite laffichage des types de token 
+// Facilite laffichage des types de token
 const char	*token_type_to_str(t_token_type type)
 {
 	if (type == TOKEN_WORD)
@@ -92,7 +92,7 @@ void	free_word_list(t_word *word)
 // Free la liste chainee TOKEN
 void	ft_free_list(t_token *token)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	while (token)
 	{
