@@ -42,7 +42,7 @@ t_token_type	get_operator_type(t_lexer *lexer);
 int				is_word_expandable(char *str);
 int				extract_word_length(t_lexer *lexer);
 int				init_lexer_preprocess(t_lexer **lexer, char **p_input ,char *input);
-void			free_tok_error(t_lexer *lexer, t_token *head, char *value, char *p_input);
+void			free_tok_error(t_lexer *lexer, t_token *h, char *value, char *p_input);
 
 
 #endif

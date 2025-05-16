@@ -1,6 +1,6 @@
 #include "../../include/minishell.h"
 
-t_token_type get_operator_type(t_lexer *lexer)
+t_token_type	get_operator_type(t_lexer *lexer)
 {
 	if (lexer->current == '|')
 		return (TOKEN_PIPE);
@@ -15,11 +15,11 @@ t_token_type get_operator_type(t_lexer *lexer)
 	return (TOKEN_WORD);
 }
 
-int extract_word_length(t_lexer *lexer)
+int	extract_word_length(t_lexer *lexer)
 {
-	int i;
-	char quote;
-	char c;
+	int		i;
+	char	quote;
+	char	c;
 
 	i = 0;
 	quote = 0;
@@ -33,25 +33,24 @@ int extract_word_length(t_lexer *lexer)
 			else if (quote != 0)
 				quote = 0;
 			i++;
-			continue;
+			continue ;
 		}
 		if (quote == 0 && (c == ' ' || c == '\t' || is_delimiter_start(c)))
-			break;
+			break ;
 		i++;
 	}
 	return (i);
 }
 
 // Fonction qui centralise la liberation de memoire pour tokenize
-void	free_tok_error(t_lexer *lexer, t_token *head, char *value, char *p_input)
+void	free_tok_error(t_lexer *lexer, t_token *h, char *value, char *p_input)
 {
 	if (lexer)
 		free(lexer);
 	if (head)
-		ft_free_list(head);
+		ft_free_list(h);
 	if (p_input)
 		free(p_input);
 	if (value)
 		free(value);
 }
-

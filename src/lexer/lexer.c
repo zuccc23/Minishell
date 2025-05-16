@@ -12,5 +12,5 @@ t_lexer	*init_lexer(char *input)
 	lexer->pos = 0;
 	lexer->length = ft_strlen(input);
 	lexer->current = input[0];
-		return (lexer);
+	return (lexer);
 }

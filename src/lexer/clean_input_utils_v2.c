@@ -13,7 +13,7 @@ int	get_word_dq(t_word **word, char *input, int *i)
 	(*i)++;
 	while (is_double_quotes(input[*i]) == 0)
 	{
-		if (is_expandable(input[*i], input[(*i)+1]) == 1)
+		if (is_expandable(input[*i], input[(*i) + 1]) == 1)
 			(*word)->expandable = 1;
 		(*word)->value[a++] = input[(*i)++];
 	}
@@ -28,11 +28,9 @@ int	get_word_sq(t_word **word, char *input, int *i)
 	int	a;
 
 	a = 0;
-	//MALLOC
 	(*word) = new_word(count_word_size(input, *i));
 	if (!(*word))
 		return (-1);
-	//ASSIGN VALUE
 	(*word)->expandable = 0;
 	(*i)++;
 	while (is_single_quotes(input[*i]) == 0)
@@ -54,7 +52,7 @@ int	get_word_nq(t_word **word, char *input, int *i)
 	(*word)->expandable = 0;
 	while (is_ok_word(input[*i]) == 1)
 	{
-		if (is_expandable(input[*i], input[(*i)+1]) == 1)
+		if (is_expandable(input[*i], input[(*i) + 1]) == 1)
 			(*word)->expandable = 1;
 		(*word)->value[a++] = input[(*i)++];
 	}

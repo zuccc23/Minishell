@@ -1,6 +1,6 @@
 #include "../../include/minishell.h"
 
-//fonction pour nettoyer et recuperer l'input dans une liste chainee
+//Fonction pour nettoyer, recuperer l'input dans liste chainee
 int	clean_words(char *input, t_word **word)
 {
 	int		i;
@@ -21,11 +21,12 @@ int	clean_words(char *input, t_word **word)
 	return (0);
 }
 
-//creer un nouveau noeud pour t_word list
+//Creer un nouveau noeud pour t_word list
 t_word	*new_word(int size)
 {
-	t_word *new = NULL;
+	t_word	*new;
 
+	new = NULL;
 	new = malloc(sizeof(t_word));
 	if (!new)
 		return (NULL);
@@ -45,7 +46,7 @@ int	get_partial_value(char *input, t_word **word, int *i)
 	int	er_code;
 
 	er_code = 0;
-	while (check_empty_quotes(input[*i], input[(*i)+1]) == 1)
+	while (check_empty_quotes(input[*i], input[(*i) + 1]) == 1)
 		(*i) += 2;
 	if (is_double_quotes(input[*i]) == 1)
 		er_code = get_word_dq(&(*word), input, &(*i));

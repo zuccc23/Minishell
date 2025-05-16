@@ -67,7 +67,7 @@ char	*remove_extra_spaces(char *str)
 	return (s.str);
 }
 
-// Prétraite l'entrée en ajoutant des espaces et en vérifiant les quotes ; retourne résultat nettoyé.
+// Prétraite l'entrée en ajoutant des espaces/vérifiant les quotes.
 char	*preprocess_input(char *input)
 {
 	char	*step1;
