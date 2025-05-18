@@ -7,8 +7,8 @@ int	init_parser(t_env **env, t_token **token, t_command **commands)
 
 	er_code = 0;
 	er_code = parse_tokens(*token);
-	if (er_code != ER_OK) 
-		return(er_code);
+	if (er_code != ER_OK)
+		return (er_code);
 	er_code = expand_vars(&(*token), *env);
 	if (er_code != ER_OK)
 		return (er_code);

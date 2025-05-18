@@ -31,7 +31,7 @@ SRC =	./src/main.c ./src/signals/signals.c \
 		./src/parser/redirections.c ./src/utils/clean.c \
 		./src/parser/expand.c ./src/parser/command_utils.c \
 		./src/env/env_init.c ./src/parser/expand_utils.c \
-		./src/parser/init_parsing.c 
+		./src/parser/init_parsing.c
 
 #DIRECTORIES
 OBJ_DIR = obj
@@ -39,8 +39,6 @@ LIBFT_DIR = libft
 
 #DEFINE OBJECTS
 OBJ = $(patsubst src/%.c, $(OBJ_DIR)/%.o, $(SRC))
-#OBJ += $(patsubst src/parser/%.c, $(OBJ_DIR)/%.o, $(SRC))
-
 LIBFT_OBJ = $(LIBFT_DIR)/libft.a
 
 #PROGRAM NAME
@@ -49,7 +47,6 @@ NAME = minishell
 #DEFAULT TARGET
 all: $(NAME)
 	@echo "${BOLD}${GREEN}Minishell built ✅${RESET}"
-
 
 #LINKING EXECUTABLE !!!FLAGS
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_OBJ)

@@ -97,10 +97,13 @@ void	print_line_tokens(t_token *token) // fonction temporaire
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*input;
+	char		*input;
+	t_env		*env = NULL;
+	t_command	*command = NULL;
 	(void)ac;
 	(void)av;
 	(void)envp;
+	// int i = 0;
 
 	// input = "ls -l";
     // printf("\n%s\n", input);
@@ -115,8 +118,8 @@ int	main(int ac, char **av, char **envp)
     // ft_free_list(head);
     // return (0);
 
-	// Initialisation du shell
-	//setup_env(envp); --> pour avoir lenvironnement
+	// Initialisation du shell + a proteger
+	init_env(&env, envp);
 	handle_signal();
 	while (1)
 	{
@@ -124,6 +127,7 @@ int	main(int ac, char **av, char **envp)
 		if (!input)
 		{
 			write (1, "exit\n", 5);
+			free_env(env);
 			break;
 		}
 		if (*input)
@@ -139,7 +143,28 @@ int	main(int ac, char **av, char **envp)
 			}
 			printf("\n\n\n\n\n");
 			ft_print_list(head);
+			init_parser(&env, &head, &command);
+
+			// while (command)
+			// {
+			// 	i = 0;
+			// 	while (command->args[i])
+			// 	{
+			// 		printf("%s ", command->args[i]);
+			// 		i++;
+			// 	}
+			// 	printf("\n");
+			// 	if (command->redirections)
+			// 	{
+			// 		printf("type: %d\n", command->redirections->type);
+			// 		if (command->redirections->file)
+			// 			printf("%s\n", command->redirections->file);
+			// 	}
+			// 	command = command->next;
+			// }
+
 			ft_free_list(head);
+			free_commands(command);
 		}
 		free(input);
 	}

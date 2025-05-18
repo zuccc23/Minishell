@@ -5,9 +5,9 @@ static void	handle_double_delimiter(t_process *p)
 	p->result[p->j++] = p->input[p->i++];
 	if (p->input[p->i] && ((p->input[p->i] == '>' && p->input[p->i - 1] == '>')
 			|| (p->input[p->i] == '<' && p->input[p->i - 1] == '<')))
-	p->result[p->j++] = p->input[p->i++];
+		p->result[p->j++] = p->input[p->i++];
 	if (p->input[p->i] && p->input[p->i] != ' ')
-	p->result[p->j++] = ' ';
+		p->result[p->j++] = ' ';
 }
 
 static void	process_delimiter(t_process *p)
