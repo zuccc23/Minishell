@@ -1,8 +1,0 @@
-# Fichiers de configuration spécifiques à l'IDE
-.vscode/
-.idea/
-
-#ignorer les executables
-*.o
-*.a
-minishell
