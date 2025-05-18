@@ -70,12 +70,12 @@ int	get_redir_file(t_token *token, t_redirection **redir)
 		if (!(*redir)->file)
 			return (ER_MALLOC);
 	}
-	join_redir_words(token->word, &(*redir), tmp);
+	join_redir(token->word, &(*redir), tmp);
 	return (ER_OK);
 }
 
 //joint les mots du fichier de redirection
-int	join_redir_words(t_word *word, t_redirection **redir, char *tmp)
+int	join_redir(t_word *word, t_redirection **redir, char *tmp)
 {
 	char	*tmp2;
 	t_word	*head;

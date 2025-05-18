@@ -48,7 +48,7 @@ char	*copy_path(const char *s1, int start)
 //initialise l'env a partir de l'env de base
 int	init_env(t_env **env, char **envp)
 {
-	int	i;
+	int		i;
 	t_env	*head;
 
 	*env = create_env_node(envp[0]);

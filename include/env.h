@@ -1,10 +1,11 @@
 #ifndef ENV_H
 # define ENV_H
 
+// value = Exemple : "PATH=usr/bin:/bin:..."
 typedef struct s_env
 {
-	char			*value;// Exemple : "PATH=usr/bin:/bin:..."
-	struct s_env	*next; // Pointeur vers la prochaine variable
+	char			*value;
+	struct s_env	*next;
 }	t_env;
 
 //recupere l'env

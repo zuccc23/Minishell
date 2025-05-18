@@ -5,10 +5,11 @@
 
 typedef struct s_token	t_token;
 
+//args = Tableau d'arguments, redirections = liste de redirections
 typedef struct s_command
 {
-	char				**args;	//Tableau d'arguments
-	t_redirection		*redirections; // liste de redirections
+	char				**args;
+	t_redirection		*redirections;
 	struct s_command	*next;
 }	t_command;
 
