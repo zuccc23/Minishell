@@ -5,8 +5,8 @@
 
 typedef struct s_command
 {
-	char					**args;	//Tableau d'arguments. args[0] c'est le nom de la commande
-	t_redirection			*redirections; // Liste chainee des redirections associees a la commande
+	char					**args;
+	t_redirection			*redirections;
 	struct s_command		*next;
 }	t_command;
 

@@ -18,8 +18,9 @@
 # include "utils.h"
 # include "parser.h"
 # include "executor.h"
-# include "signals.h"
 # include "lexer.h"
-
+# include "signals.h"
+# include "preprocess.h"
+# include "test.h"
 
 #endif
