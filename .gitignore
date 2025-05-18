@@ -2,3 +2,12 @@
 .vscode/
 .idea/
 .editorconfig/
+
+#ignorer les executables
+*.o
+*.a
+minishell
+
+start.sh
+
+.*

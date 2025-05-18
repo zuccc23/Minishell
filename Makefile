@@ -15,7 +15,7 @@ CYAN = \033[36m
 
 #COMPILER AND FLAGS
 CC = gcc -g
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -Werror
 R_FLAG = -lreadline
 
 #SOURCE FILES
@@ -24,7 +24,14 @@ SRC =	./src/main.c ./src/signals/signals.c \
 		./src/lexer/preprocess.c ./src/utils/lexer_utils.c \
 		./src/lexer/preprocess_utils.c ./src/utils/list_utils.c \
 		./src/lexer/syntax_checks.c ./src/lexer/clean_input_utils.c ./src/lexer/clean_input.c\
-		./src/lexer/clean_input_v2.c ./src/lexer/clean_input_utils_v2.c
+		./src/lexer/clean_input_v2.c ./src/lexer/clean_input_utils_v2.c \
+		./src/parser/parser.c ./src/parser/command.c \
+		./src/parser/parser_utils.c \
+		./src/parser/analyse_token.c \
+		./src/parser/redirections.c ./src/utils/clean.c \
+		./src/parser/expand.c ./src/parser/command_utils.c \
+		./src/env/env_init.c ./src/parser/expand_utils.c \
+		./src/parser/init_parsing.c 
 
 #DIRECTORIES
 OBJ_DIR = obj
@@ -46,7 +53,7 @@ all: $(NAME)
 
 #LINKING EXECUTABLE !!!FLAGS
 $(NAME): $(OBJ_DIR) $(OBJ) $(LIBFT_OBJ)
-	@${CC} ${CFLAGS} $(OBJ) $(GNL_OBJ) $(LIBFT_OBJ) $(PRINTF_OBJ) $(MINILIBIX_OBJ) -o $(NAME) ${R_FLAG} $(MLX_FLAGS)
+	@${CC} ${CFLAGS} $(OBJ) $(LIBFT_OBJ) ${R_FLAG} -o $(NAME)
 	@echo "${ITALIC}Building Minishell...🔨${RESET}"
 
 #BUILD LIBRARIES
@@ -67,7 +74,7 @@ $(OBJ_DIR):
 
 #COMPILING .c FILES INTO .o FILES (INSIDE OBJ DIR) !!!FLAGS
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
-	@${CC} ${CFLAGS} -c $< -o $@
+	@${CC} ${CFLAGS} ${R_FLAG} -c $< -o $@
 
 #BASIC RULES
 clean:

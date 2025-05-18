@@ -14,6 +14,7 @@
 # include "command.h"
 # include "builtins.h"
 # include "env.h"
+# include "expand.h"
 # include "defines.h"
 # include "utils.h"
 # include "parser.h"
