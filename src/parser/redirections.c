@@ -35,6 +35,7 @@ int	get_redirections(t_token **token, t_redirection **redir)
 	*redir = temp_redir;
 	if (!temp_redir)
 		return (ER_MALLOC);
+	temp_redir->fd = -1;
 	temp_redir->next = NULL;
 	temp_redir->file = NULL;
 	if ((*token)->type == TOKEN_REDIRECT_OUT)

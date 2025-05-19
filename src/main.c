@@ -143,8 +143,8 @@ int	main(int ac, char **av, char **envp)
 			}
 			printf("\n\n\n\n\n");
 			ft_print_list(head);
-			init_parser(&env, &head, &command);
-
+			init_parser(&env, &head, &command); // proteger
+			printf("\n\n\n\n");
 			// while (command)
 			// {
 			// 	i = 0;
@@ -162,7 +162,7 @@ int	main(int ac, char **av, char **envp)
 			// 	}
 			// 	command = command->next;
 			// }
-
+			execute_single_command(command, env);
 			ft_free_list(head);
 			free_commands(command);
 		}
