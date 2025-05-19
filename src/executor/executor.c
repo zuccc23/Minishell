@@ -58,6 +58,7 @@ int apply_output_redirection(t_redirection *redir, char *filename)
 		perror(filename);
 		return (1);
 	}
+	
 }
 
 int	execute_single_command(t_command *command, t_env *env)
