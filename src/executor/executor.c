@@ -75,6 +75,37 @@ int init_exec(t_env *env, t_exec *exec)
 	return (0);
 }
 
+static int	count_commands(t_command *cmd)
+{
+	int	count;
+
+	count = 0;
+	while (cmd)
+	{
+		count++;
+		cmd = cmd->next;
+	}
+	return (count);
+}
+
+int	execute_pipeline(t_command *cmd, t_redirection *redir, t_exec *exec)
+{
+	while (cmd)
+	{
+		// Enfant
+		if (exec->pidarray == 0)
+		{
+
+		}
+		// Parent
+		else
+		{
+
+		}
+		cmd = cmd->next;
+	}
+}
+
 // Fonction principale qui orchestre toute lexec
 int	execute(t_command *command, t_env *env)
 {
