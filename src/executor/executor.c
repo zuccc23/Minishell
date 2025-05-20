@@ -61,20 +61,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		waitpid(pid, NULL, 0);
 	return (0);
 }
-// Initialiser la structure de lexec
-int init_exec(t_env *env, t_exec *exec)
-{
-	exec->pipe_fd[0] = -1;
-	exec->pipe_fd[1] = -1;
-	exec->input_fd = STDIN_FILENO;
-	exec->output_fd = STDOUT_FILENO;
-	exec->envp = lst_to_char_star(env);
-	if (!exec->envp)
-		return (-1);
-	exec->pidarray = NULL;
-	return (0);
-}
-
+//Compter le nombre de commande
 static int	count_commands(t_command *cmd)
 {
 	int	count;
@@ -86,6 +73,21 @@ static int	count_commands(t_command *cmd)
 		cmd = cmd->next;
 	}
 	return (count);
+}
+
+// Initialiser la structure de lexec
+int init_exec(t_env *env, t_exec *exec, t_command *cmd)
+{
+	exec->cout_cmd = count_commands(cmd);
+	exec->pipe_fd[0] = -1;
+	exec->pipe_fd[1] = -1;
+	exec->input_fd = STDIN_FILENO;
+	exec->output_fd = STDOUT_FILENO;
+	exec->envp = lst_to_char_star(env);
+	if (!exec->envp)
+		return (-1);
+	exec->pidarray = NULL;
+	return (0);
 }
 
 int	execute_pipeline(t_command *cmd, t_redirection *redir, t_exec *exec)
@@ -113,12 +115,12 @@ int	execute(t_command *command, t_env *env)
 	t_exec	exec;
 
 	error_code = 0;
-	error_code = init_exec(env, &exec);
+	error_code = init_exec(env, &exec, command);
 	if (error_code != ER_OK)
 		return (error_code);
 	if (command->next == NULL)
 		return (execute_single_command(command, &exec));
-	// else
-	// 	return (execute_pipeline(command, env));
+	else
+		return (execute_pipeline(command, env));
 	return (0);
 }
