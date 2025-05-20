@@ -162,7 +162,7 @@ int	main(int ac, char **av, char **envp)
 			// 	}
 			// 	command = command->next;
 			// }
-			execute_single_command(command, env);
+			execute(command, env);
 			ft_free_list(head);
 			free_commands(command);
 		}
