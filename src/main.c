@@ -133,7 +133,7 @@ int	main(int ac, char **av, char **envp)
 		if (*input)
 		{
 			add_history(input);
-			printf("\n%s\n", input);
+			// printf("\n%s\n", input);
 			t_token *head = NULL;
 			head = tokenize(input);
 			if (!head)
@@ -141,10 +141,9 @@ int	main(int ac, char **av, char **envp)
 				free(input);
 				return (1);
 			}
-			printf("\n\n\n\n\n");
-			ft_print_list(head);
+			// printf("\n\n\n\n\n");
+			// ft_print_list(head);
 			init_parser(&env, &head, &command);
-
 			// while (command)
 			// {
 			// 	i = 0;
@@ -162,7 +161,12 @@ int	main(int ac, char **av, char **envp)
 			// 	}
 			// 	command = command->next;
 			// }
-
+			char *str = get_path(command, envp);
+			if (str)
+			{
+				printf("path: %s\n", str);
+				free(str);
+			}
 			ft_free_list(head);
 			free_commands(command);
 		}

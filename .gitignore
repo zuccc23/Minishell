@@ -7,7 +7,4 @@
 *.o
 *.a
 minishell
-
-start.sh
-
 .*
