@@ -56,16 +56,19 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	{
 		execve(path, cmd->args, exec->envp);
 		perror("execve failed");
+		free(path);
+		free_exec(exec);
 		exit(127);
 	}
 	else
 		waitpid(pid, NULL, 0);
 	free(path);
+	free_exec(exec);
 	return (0);
 }
 
 // Compter le nombre de commande
-static int	count_commands(t_command *cmd)
+int	count_commands(t_command *cmd)
 {
 	int	count;
 
@@ -78,23 +81,66 @@ static int	count_commands(t_command *cmd)
 	return (count);
 }
 
-// static int	execute_pipeline(t_command *cmd, t_exec *exec)
-// {
-// 	while (cmd)
-// 	{
-// 		// Enfant
-// 		if (exec->pidarray == 0)
-// 		{
+static int	execute_pipeline(t_command *cmd, t_exec *exec)
+{
+	int	i;
+	int	j;
 
-// 		}
-// 		// Parent
-// 		else
-// 		{
-
-// 		}
-// 		cmd = cmd->next;
-// 	}
-// }
+	i = -1;
+	while (cmd)
+	{
+		char *path = ft_strjoin("/bin/", cmd->args[0]);
+		if (cmd->next)
+		{
+			if (pipe(exec->pipe_fd) == -1)
+			{
+				perror("pipe");
+				free_exec(exec);
+				return (-1);
+			}
+		}
+		exec->pidarray[++i] = fork();
+		if (exec->pidarray[i] < 0)
+		{
+			// Verifier sil faut ajouter des free ou protecions
+			perror("fork");
+			free_exec(exec);
+			return (-1);
+		}
+		else if (exec->pidarray[i] == 0)
+		{
+			// Child
+			if (i > 0)
+				dup2(exec->input_fd, STDIN_FILENO);
+			if (cmd->next)
+			{
+				dup2(exec->pipe_fd[1], STDOUT_FILENO);
+				close(exec->pipe_fd[0]);
+				close(exec->pipe_fd[1]);
+			}
+			execve(path, cmd->args, exec->envp);
+			perror("execve failed");
+			exit(127);
+		}
+		else
+		{
+			// Parent
+			if (cmd->next)
+			{
+				exec->input_fd = exec->pipe_fd[0];
+				close(exec->pipe_fd[1]);
+			}
+		}
+		cmd = cmd->next;
+	}
+	j = 0;
+	while (j <= i)
+	{
+		waitpid(exec->pidarray[j], NULL, 0);
+		j++;
+	}
+	return (0);
+}
 
 // Fonction principale qui orchestre toute lexec
 int	execute(t_command *command, t_env *env)
@@ -108,8 +154,8 @@ int	execute(t_command *command, t_env *env)
 		return (error_code);
 	if (command->next == NULL)
 		return (execute_single_command(command, &exec));
-	// else
-	// 	return (execute_pipeline(command, env));
+	else
+		return (execute_pipeline(command, &exec));
 	free_exec(&exec);
 	return (0);
 }
