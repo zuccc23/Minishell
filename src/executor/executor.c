@@ -39,6 +39,7 @@ int apply_output_redirection(t_redirection *redir, char *filename)
 	return (0);
 }
 
+// Gere le cas ou nous avons une seule commande
 int	execute_single_command(t_command *cmd, t_exec *exec)
 {
 	int	pid;
@@ -59,9 +60,11 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	}
 	else
 		waitpid(pid, NULL, 0);
+	free(path);
 	return (0);
 }
-//Compter le nombre de commande
+
+// Compter le nombre de commande
 static int	count_commands(t_command *cmd)
 {
 	int	count;
@@ -75,38 +78,23 @@ static int	count_commands(t_command *cmd)
 	return (count);
 }
 
-// Initialiser la structure de lexec
-int init_exec(t_env *env, t_exec *exec, t_command *cmd)
-{
-	exec->cout_cmd = count_commands(cmd);
-	exec->pipe_fd[0] = -1;
-	exec->pipe_fd[1] = -1;
-	exec->input_fd = STDIN_FILENO;
-	exec->output_fd = STDOUT_FILENO;
-	exec->envp = lst_to_char_star(env);
-	if (!exec->envp)
-		return (-1);
-	exec->pidarray = NULL;
-	return (0);
-}
+// static int	execute_pipeline(t_command *cmd, t_exec *exec)
+// {
+// 	while (cmd)
+// 	{
+// 		// Enfant
+// 		if (exec->pidarray == 0)
+// 		{
 
-int	execute_pipeline(t_command *cmd, t_redirection *redir, t_exec *exec)
-{
-	while (cmd)
-	{
-		// Enfant
-		if (exec->pidarray == 0)
-		{
+// 		}
+// 		// Parent
+// 		else
+// 		{
 
-		}
-		// Parent
-		else
-		{
-
-		}
-		cmd = cmd->next;
-	}
-}
+// 		}
+// 		cmd = cmd->next;
+// 	}
+// }
 
 // Fonction principale qui orchestre toute lexec
 int	execute(t_command *command, t_env *env)
@@ -120,7 +108,8 @@ int	execute(t_command *command, t_env *env)
 		return (error_code);
 	if (command->next == NULL)
 		return (execute_single_command(command, &exec));
-	else
-		return (execute_pipeline(command, env));
+	// else
+	// 	return (execute_pipeline(command, env));
+	free_exec(&exec);
 	return (0);
 }
