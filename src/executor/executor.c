@@ -28,13 +28,14 @@ char	**lst_to_char_star(t_env *env)
 	return (envp);
 }
 
-int apply_output_redirection(t_redirection *redir, char *filename)
+int	apply_redirection(t_command *cmd, t_exec *exec)
 {
-	redir->fd = open(filename, O_RDONLY);
-	if (redir->fd == -1)
+	t_redirection	*redir;
+
+	redir = cmd->redirections;
+	while (redir)
 	{
-		perror(filename);
-		return (1);
+		redir = redir->next;
 	}
 	return (0);
 }
@@ -103,21 +104,26 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		exec->pidarray[++i] = fork();
 		if (exec->pidarray[i] < 0)
 		{
-			// Verifier sil faut ajouter des free ou protecions
 			perror("fork");
+			free(path);
 			free_exec(exec);
 			return (-1);
 		}
 		else if (exec->pidarray[i] == 0)
 		{
 			// Child
+			close(exec->pipe_fd[0]);
 			if (i > 0)
 				dup2(exec->input_fd, STDIN_FILENO);
 			if (cmd->next)
-			{
 				dup2(exec->pipe_fd[1], STDOUT_FILENO);
-				close(exec->pipe_fd[0]);
-				close(exec->pipe_fd[1]);
+			close(exec->pipe_fd[1]);
+			if (apply_redirection(cmd, exec) == -1)
+			{
+				perror("redirection failed");
+				free_exec(exec);
+				free(path);
+				exit(1);
 			}
 			execve(path, cmd->args, exec->envp);
 			perror("execve failed");

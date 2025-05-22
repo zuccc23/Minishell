@@ -19,6 +19,7 @@ typedef struct s_exex
 
 int			execute(t_command *command, t_env *env);
 int			execute_single_command(t_command *cmd, t_exec *exec);
+int			apply_redirection(t_command *cmd, t_exec *exec);
 
 // UTILS
 
