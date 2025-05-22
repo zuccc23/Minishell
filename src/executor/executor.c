@@ -83,13 +83,14 @@ int	count_commands(t_command *cmd)
 
 static int	execute_pipeline(t_command *cmd, t_exec *exec)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	*path;
 
 	i = -1;
 	while (cmd)
 	{
-		char *path = ft_strjoin("/bin/", cmd->args[0]);
+		path = get_path(cmd, exec->envp);
 		if (cmd->next)
 		{
 			if (pipe(exec->pipe_fd) == -1)

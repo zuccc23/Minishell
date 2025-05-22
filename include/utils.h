@@ -30,4 +30,7 @@ void	free_tokens(t_token *token);
 
 void	free_env(t_env *env);
 
+// clean path
+char	*free_paths(char ***paths, char ***j_paths, char **cmd_tmp);
+
 #endif

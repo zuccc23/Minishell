@@ -23,5 +23,6 @@
 # include "signals.h"
 # include "preprocess.h"
 # include "test.h"
+# include "path.h"
 
 #endif
