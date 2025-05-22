@@ -131,6 +131,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				exec->input_fd = exec->pipe_fd[0];
 				close(exec->pipe_fd[1]);
 			}
+			free(path);
 		}
 		cmd = cmd->next;
 	}
@@ -140,6 +141,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		waitpid(exec->pidarray[j], NULL, 0);
 		j++;
 	}
+	free_exec(exec);
 	return (0);
 }
 

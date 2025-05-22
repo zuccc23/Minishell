@@ -95,5 +95,3 @@ void	init_paths(char ***paths, char ***j_paths, char **f_path, char **cmd_tmp)
 	*cmd_tmp = NULL;
 	*f_path = NULL;
 }
-
-

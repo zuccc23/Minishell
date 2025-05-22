@@ -5,10 +5,7 @@ void free_exec(t_exec *exec)
 	if (exec->envp)
 		free(exec->envp);
 	if (exec->pidarray)
-	{
-		printf("\n\n---jemefree---\n\n");
 		free(exec->pidarray);
-	}
 	//free(exec);
 }
 
