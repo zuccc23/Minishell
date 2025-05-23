@@ -31,10 +31,41 @@ char	**lst_to_char_star(t_env *env)
 int	apply_redirection(t_command *cmd, t_exec *exec)
 {
 	t_redirection	*redir;
+	int				fd;
 
 	redir = cmd->redirections;
 	while (redir)
 	{
+		if (cmd->redirections->type == REDIR_INPUT)
+		{
+			fd = open(cmd->redirections->file, O_RDONLY);
+			if (fd == -1)
+			{
+				printf("failed opening infile\n");
+				return (-1);
+			}
+			if (dup2(fd, STDIN_FILENO) == -1)
+			{
+				close(fd);
+				return (-1);
+			}
+			close(fd);
+		}
+		else if (cmd->redirections->file == REDIR_OUTPUT)
+		{
+			fd = open(cmd->redirections->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd == -1)
+			{
+				printf("erreur ouverture outfile\n");
+				return (-1);
+			}
+			if (dup2(fd, STDOUT_FILENO) == -1)
+			{
+				close(fd);
+				return (-1);
+			}
+			close(fd);
+		}
 		redir = redir->next;
 	}
 	return (0);
@@ -45,8 +76,8 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 {
 	int	pid;
 
-	char *path = "/bin/";
-	path = ft_strjoin(path, cmd->args[0]);
+	char *path;
+	path = get_path(cmd, exec->envp);
 	pid = fork();
 	if (pid < 0)
 	{
@@ -92,6 +123,12 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	while (cmd)
 	{
 		path = get_path(cmd, exec->envp);
+		if (!path)
+		{
+			perror("command not found");
+			free_exec(exec);
+			exit(127);
+		}
 		if (cmd->next)
 		{
 			if (pipe(exec->pipe_fd) == -1)
@@ -113,8 +150,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		{
 			// Child
 			close(exec->pipe_fd[0]);
-			if (i > 0)
-				dup2(exec->input_fd, STDIN_FILENO);
+			dup2(exec->input_fd, STDIN_FILENO);
 			if (cmd->next)
 				dup2(exec->pipe_fd[1], STDOUT_FILENO);
 			close(exec->pipe_fd[1]);
