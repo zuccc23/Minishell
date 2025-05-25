@@ -18,7 +18,6 @@ typedef struct s_redirection
 	t_redir_type			type;
 	char					*file;
 	int						fd;
-	int						valid;
 	struct s_redirection	*next;
 }	t_redirection;
 
@@ -29,5 +28,11 @@ int				get_redirections(t_token **token, t_redirection **redir);
 int				get_redir_file(t_token *token, t_redirection **redir);
 int				join_redir(t_word *word, t_redirection **redir, char *tmp);
 t_redirection	*lstlast_redir(t_redirection *lst);
+
+// check if redirections are valid (file can be opened, etc)
+
+int	check_file_access(t_redirection *redir);
+int	check_input_redir(t_redirection *redir);
+int	check_output_redir(t_redirection *redir);
 
 #endif
