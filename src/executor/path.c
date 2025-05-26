@@ -23,6 +23,7 @@ char	*get_path(t_command *command, char **env)
 	join_paths(paths, cmd_tmp, &joined_paths);
 	if (!joined_paths)
 		return (free_paths(&paths, &joined_paths, &cmd_tmp));
+	printf("----%s---\n%s\n", joined_paths[0], joined_paths[1]);
 	final_path = ft_strdup(get_okpath(joined_paths));
 	if (!final_path)
 		return (free_paths(&paths, &joined_paths, &cmd_tmp));

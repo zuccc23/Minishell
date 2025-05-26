@@ -102,6 +102,8 @@ t_token	*tokenize(char *input)
 	while (lexer->pos < lexer->length)
 	{
 		skip_whitespace(lexer);
+		if (lexer->pos >= lexer->length)
+			break;
 		if (is_delimiter_start(lexer->current))
 			new_token = operator_step(lexer, head, processed_input);
 		else

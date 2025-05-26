@@ -17,6 +17,8 @@ int init_exec(t_env *env, t_exec *exec, t_command *cmd)
 	exec->pipe_fd[1] = -1;
 	exec->input_fd = STDIN_FILENO;
 	exec->output_fd = STDOUT_FILENO;
+	exec->infile_fd = -1;
+	exec->outfile_fd = -1;
 	exec->envp = lst_to_char_star(env);
 	if (!exec->envp)
 		return (-1);

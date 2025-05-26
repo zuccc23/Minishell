@@ -13,6 +13,8 @@ typedef struct s_exex
 	int		count_cmd; // Savoir combien tu as de commande pour gerer la derniere differement
 	int		input_fd;   // Ce que la commande lira (STDIN ou pipe precedent)
 	int		output_fd;  // Ce que la commande ecrira (STDOUT ou pipe suivant)
+	int		infile_fd;
+	int		outfile_fd;
 	char	**envp;
 	pid_t	*pidarray;  // Tableau de tous les pids (si plusieurs commandes)
 }	t_exec;
@@ -27,4 +29,5 @@ int 		init_exec(t_env *env, t_exec *exec, t_command *cmd);
 char		**lst_to_char_star(t_env *env);
 void		free_exec(t_exec *exec);
 int			count_commands(t_command *cmd);
+
 #endif

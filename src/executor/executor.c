@@ -36,35 +36,29 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 	redir = cmd->redirections;
 	while (redir)
 	{
-		if (cmd->redirections->type == REDIR_INPUT)
+		if (redir->type == REDIR_INPUT)
 		{
-			fd = open(cmd->redirections->file, O_RDONLY);
+			fd = open(redir->file, O_RDONLY);
 			if (fd == -1)
 			{
-				printf("failed opening infile\n");
+				ft_putstr_fd("failed opening infile", 2);
 				return (-1);
 			}
-			if (dup2(fd, STDIN_FILENO) == -1)
-			{
-				close(fd);
-				return (-1);
-			}
-			close(fd);
+			if (exec->infile_fd != -1)
+				close(exec->infile_fd);
+			exec->infile_fd = fd;
 		}
-		else if (cmd->redirections->file == REDIR_OUTPUT)
+		else if (redir->type == REDIR_OUTPUT)
 		{
-			fd = open(cmd->redirections->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd == -1)
 			{
-				printf("erreur ouverture outfile\n");
+				ft_putstr_fd("erreur ouverture outfile", 2);
 				return (-1);
 			}
-			if (dup2(fd, STDOUT_FILENO) == -1)
-			{
-				close(fd);
-				return (-1);
-			}
-			close(fd);
+			if (exec->outfile_fd != -1)
+				close(exec->outfile_fd);
+			exec->outfile_fd = fd;
 		}
 		redir = redir->next;
 	}
@@ -149,11 +143,6 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		else if (exec->pidarray[i] == 0)
 		{
 			// Child
-			close(exec->pipe_fd[0]);
-			dup2(exec->input_fd, STDIN_FILENO);
-			if (cmd->next)
-				dup2(exec->pipe_fd[1], STDOUT_FILENO);
-			close(exec->pipe_fd[1]);
 			if (apply_redirection(cmd, exec) == -1)
 			{
 				perror("redirection failed");
@@ -161,6 +150,33 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				free(path);
 				exit(1);
 			}
+			// Setup input
+			if (exec->infile_fd != -1)
+			{
+				dup2(exec->infile_fd, STDIN_FILENO);
+				close(exec->infile_fd);
+			}
+			else if (exec->input_fd != STDIN_FILENO)
+			{
+				dup2(exec->input_fd, STDIN_FILENO);
+				close(exec->infile_fd);
+			}
+
+			// Setup output (pipe to next command)
+			if (cmd->next)
+			{
+				dup2(exec->pipe_fd[1], STDOUT_FILENO);
+				close(exec->pipe_fd[1]);
+				close(exec->pipe_fd[0]);
+			}
+
+			// Setup output redir (overides pipe)
+			if (exec->outfile_fd != -1)
+			{
+				dup2(exec->outfile_fd, STDOUT_FILENO);
+				close(exec->outfile_fd);
+			}
+
 			execve(path, cmd->args, exec->envp);
 			perror("execve failed");
 			exit(127);
@@ -168,12 +184,32 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		else
 		{
 			// Parent
+			free(path);
+
+			// Close the current input fd if not stdin
+			if (exec->input_fd != STDIN_FILENO)
+				close(exec->input_fd);
+
+			// Close infile fd after child duplicated it
+			if (exec->infile_fd != -1)
+			{
+				close(exec->infile_fd);
+				exec->infile_fd = -1;
+			}
+
 			if (cmd->next)
 			{
-				exec->input_fd = exec->pipe_fd[0];
+				// close write end of pipe in parent
 				close(exec->pipe_fd[1]);
+				// Setup for next command
+				exec->input_fd = exec->pipe_fd[0];
 			}
-			free(path);
+			else
+				exec->input_fd = STDIN_FILENO;
+			// if (exec->input_fd != STDIN_FILENO)
+			// 	close(exec->input_fd);
+			// exec->input_fd = exec->pipe_fd[0];
+			//free(path);
 		}
 		cmd = cmd->next;
 	}
