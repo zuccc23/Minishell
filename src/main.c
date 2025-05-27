@@ -99,7 +99,7 @@ int	main(int ac, char **av, char **envp)
 {
 	char		*input;
 	t_env		*env = NULL;
-	//t_command	*command = NULL;
+	t_command	*command = NULL;
 	(void)ac;
 	(void)av;
 	(void)envp;
@@ -144,7 +144,7 @@ int	main(int ac, char **av, char **envp)
 			}
 			printf("\n\n\n\n\n");
 			ft_print_list(head);
-			// init_parser(&env, &head, &command); // proteger
+			init_parser(&env, &head, &command); // proteger
 			// printf("\n\n\n\n");
 			// while (command)
 			// {
@@ -163,9 +163,9 @@ int	main(int ac, char **av, char **envp)
 			// 	}
 			// 	command = command->next;
 			// }
-			// execute(command, env);
-			// ft_free_list(head);
-			// free_commands(command);
+			execute(command, env);
+			ft_free_list(head);
+			free_commands(command);
 		}
 		free(input);
 	}
