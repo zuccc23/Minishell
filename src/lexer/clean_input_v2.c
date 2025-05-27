@@ -6,7 +6,7 @@ int	clean_words(char *input, t_word **word)
 	int		i;
 	t_word	*head;
 
-	printf("original input: %s\n", input);
+	//printf("original input: %s\n", input);
 	i = 0;
 	if (get_partial_value(input, &(*word), &i) == -1)
 		return (-1);

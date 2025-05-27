@@ -39,6 +39,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 		if (redir->type == REDIR_INPUT)
 		{
 			fd = open(redir->file, O_RDONLY);
+			printf("Opening outfile: %s\n", redir->file);
 			if (fd == -1)
 			{
 				ft_putstr_fd("failed opening infile", 2);
@@ -50,6 +51,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 		}
 		else if (redir->type == REDIR_OUTPUT)
 		{
+			printf("Opening outfile: %s\n", redir->file);
 			fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd == -1)
 			{
@@ -72,6 +74,8 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 
 	char *path;
 	path = get_path(cmd, exec->envp);
+	if (!path)
+		return (printf("path error\n"));
 	pid = fork();
 	if (pid < 0)
 	{
@@ -80,6 +84,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	}
 	if (pid == 0)
 	{
+		printf("path :%s\n", path);
 		execve(path, cmd->args, exec->envp);
 		perror("execve failed");
 		free(path);

@@ -38,6 +38,8 @@ char	*get_okpath(char **paths)
 	i = 0;
 	while (paths[i] && access(paths[i], F_OK) != 0)
 		i++;
+	if (!paths[i])
+		return (NULL);
 	return (paths[i]);
 }
 

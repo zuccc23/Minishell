@@ -142,8 +142,8 @@ int	main(int ac, char **av, char **envp)
 				free(input);
 				return (1);
 			}
-			printf("\n\n\n\n\n");
-			ft_print_list(head);
+			//printf("\n\n\n\n\n");
+			//ft_print_list(head);
 			init_parser(&env, &head, &command); // proteger
 			// printf("\n\n\n\n");
 			// while (command)
