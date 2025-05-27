@@ -62,6 +62,18 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 				close(exec->outfile_fd);
 			exec->outfile_fd = fd;
 		}
+		else if (redir->type == REDIR_APPEND)
+		{
+			fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (fd == -1)
+			{
+				ft_putstr_fd("erreur ouverture append", 2);
+				return (-1);
+			}
+			if (exec->outfile_fd != -1)
+				close(exec->outfile_fd);
+			exec->outfile_fd = fd;
+		}
 		redir = redir->next;
 	}
 	return (0);
@@ -70,9 +82,9 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 // Gere le cas ou nous avons une seule commande
 int	execute_single_command(t_command *cmd, t_exec *exec)
 {
-	int	pid;
+	int		pid;
+	char	*path;
 
-	char *path;
 	path = get_path(cmd, exec->envp);
 	if (!path)
 		return (printf("path error\n"));
@@ -80,10 +92,29 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	if (pid < 0)
 	{
 		perror("Failed fork \n");
+		free(path);
 		return (-1);
 	}
 	if (pid == 0)
 	{
+		// child --> apply redirection
+		if (apply_redirection(cmd, exec) == -1)
+		{
+			perror("redirection failed");
+			free_exec(exec);
+			free(path);
+			return (-1);
+		}
+		if(exec->infile_fd != -1)
+		{
+			dup2(exec->infile_fd, STDIN_FILENO);
+			close(exec->infile_fd);
+		}
+		if (exec->outfile_fd != -1)
+		{
+			dup2(exec->outfile_fd, STDOUT_FILENO);
+			close(exec->outfile_fd);
+		}
 		printf("path :%s\n", path);
 		execve(path, cmd->args, exec->envp);
 		perror("execve failed");
