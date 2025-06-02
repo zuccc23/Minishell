@@ -195,7 +195,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			else if (exec->input_fd != STDIN_FILENO)
 			{
 				dup2(exec->input_fd, STDIN_FILENO);
-				close(exec->infile_fd);
+				close(exec->input_fd);
 			}
 
 			// Setup output (pipe to next command)

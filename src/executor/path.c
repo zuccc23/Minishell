@@ -9,6 +9,8 @@ char	*get_path(t_command *command, char **env)
 	char	*final_path;
 	char	*cmd_tmp;
 
+	if (access(command->args[0], X_OK) == 0)
+        return (ft_strdup(command->args[0]));
 	if (!command->args || !command->args[0])
 		return (NULL);
 	init_paths(&paths, &joined_paths, &final_path, &cmd_tmp);
