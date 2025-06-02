@@ -12,7 +12,7 @@ int	main(int ac, char **av, char **envp)
 
 	// Initialisation du shell + a proteger
 	init_env(&env, envp);
-	handle_signal();
+	handle_interactive_signal();
 	while (1)
 	{
 		input = readline("minishell> ");
@@ -55,10 +55,13 @@ int	main(int ac, char **av, char **envp)
 			
 			// if (access(command->args[0], F_OK) == 0)
 			// 	execve(command->args[0], command->args, envp);
+			if (is_builtin(command->args[0]) != NOT_BUILTIN)
+				exec_builtins(command);
+
 			char *str = get_path(command, envp);
 			if (str)
 			{
-				printf("path: %s\n", str);
+				// printf("path: %s\n", str);
 				// execve(str, command->args, envp);
 				free(str);
 			}
