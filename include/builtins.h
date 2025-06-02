@@ -15,6 +15,7 @@ typedef enum e_builtin_type {
 //builtins
 
 int	bltin_pwd(void);
+int	bltin_echo(t_command *command);
 
 //utils
 

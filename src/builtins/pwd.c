@@ -1,6 +1,7 @@
 #include "../../include/minishell.h"
 
-// pwd: returns 1 if failure, 0 if success
+// pwd: prints current directory
+// returns 1 if failure, 0 if success
 int	bltin_pwd(void)
 {
 	char	buff[1024];
