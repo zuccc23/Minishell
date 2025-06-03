@@ -33,7 +33,7 @@ SRC =	./src/main.c ./src/signals/signals.c \
 		./src/env/env_init.c ./src/parser/expand_utils.c \
 		./src/parser/init_parsing.c ./src/executor/executor.c \
 		./src/executor/executor_utils.c ./src/executor/path.c \
-		./src/utils/exec_utils.c \
+		./src/utils/exec_utils.c ./src/executor/redirections.c \
 
 #DIRECTORIES
 OBJ_DIR = obj

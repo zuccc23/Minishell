@@ -6,7 +6,6 @@ void free_exec(t_exec *exec)
 		free(exec->envp);
 	if (exec->pidarray)
 		free(exec->pidarray);
-	//free(exec);
 }
 
 // Initialiser la structure de lexec

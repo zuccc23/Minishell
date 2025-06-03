@@ -46,7 +46,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 				return (-1);
 			}
 			if (exec->infile_fd != -1)
-				close(exec->infile_fd);
+				safe_close(&exec->infile_fd);
 			exec->infile_fd = fd;
 		}
 		else if (redir->type == REDIR_OUTPUT)
@@ -59,7 +59,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 				return (-1);
 			}
 			if (exec->outfile_fd != -1)
-				close(exec->outfile_fd);
+				safe_close(&exec->outfile_fd);
 			exec->outfile_fd = fd;
 		}
 		else if (redir->type == REDIR_APPEND)
@@ -71,7 +71,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 				return (-1);
 			}
 			if (exec->outfile_fd != -1)
-				close(exec->outfile_fd);
+				safe_close(&exec->outfile_fd);
 			exec->outfile_fd = fd;
 		}
 		redir = redir->next;
@@ -87,7 +87,10 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 
 	path = get_path(cmd, exec->envp);
 	if (!path)
+	{
+		free_exec(exec);
 		return (printf("path error\n"));
+	}
 	pid = fork();
 	if (pid < 0)
 	{
@@ -108,14 +111,13 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		if(exec->infile_fd != -1)
 		{
 			dup2(exec->infile_fd, STDIN_FILENO);
-			close(exec->infile_fd);
+			safe_close(&exec->infile_fd);
 		}
 		if (exec->outfile_fd != -1)
 		{
 			dup2(exec->outfile_fd, STDOUT_FILENO);
-			close(exec->outfile_fd);
+			safe_close(&exec->outfile_fd);
 		}
-		printf("path :%s\n", path);
 		execve(path, cmd->args, exec->envp);
 		perror("execve failed");
 		free(path);
@@ -190,29 +192,28 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			if (exec->infile_fd != -1)
 			{
 				dup2(exec->infile_fd, STDIN_FILENO);
-				close(exec->infile_fd);
+				safe_close(&exec->infile_fd);
 			}
 			else if (exec->input_fd != STDIN_FILENO)
 			{
 				dup2(exec->input_fd, STDIN_FILENO);
-				close(exec->input_fd);
+				safe_close(&exec->input_fd);
 			}
 
 			// Setup output (pipe to next command)
 			if (cmd->next)
 			{
 				dup2(exec->pipe_fd[1], STDOUT_FILENO);
-				close(exec->pipe_fd[1]);
-				close(exec->pipe_fd[0]);
+				safe_close(&exec->pipe_fd[1]);
+				safe_close(&exec->pipe_fd[0]);
 			}
 
 			// Setup output redir (overides pipe)
 			if (exec->outfile_fd != -1)
 			{
 				dup2(exec->outfile_fd, STDOUT_FILENO);
-				close(exec->outfile_fd);
+				safe_close(&exec->outfile_fd);
 			}
-
 			execve(path, cmd->args, exec->envp);
 			perror("execve failed");
 			exit(127);
@@ -224,19 +225,19 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 
 			// Close the current input fd if not stdin
 			if (exec->input_fd != STDIN_FILENO)
-				close(exec->input_fd);
+				safe_close(&exec->input_fd);
 
 			// Close infile fd after child duplicated it
 			if (exec->infile_fd != -1)
 			{
-				close(exec->infile_fd);
+				safe_close(&exec->infile_fd);
 				exec->infile_fd = -1;
 			}
 
 			if (cmd->next)
 			{
 				// close write end of pipe in parent
-				close(exec->pipe_fd[1]);
+				safe_close(&exec->pipe_fd[1]);
 				// Setup for next command
 				exec->input_fd = exec->pipe_fd[0];
 			}

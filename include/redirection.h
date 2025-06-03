@@ -29,4 +29,7 @@ int				get_redir_file(t_token *token, t_redirection **redir);
 int				join_redir(t_word *word, t_redirection **redir, char *tmp);
 t_redirection	*lstlast_redir(t_redirection *lst);
 
+
+void	safe_close(int *fd);
+
 #endif

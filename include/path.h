@@ -9,6 +9,4 @@ int		find_path_line(char **path_line, char **env);
 int		join_paths(char **paths, char *command, char ***j_path);
 void	init_paths(char ***paths, char ***j_paths, char **f_path, char **cmd_tmp);
 
-
-
 #endif
