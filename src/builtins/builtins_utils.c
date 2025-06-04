@@ -33,6 +33,7 @@ int	exec_builtins(t_command *cmd)
 		exit_status = bltin_pwd();
 	if (is_builtin(cmd->args[0]) == ECHO)
 		exit_status = bltin_echo(cmd);
-	
+	// if (is_builtin(cmd->args[0]) == EXIT)
+	// 	exit_status = bltin_echo(cmd);
 	return (exit_status);
 }

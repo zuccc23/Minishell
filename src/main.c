@@ -57,7 +57,8 @@ int	main(int ac, char **av, char **envp)
 			// 	execve(command->args[0], command->args, envp);
 			if (is_builtin(command->args[0]) != NOT_BUILTIN)
 				exec_builtins(command);
-
+			if (is_builtin(command->args[0]) == EXIT)
+				exit(bltin_exit(command->args));
 			char *str = get_path(command, envp);
 			if (str)
 			{

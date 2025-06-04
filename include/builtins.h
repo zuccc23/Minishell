@@ -15,7 +15,13 @@ typedef enum e_builtin_type {
 //builtins
 
 int	bltin_pwd(void);
+
 int	bltin_echo(t_command *command);
+int	is_n(char *str);
+
+int	bltin_exit(char **cmd);
+int	ft_is_number(char *str);
+int	check_long(char *str);
 
 //utils
 

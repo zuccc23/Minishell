@@ -7,6 +7,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <limits.h>
 
 # include "../libft/libft.h"
 # include "token.h"
