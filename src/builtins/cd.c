@@ -1,40 +1,46 @@
 #include "../../include/minishell.h"
 
-// Change the shell working directory.
-    
-//     Change the current directory to DIR.  The default DIR is the value of the
-//     HOME shell variable.
-    
-//     The variable CDPATH defines the search path for the directory containing
-//     DIR.  Alternative directory names in CDPATH are separated by a colon (:).
-//     A null directory name is the same as the current directory.  If DIR begins
-//     with a slash (/), then CDPATH is not used.
-    
-//     If the directory is not found, and the shell option `cdable_vars' is set,
-//     the word is assumed to be  a variable name.  If that variable has a value,
-//     its value is used for DIR.
-    
-//     Options:
-//       -L	force symbolic links to be followed: resolve symbolic
-//     		links in DIR after processing instances of `..'
-//       -P	use the physical directory structure without following
-//     		symbolic links: resolve symbolic links in DIR before
-//     		processing instances of `..'
-//       -e	if the -P option is supplied, and the current working
-//     		directory cannot be determined successfully, exit with
-//     		a non-zero status
-//       -@	on systems that support it, present a file with extended
-//     		attributes as a directory containing the file attributes
-    
-//     The default is to follow symbolic links, as if `-L' were specified.
-//     `..' is processed by removing the immediately previous pathname component
-//     back to a slash or the beginning of DIR.
-    
-//     Exit Status:
-//     Returns 0 if the directory is changed, and if $PWD is set successfully when
-//     -P is used; non-zero otherwise.
-
-int	bltin_cd(t_command *command)
+//changes current working directory
+//returns 1 if any error occurs, 0 if ok
+int	bltin_cd(t_command *cmd)
 {
+	DIR	*dir;
 
+	if (cd_errors(cmd) != ER_OK)
+		return (1);
+	dir = opendir(cmd->args[1]);
+	if (!dir)
+	{
+		ft_printf("minishell: cd: %s: ", cmd->args[1]);
+		perror("");
+		return (1);
+	}
+	if (chdir(cmd->args[1]) == -1)
+	{
+		ft_printf("minishell: cd: error changing directories\n");
+		closedir(dir);
+		return (1);
+	}
+	if (closedir(dir) == -1)
+	{
+		ft_printf("minishell: cd: error closing directory stream\n");
+		return (1);
+	}
+	return (ER_OK);
+}
+
+int	cd_errors(t_command *cmd)
+{
+	if (!cmd->args[1])
+	{
+		ft_printf("minishell: cd: an absolute or relative path must be given");
+		ft_printf("\n");
+		return (1);
+	}
+	if (cmd->args[2])
+	{
+		ft_printf("minishell: cd: too many arguments\n");
+		return (1);
+	}
+	return (ER_OK);
 }

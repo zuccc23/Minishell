@@ -12,6 +12,7 @@ int	main(int ac, char **av, char **envp)
 
 	// Initialisation du shell + a proteger
 	init_env(&env, envp);
+	char **copy_envp = copy_env(envp);
 	handle_interactive_signal();
 	while (1)
 	{
@@ -55,8 +56,10 @@ int	main(int ac, char **av, char **envp)
 			
 			// if (access(command->args[0], F_OK) == 0)
 			// 	execve(command->args[0], command->args, envp);
+			
+
 			if (is_builtin(command->args[0]) != NOT_BUILTIN)
-				exec_builtins(command);
+				exec_builtins(command, &copy_envp);
 			if (is_builtin(command->args[0]) == EXIT)
 				exit(bltin_exit(command->args));
 			char *str = get_path(command, envp);

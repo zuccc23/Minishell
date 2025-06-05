@@ -3,22 +3,22 @@
 //prints strings
 // option -n removes '\n'
 // returns only 0 bc it rarely fails
-int	bltin_echo(t_command *command)
+int	bltin_echo(t_command *cmd)
 {
 	int	i;
 	int	n;
 
 	i = 1;
 	n = 0;
-	while (command->args[i] && is_n(command->args[i]) == 1)
+	while (cmd->args[i] && is_n(cmd->args[i]) == 1)
 	{
 		i++;
 		n = 1;
 	}
-	while (command->args[i])
+	while (cmd->args[i])
 	{
-		ft_printf("%s", command->args[i]);
-		if (command->args[i + 1])
+		ft_printf("%s", cmd->args[i]);
+		if (cmd->args[i + 1])
 			ft_printf(" ");
 		i++;
 	}
@@ -35,7 +35,7 @@ int	is_n(char *str)
 	if (!str)
 		return (0);
 	i = 0;
-	if (str[0] != '-'  || !str[i+1])
+	if (str[0] != '-' || !str[i + 1])
 		return (0);
 	i++;
 	while (str[i])

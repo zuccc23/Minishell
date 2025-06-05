@@ -24,16 +24,20 @@ int	is_builtin(char *cmd)
 }
 
 //execute the right function depending on the builtin called
-int	exec_builtins(t_command *cmd)
+int	exec_builtins(t_command *cmd, char ***env)
 {
 	int	exit_status;
 
 	exit_status = 0;
 	if (is_builtin(cmd->args[0]) == PWD)
-		exit_status = bltin_pwd();
+		exit_status = bltin_pwd(cmd);
 	if (is_builtin(cmd->args[0]) == ECHO)
 		exit_status = bltin_echo(cmd);
-	// if (is_builtin(cmd->args[0]) == EXIT)
-	// 	exit_status = bltin_echo(cmd);
+	if (is_builtin(cmd->args[0]) == CD)
+		exit_status = bltin_cd(cmd);
+	if (is_builtin(cmd->args[0]) == ENV)
+		exit_status = bltin_env(cmd, *env);
+	if (is_builtin(cmd->args[0]) == EXPORT)
+		exit_status = bltin_export(cmd, &(*env));
 	return (exit_status);
 }
