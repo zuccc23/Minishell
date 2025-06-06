@@ -133,16 +133,15 @@ int	main(int ac, char **av, char **envp)
 		if (*input)
 		{
 			add_history(input);
-			printf("\n%s\n", input);
+			//printf("\n%s\n", input);
 			t_token *head = NULL;
 			head = tokenize(input);
 			if (!head)
 			{
-				printf("je suis ici\n");
+				//printf("je suis ici\n");
 				free(input);
 				return (1);
 			}
-			//printf("\n\n\n\n\n");
 			//ft_print_list(head);
 			init_parser(&env, &head, &command); // proteger
 			// printf("\n\n\n\n");

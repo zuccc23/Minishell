@@ -39,7 +39,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 		if (redir->type == REDIR_INPUT)
 		{
 			fd = open(redir->file, O_RDONLY);
-			printf("Opening outfile: %s\n", redir->file);
+			//printf("Opening outfile: %s\n", redir->file);
 			if (fd == -1)
 			{
 				ft_putstr_fd("failed opening infile", 2);
@@ -74,6 +74,12 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 				safe_close(&exec->outfile_fd);
 			exec->outfile_fd = fd;
 		}
+		else if (redir->type == REDIR_HEREDOC)
+		{
+			if (exec->infile_fd != -1)
+				safe_close(&exec->infile_fd);
+			exec->infile_fd = redir->fd;
+		}
 		redir = redir->next;
 	}
 	return (0);
@@ -85,11 +91,24 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	int		pid;
 	char	*path;
 
+	if (!cmd->args || !cmd->args[0])
+	{
+		if (has_valid_redirections(cmd))
+		{
+			// Exécuter seulement les redirections sans commande
+			if (apply_redirection(cmd, exec) == -1)
+				return (1);
+			return (0);
+		}
+		return (127);
+	}
 	path = get_path(cmd, exec->envp);
 	if (!path)
 	{
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		free_exec(exec);
-		return (printf("path error\n"));
+		return (127);
 	}
 	pid = fork();
 	if (pid < 0)
@@ -266,14 +285,28 @@ int	execute(t_command *command, t_env *env)
 	int		error_code;
 	t_exec	exec;
 
-	error_code = 0;
 	error_code = init_exec(env, &exec, command);
 	if (error_code != ER_OK)
 		return (error_code);
+	error_code = collect_all_heredocs(command);
+	if (error_code != ER_OK)
+	{
+		free_exec(&exec);
+		return (error_code);
+	}
+	if (!command->args || !command->args[0])
+	{
+		if (!has_valid_redirections(command))
+		{
+			ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
+			free_exec(&exec);
+			return (2);
+		}
+	}
 	if (command->next == NULL)
-		return (execute_single_command(command, &exec));
+		error_code = execute_single_command(command, &exec);
 	else
-		return (execute_pipeline(command, &exec));
+		error_code = execute_pipeline(command, &exec);
 	free_exec(&exec);
-	return (0);
+	return (error_code);
 }

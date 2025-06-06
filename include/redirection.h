@@ -3,6 +3,7 @@
 
 typedef struct s_token		t_token;
 typedef struct s_command	t_command;
+typedef struct s_exex		t_exec;
 
 typedef enum redir_type
 {
@@ -29,7 +30,8 @@ int				get_redir_file(t_token *token, t_redirection **redir);
 int				join_redir(t_word *word, t_redirection **redir, char *tmp);
 t_redirection	*lstlast_redir(t_redirection *lst);
 
-
+int		collect_all_heredocs(t_command *cmd);
+int		has_valid_redirections(t_command *cmd);
 void	safe_close(int *fd);
 
 #endif
