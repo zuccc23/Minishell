@@ -28,14 +28,19 @@ int handle_heredoc(const char *delimiter, int *heredoc_fd)
 		return (-1);
 	pid = fork();
 	if (pid == -1)
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
 		return (-1);
+	}
 	if (pid == 0)
 	{
+		close(pipe_fd[0]);
 		while (1)
 		{
 			line = readline("> ");
 			if (!line || ((ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
-			&& line[ft_strlen(delimiter) == '\0']))
+			&& line[ft_strlen(delimiter)] == '\0'))
 			{
 				free(line);
 				break;

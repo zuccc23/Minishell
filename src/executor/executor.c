@@ -76,6 +76,11 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 		}
 		else if (redir->type == REDIR_HEREDOC)
 		{
+			if (redir->fd == -1)
+			{
+			    ft_putstr_fd("heredoc error\n", STDERR_FILENO);
+        		return (-1);
+			}
 			if (exec->infile_fd != -1)
 				safe_close(&exec->infile_fd);
 			exec->infile_fd = redir->fd;
@@ -107,7 +112,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	{
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		free_exec(exec);
+		//free_exec(exec);
 		return (127);
 	}
 	pid = fork();
@@ -123,7 +128,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		if (apply_redirection(cmd, exec) == -1)
 		{
 			perror("redirection failed");
-			free_exec(exec);
+			//free_exec(exec);
 			free(path);
 			return (-1);
 		}
@@ -140,13 +145,13 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		execve(path, cmd->args, exec->envp);
 		perror("execve failed");
 		free(path);
-		free_exec(exec);
+		//free_exec(exec);
 		exit(127);
 	}
 	else
 		waitpid(pid, NULL, 0);
 	free(path);
-	free_exec(exec);
+	//free_exec(exec);
 	return (0);
 }
 
@@ -177,15 +182,15 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		if (!path)
 		{
 			perror("command not found");
-			free_exec(exec);
-			exit(127);
+			//free_exec(exec);
+			return (127);
 		}
 		if (cmd->next)
 		{
 			if (pipe(exec->pipe_fd) == -1)
 			{
 				perror("pipe");
-				free_exec(exec);
+				//free_exec(exec);
 				return (-1);
 			}
 		}
@@ -194,7 +199,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		{
 			perror("fork");
 			free(path);
-			free_exec(exec);
+			//free_exec(exec);
 			return (-1);
 		}
 		else if (exec->pidarray[i] == 0)
@@ -275,7 +280,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		waitpid(exec->pidarray[j], NULL, 0);
 		j++;
 	}
-	free_exec(exec);
+	//free_exec(exec);
 	return (0);
 }
 
