@@ -7,12 +7,12 @@
 //     Exit the shell.  
 //     Exits the shell with a status of n.  If n is omitted, the exit status
 //     is that of the last command executed.
-int	bltin_exit(char **cmd)
+int	bltin_exit(char **cmd, int exit_status)
 {
 	if (!cmd[1])
 	{
 		ft_printf("exit\n");
-		return (0);
+		return (exit_status);
 	}
 	if (ft_is_number(cmd[1]) == 0)
 	{

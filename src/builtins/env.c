@@ -9,6 +9,8 @@ int	bltin_env(t_command *cmd, char **env)
 		return (0);
 	if (!cmd->args[1])
 		print_strs(env);
+	if (invalid_option(cmd->args, "env") == 2)
+		return (125);
 	if (cmd->args[1])
 	{
 		ft_printf("minishell: env: too many arguments\n");

@@ -5,10 +5,10 @@ int	main(int ac, char **av, char **envp)
 	char		*input;
 	t_env		*env = NULL;
 	t_command	*command = NULL;
+	int			exit_status = 0;
 	(void)ac;
 	(void)av;
 	(void)envp;
-	// int i = 0;
 
 	// Initialisation du shell + a proteger
 	init_env(&env, envp);
@@ -16,7 +16,7 @@ int	main(int ac, char **av, char **envp)
 	handle_interactive_signal();
 	while (1)
 	{
-		input = readline("minishell> ");
+		input = readline("minishell-1.0# ");
 		if (!input)
 		{
 			write (1, "exit\n", 5);
@@ -57,16 +57,17 @@ int	main(int ac, char **av, char **envp)
 			// if (access(command->args[0], F_OK) == 0)
 			// 	execve(command->args[0], command->args, envp);
 			
+			//BUILTINS
 
-			if (is_builtin(command->args[0]) != NOT_BUILTIN)
-				exec_builtins(command, &copy_envp);
+			if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
+				exit_status = exec_builtins(command, &copy_envp);
 			if (is_builtin(command->args[0]) == EXIT)
-				exit(bltin_exit(command->args));
+				exit(bltin_exit(command->args, exit_status));
+			
+			//PATH
 			char *str = get_path(command, envp);
 			if (str)
 			{
-				// printf("path: %s\n", str);
-				// execve(str, command->args, envp);
 				free(str);
 			}
 			ft_free_list(head);

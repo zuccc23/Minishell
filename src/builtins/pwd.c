@@ -7,12 +7,8 @@ int	bltin_pwd(t_command *cmd)
 	char	buff[1024];
 	char	*str;
 
-	str = NULL;
-	if (cmd->args[1][0] == '-')
-	{
-		ft_printf("minishell: pwd: invalid option\n");
+	if (invalid_option(cmd->args, "pwd") == 2)
 		return (2);
-	}
 	str = getcwd(buff, 1024);
 	if (!str)
 	{

@@ -39,5 +39,36 @@ int	exec_builtins(t_command *cmd, char ***env)
 		exit_status = bltin_env(cmd, *env);
 	if (is_builtin(cmd->args[0]) == EXPORT)
 		exit_status = bltin_export(cmd, &(*env));
+	if (is_builtin(cmd->args[0]) == UNSET)
+		exit_status = bltin_unset(cmd, &(*env));
 	return (exit_status);
+}
+
+//checks for invalid options
+int	invalid_option(char **args, char *cmd)
+{
+	if (args[1] && args[1][0] == '-' && args[1][1])
+	{
+		printf("minishell: %s: -%c: invalid option\n", cmd, args[1][1]);
+		return (2);
+	}
+	return (ER_OK);
+}
+
+//count strings in a char**
+int	count_strings(char **strs)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	if (!strs)
+		return (0);
+	while (strs[i])
+	{
+		count++;
+		i++;
+	}
+	return (count);
 }
