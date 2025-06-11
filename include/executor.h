@@ -29,5 +29,7 @@ int 		init_exec(t_env *env, t_exec *exec, t_command *cmd);
 char		**lst_to_char_star(t_env *env);
 void		free_exec(t_exec *exec);
 int			count_commands(t_command *cmd);
+void		heredoc_handle_signal(int sig);
+void		close_all_heredoc_fds(t_command *cmd);
 
 #endif

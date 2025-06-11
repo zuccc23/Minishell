@@ -142,14 +142,21 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 			dup2(exec->outfile_fd, STDOUT_FILENO);
 			safe_close(&exec->outfile_fd);
 		}
+		close_all_heredoc_fds(cmd);
 		execve(path, cmd->args, exec->envp);
 		perror("execve failed");
 		free(path);
-		//free_exec(exec);
 		exit(127);
 	}
 	else
+	{
 		waitpid(pid, NULL, 0);
+		if (exec->infile_fd != -1)
+		{
+			safe_close(&exec->infile_fd);
+			exec->infile_fd = -1;
+		}
+	}
 	free(path);
 	//free_exec(exec);
 	return (0);
@@ -238,6 +245,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				dup2(exec->outfile_fd, STDOUT_FILENO);
 				safe_close(&exec->outfile_fd);
 			}
+			//close_all_heredoc_fds(cmd);
 			execve(path, cmd->args, exec->envp);
 			perror("execve failed");
 			exit(127);
@@ -267,10 +275,6 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			}
 			else
 				exec->input_fd = STDIN_FILENO;
-			// if (exec->input_fd != STDIN_FILENO)
-			// 	close(exec->input_fd);
-			// exec->input_fd = exec->pipe_fd[0];
-			//free(path);
 		}
 		cmd = cmd->next;
 	}
@@ -312,6 +316,7 @@ int	execute(t_command *command, t_env *env)
 		error_code = execute_single_command(command, &exec);
 	else
 		error_code = execute_pipeline(command, &exec);
+	close_all_heredoc_fds(command);
 	free_exec(&exec);
 	return (error_code);
 }
