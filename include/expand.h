@@ -6,17 +6,25 @@ typedef struct s_word	t_word;
 
 //expand les variables
 
-int		expand_vars(t_token **token, t_env *env);
-int		replace_value(char **value, t_env *env);
-int		replace_expands(t_word **word, t_env *env);
+int		expand_vars(t_token **token, t_env *env, int ex_code);
+int		replace_value(char **value, t_env *env, int ex_code);
+int		replace_expands(t_word **word, t_env *env, int ex_code);
 
 // expand utils
 
 char	*get_var_name(char **value, int *i);
-char	*get_expand(char *varname, t_env *env);
+char	*get_expand(char *varname, t_env *env, int ex_code);
 char	*get_leftover(char **value, int *i);
 char	*join_expand(char *s1, char *s2);
 char	*dup_value(char *s1);
+
+
+//more utils
+
+char	*question_mark(char *varname, int ex_code);
+char	*check_value(size_t *j, char *value, int *i);
+int		check_char_v(char c);
+char	*return_q_mark(size_t *j, int *i);
 
 // supprime les noeuds avec des valeurs vides
 

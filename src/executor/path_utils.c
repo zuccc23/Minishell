@@ -58,10 +58,10 @@ int	join_paths(char **paths, char *command, char ***j_path)
 }
 
 //init all path variables to NULL
-void	init_paths(char ***paths, char ***j_paths, char **f_path, char **cmd_tmp)
+void	init_paths(char ***path, char ***j_path, char **f_path, char **cmd_tmp)
 {
-	*paths = NULL;
-	*j_paths = NULL;
+	*path = NULL;
+	*j_path = NULL;
 	*cmd_tmp = NULL;
 	*f_path = NULL;
 }

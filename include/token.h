@@ -22,7 +22,6 @@ typedef struct s_word
 
 typedef struct s_token
 {
-	//char					*value;
 	t_word					*word;
 	t_token_type			type;
 	struct s_token			*next;

@@ -12,7 +12,7 @@ int		join_paths(char **paths, char *command, char ***j_path);
 
 //path utils
 
-void	init_paths(char ***paths, char ***j_paths, char **f_path, char **cmd_tmp);
+void	init_paths(char ***path, char ***j_path, char **f_path, char **cmd_tmp);
 char	*free_paths(char ***paths, char ***j_paths, char **cmd_tmp);
 
 #endif

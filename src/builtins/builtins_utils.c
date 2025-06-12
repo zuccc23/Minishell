@@ -54,21 +54,3 @@ int	invalid_option(char **args, char *cmd)
 	}
 	return (ER_OK);
 }
-
-//count strings in a char**
-int	count_strings(char **strs)
-{
-	int	count;
-	int	i;
-
-	count = 0;
-	i = 0;
-	if (!strs)
-		return (0);
-	while (strs[i])
-	{
-		count++;
-		i++;
-	}
-	return (count);
-}

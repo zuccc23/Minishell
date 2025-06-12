@@ -20,22 +20,22 @@ int	bltin_env(t_command *cmd, char **env)
 }
 
 //prints char **
-void   print_strs(char **strs)
+void	print_strs(char **strs)
 {
-        int     i;
-        int     j;
+	int	i;
+	int	j;
 
-        i = 0;
-        j = 0;
-        while (strs[i] != NULL)
-        {
-                while (strs[i][j])
-                {
-                        write (1, &strs[i][j], 1);
-                        j++;
-                }
-                write (1, "\n", 1);
-                i++;
-                j = 0;
-        }
+	i = 0;
+	j = 0;
+	while (strs[i] != NULL)
+	{
+		while (strs[i][j])
+		{
+			write (1, &strs[i][j], 1);
+			j++;
+		}
+		write (1, "\n", 1);
+		i++;
+		j = 0;
+	}
 }

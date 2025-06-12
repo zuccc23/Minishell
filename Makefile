@@ -30,12 +30,12 @@ SRC =	./src/main.c ./src/signals/signals.c \
 		./src/parser/analyse_token.c \
 		./src/parser/redirections.c ./src/utils/clean.c \
 		./src/parser/expand.c ./src/parser/command_utils.c \
-		./src/env/env_init.c ./src/parser/expand_utils.c \
+		./src/env/env_init.c ./src/parser/expand_utils.c ./src/parser/expand_utils2.c \
 		./src/parser/init_parsing.c \
 		./src/executor/path.c ./src/executor/path_utils.c ./src/executor/valid_redir.c \
 		./src/builtins/builtins_utils.c \
 		./src/builtins/cd.c ./src/builtins/pwd.c ./src/builtins/echo.c ./src/builtins/exit.c \
-		./src/builtins/env.c ./src/builtins/unset.c ./src/builtins/export.c
+		./src/builtins/env.c ./src/builtins/unset.c ./src/builtins/export.c ./src/builtins/export_utils.c
 
 #DIRECTORIES
 OBJ_DIR = obj

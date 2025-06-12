@@ -58,31 +58,8 @@ int	get_new_env(char ***env, char *cmd)
 	return (ER_OK);
 }
 
-int	is_same_var_exp(char *str1, char *str2)
-{
-	size_t	len;
-	size_t	len2;
-
-	len = char_position(str1, '=');
-	len2 = char_position(str2, '=');
-	if (len == 0 || len2 == 0)
-		return (0);
-	if (ft_strncmp(str1, str2, len) == 0 \
-		&& len == len2)
-		return (1);
-	return (0);
-}
-
-//check for empty args or invalid options
-int	check_args(t_command *cmd)
-{
-	if (!cmd->args[1])
-		return (ER_OK);
-	if (invalid_option(cmd->args, "env") == 2)
-		return (2);
-	return (0);
-}
-
+//copy the env and replace the right variable
+//takes command->args[i] as parameter
 char	**copy_and_replace(char **env, char *cmd)
 {
 	char	**tmp;
@@ -136,34 +113,11 @@ char	**copy_and_add(char **env, char *cmd)
 		free_strs(tmp);
 		return (NULL);
 	}
-	tmp[i+1] = NULL;
+	tmp[i + 1] = NULL;
 	return (tmp);
 }
 
-//checks if the export is correct format (var=value)
-//returns 0 if ok, 1 if not
-int	check_export(char *cmd)
-{
-	int	i;
-	int	count;
-
-	count = 0;
-	i = 0;
-	if (ft_isalpha(cmd[0]) == 0 && cmd[0] != '_')
-		return (1);
-	while (cmd[i])
-	{
-		if (ft_isalnum(cmd[i]) == 0 && cmd[i] != '_'&& cmd[i] != '=')
-			return (1);
-		if (cmd[i] == '=')
-			count = 1;
-		i++;
-	}
-	if (count == 0)
-		return (2);
-	return (0);
-}
-
+//delete later
 char	**copy_env(char **env)
 {
 	char	**tmp;

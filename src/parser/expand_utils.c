@@ -6,15 +6,14 @@ char	*get_var_name(char **value, int *i)
 	char		*varname;
 	size_t		j;
 
-	if ((*value)[(*i)] != '$')
-		return (NULL);
 	j = 0;
+	varname = check_value(&j, *value, &(*i));
+	if (j == 1)
+		return (varname);
 	varname = malloc(sizeof(char) * ft_strlen(&(*value)[*i]));
 	if (!varname)
 		return (NULL);
 	(*i)++;
-	if ((*value)[(*i)] == '\0')
-		return (NULL);
 	while (ft_isalnum((*value)[(*i)]) == 1 || (*value)[(*i)] == '_')
 	{
 		varname[j] = (*value)[(*i)];
@@ -31,12 +30,14 @@ char	*get_var_name(char **value, int *i)
 }
 
 // recupere le resultat de l'expansion
-char	*get_expand(char *varname, t_env *env)
+char	*get_expand(char *varname, t_env *env, int ex_code)
 {
 	char	*expand;
 
 	if (!varname)
 		return (NULL);
+	if (varname[0] == '?')
+		return (question_mark(varname, ex_code));
 	expand = NULL;
 	expand = ft_getenv(varname, env);
 	free(varname);
@@ -51,19 +52,21 @@ char	*get_leftover(char **value, int *i)
 	char		*leftover;
 	size_t		j;
 
-	if ((*value)[(*i)] == '$')
+	if ((*value)[(*i)] == '\0' || (*value)[(*i)] == '$')
 		return (NULL);
 	j = 0;
 	leftover = NULL;
-	leftover = malloc(sizeof(char) * ft_strlen(&(*value)[*i]));
+	leftover = malloc(sizeof(char) * (ft_strlen(&(*value)[*i]) + 1));
 	if (!leftover)
 		return (NULL);
-	while ((*value)[(*i)] != '$')
+	while ((*value)[(*i)] && (*value)[(*i)] != '$')
 	{
 		leftover[j] = (*value)[(*i)];
 		(*i)++;
 		j++;
 	}
+	// if (!(*value)[(*i)])
+	leftover[j] = '\0';
 	while (j < ft_strlen(&(*value)[*i]))
 	{
 		leftover[j] = '\0';

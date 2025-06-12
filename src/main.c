@@ -35,7 +35,7 @@ int	main(int ac, char **av, char **envp)
 			}
 			// printf("\n\n\n\n\n");
 			// ft_print_list(head);
-			init_parser(&env, &head, &command);
+			init_parser(&env, &head, &command, exit_status);
 			// while (command)
 			// {
 			// 	i = 0;
@@ -58,17 +58,27 @@ int	main(int ac, char **av, char **envp)
 			// 	execve(command->args[0], command->args, envp);
 			
 			//BUILTINS
-
-			if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
-				exit_status = exec_builtins(command, &copy_envp);
-			if (is_builtin(command->args[0]) == EXIT)
-				exit(bltin_exit(command->args, exit_status));
-			
-			//PATH
-			char *str = get_path(command, envp);
-			if (str)
+			// "'$USER'" "'$LOGNAME'"
+			if (command->args)
 			{
-				free(str);
+				if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
+					exit_status = exec_builtins(command, &copy_envp);
+				if (is_builtin(command->args[0]) == EXIT)
+				{
+					int	ex_code = bltin_exit(command->args, exit_status);
+					ft_free_list(head);
+					free_commands(command);
+					free(input);
+					free_env(env);
+					exit(ex_code);
+				}
+				
+				//PATH
+				char *str = get_path(command, envp);
+				if (str)
+				{
+					free(str);
+				}
 			}
 			ft_free_list(head);
 			free_commands(command);
