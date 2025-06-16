@@ -33,4 +33,10 @@ int				has_valid_redirections(t_command *cmd);
 
 void			safe_close(int *fd);
 
+// check if redirections are valid (file can be opened, etc)
+
+int				check_file_access(t_redirection *redir);
+int				check_input_redir(t_redirection *redir);
+int				check_output_redir(t_redirection *redir);
+
 #endif

@@ -1,7 +1,7 @@
 #include "../../include/minishell.h"
 
 //initialise l'env, le parsing des erreurs, recup des commandes/redirs
-int	init_parser(t_env **env, t_token **token, t_command **commands)
+int	init_parser(t_env **env, t_token **token, t_command **command, int ex_code)
 {
 	int	er_code;
 
@@ -9,10 +9,10 @@ int	init_parser(t_env **env, t_token **token, t_command **commands)
 	er_code = parse_tokens(*token);
 	if (er_code != ER_OK)
 		return (er_code);
-	er_code = expand_vars(&(*token), *env);
+	er_code = expand_vars(&(*token), *env, ex_code);
 	if (er_code != ER_OK)
 		return (er_code);
-	er_code = get_commands(*token, &(*commands));
+	er_code = get_commands(*token, &(*command));
 	if (er_code != ER_OK)
 		return (er_code);
 	return (er_code);

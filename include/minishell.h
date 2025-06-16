@@ -8,6 +8,8 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <stdbool.h>
+# include <limits.h>
+# include <dirent.h>
 
 # include "../libft/libft.h"
 # include "token.h"
