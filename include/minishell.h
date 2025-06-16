@@ -7,6 +7,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <stdbool.h>
 
 # include "../libft/libft.h"
 # include "token.h"
@@ -24,5 +25,6 @@
 # include "preprocess.h"
 # include "test.h"
 # include "path.h"
+# include "heredoc.h"
 
 #endif

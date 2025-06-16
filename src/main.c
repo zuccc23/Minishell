@@ -142,7 +142,7 @@ int	main(int ac, char **av, char **envp)
 				free(input);
 				return (1);
 			}
-			//ft_print_list(head);
+			ft_print_list(head);
 			init_parser(&env, &head, &command); // proteger
 			// printf("\n\n\n\n");
 			// while (command)

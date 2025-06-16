@@ -1,29 +1,13 @@
 #include "../../include/minishell.h"
 
-int	has_valid_redirections(t_command *cmd)
-{
-	t_redirection	*redir;
-
-	if (!cmd)
-		return (0);
-	redir = cmd->redirections;
-	while (redir)
-	{
-		if (redir->type == REDIR_HEREDOC || redir->type == REDIR_INPUT ||
-			redir->type == REDIR_OUTPUT || redir->type == REDIR_APPEND)
-			return (1);
-		redir = redir->next;
-	}
-	return (0);
-}
-
-int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd)
+int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, t_env *env)
 {
 	int		pipe_fd[2];
 	char	*line;
 	int		status;
 	pid_t	pid;
 
+	// (void)exit_code;
 	if (pipe(pipe_fd) == -1)
 		return (-1);
 	pid = fork();
@@ -42,16 +26,29 @@ int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd)
 		while (1)
 		{
 			line = readline("> ");
+			//line = expand_variables(line, env, );
 			if (!line)
 				break ;
 			if ((ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
-			&& line[ft_strlen(delimiter)] == '\0')
+				&& line[ft_strlen(delimiter)] == '\0')
 			{
 				free(line);
 				break;
 			}
-			write(pipe_fd[1], line, ft_strlen(line));
-			write(pipe_fd[1], "\n", 1);
+			// write(pipe_fd[1], line, ft_strlen(line));
+			// write(pipe_fd[1], "\n", 1);
+			char *expanded = expand_variables(line, env, *exit_code);
+			if (expanded)
+			{
+				write(pipe_fd[1], expanded, ft_strlen(expanded));
+				write(pipe_fd[1], "\n", 1);
+				free(expanded);
+			}
+			else
+			{
+				write(pipe_fd[1], line, ft_strlen(line));
+				write(pipe_fd[1], "\n", 1);
+			}
 			free(line);
 		}
 		close(pipe_fd[1]);
@@ -84,7 +81,7 @@ void	heredoc_handle_signal(int sig)
 	}
 }
 
-int	collect_all_heredocs(t_command *cmd)
+int	collect_all_heredocs(t_command *cmd, int *exitcode, t_env *env)
 {
 	t_redirection	*redir;
 	int				heredoc_fd;
@@ -97,7 +94,7 @@ int	collect_all_heredocs(t_command *cmd)
 		{
 			if (redir->type == REDIR_HEREDOC)
 			{
-				if (handle_heredoc(cmd, redir->file, &heredoc_fd) == -1)
+				if (handle_heredoc(cmd, redir->file, &heredoc_fd, exitcode, env) == -1)
 					return (-1);
 				if (redir->fd >= 0)
 					close(redir->fd);

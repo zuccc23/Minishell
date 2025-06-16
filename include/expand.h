@@ -4,6 +4,12 @@
 typedef struct s_token	t_token;
 typedef struct s_word	t_word;
 
+typedef struct s_expand_ctx {
+	t_env	*env;
+	int		*exit_code;
+	int		j;
+}	t_expand_ctx;
+
 //expand les variables
 
 int		expand_vars(t_token **token, t_env *env);

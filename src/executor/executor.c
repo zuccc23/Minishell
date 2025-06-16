@@ -39,10 +39,10 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 		if (redir->type == REDIR_INPUT)
 		{
 			fd = open(redir->file, O_RDONLY);
-			//printf("Opening outfile: %s\n", redir->file);
 			if (fd == -1)
 			{
 				ft_putstr_fd("failed opening infile", 2);
+				exec->last_exit_status = 1;
 				return (-1);
 			}
 			if (exec->infile_fd != -1)
@@ -56,6 +56,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			if (fd == -1)
 			{
 				ft_putstr_fd("erreur ouverture outfile", 2);
+				exec->last_exit_status = 1;
 				return (-1);
 			}
 			if (exec->outfile_fd != -1)
@@ -68,6 +69,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			if (fd == -1)
 			{
 				ft_putstr_fd("erreur ouverture append", 2);
+				exec->last_exit_status = 1;
 				return (-1);
 			}
 			if (exec->outfile_fd != -1)
@@ -79,6 +81,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			if (redir->fd == -1)
 			{
 			    ft_putstr_fd("heredoc error\n", STDERR_FILENO);
+				exec->last_exit_status = 1;
         		return (-1);
 			}
 			if (exec->infile_fd != -1)
@@ -95,6 +98,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 {
 	int		pid;
 	char	*path;
+	int		wstatus;
 
 	if (!cmd->args || !cmd->args[0])
 	{
@@ -112,13 +116,14 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	{
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		//free_exec(exec);
-		return (127);
+		exec->last_exit_status = 127;
+		return (exec->last_exit_status);
 	}
 	pid = fork();
 	if (pid < 0)
 	{
 		perror("Failed fork \n");
+		exec->last_exit_status = 1;
 		free(path);
 		return (-1);
 	}
@@ -128,7 +133,6 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		if (apply_redirection(cmd, exec) == -1)
 		{
 			perror("redirection failed");
-			//free_exec(exec);
 			free(path);
 			return (-1);
 		}
@@ -150,7 +154,8 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	}
 	else
 	{
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &wstatus, 0);
+		exec->last_exit_status = WEXITSTATUS(wstatus);
 		if (exec->infile_fd != -1)
 		{
 			safe_close(&exec->infile_fd);
@@ -181,6 +186,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	int		i;
 	int		j;
 	char	*path;
+	int		wstatus;
 
 	i = -1;
 	while (cmd)
@@ -188,8 +194,9 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		path = get_path(cmd, exec->envp);
 		if (!path)
 		{
-			perror("command not found");
-			//free_exec(exec);
+			ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+			ft_putstr_fd(": command not found\n", STDERR_FILENO);
+			exec->last_exit_status = 127;
 			return (127);
 		}
 		if (cmd->next)
@@ -197,7 +204,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			if (pipe(exec->pipe_fd) == -1)
 			{
 				perror("pipe");
-				//free_exec(exec);
+				exec->last_exit_status = 1;
 				return (-1);
 			}
 		}
@@ -205,8 +212,8 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		if (exec->pidarray[i] < 0)
 		{
 			perror("fork");
+			exec->last_exit_status = 1;
 			free(path);
-			//free_exec(exec);
 			return (-1);
 		}
 		else if (exec->pidarray[i] == 0)
@@ -281,7 +288,9 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	j = 0;
 	while (j <= i)
 	{
-		waitpid(exec->pidarray[j], NULL, 0);
+		waitpid(exec->pidarray[j], &wstatus, 0);
+		if (j == i)
+			exec->last_exit_status = WEXITSTATUS(wstatus);
 		j++;
 	}
 	//free_exec(exec);
@@ -297,9 +306,10 @@ int	execute(t_command *command, t_env *env)
 	error_code = init_exec(env, &exec, command);
 	if (error_code != ER_OK)
 		return (error_code);
-	error_code = collect_all_heredocs(command);
+	error_code = collect_all_heredocs(command, &exec.last_exit_status, env);
 	if (error_code != ER_OK)
 	{
+		exec.last_exit_status = error_code;
 		free_exec(&exec);
 		return (error_code);
 	}
@@ -308,6 +318,7 @@ int	execute(t_command *command, t_env *env)
 		if (!has_valid_redirections(command))
 		{
 			ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
+			exec.last_exit_status = 2;
 			free_exec(&exec);
 			return (2);
 		}

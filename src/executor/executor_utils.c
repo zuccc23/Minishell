@@ -21,6 +21,7 @@ int init_exec(t_env *env, t_exec *exec, t_command *cmd)
 	exec->envp = lst_to_char_star(env);
 	if (!exec->envp)
 		return (-1);
+	exec->last_exit_status = 0;
 	exec->pidarray = malloc(sizeof(pid_t) * exec->count_cmd);
 	if (!exec->pidarray)
 		return (-1);
