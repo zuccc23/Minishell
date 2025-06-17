@@ -111,7 +111,11 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		}
 		return (127);
 	}
-	path = get_path(cmd, exec->envp);
+	//add builtins
+	if (ft_strchr(cmd->args[0], '/') && access(cmd->args[0], X_OK) == 0)
+		path = ft_strdup(cmd->args[0]);
+	else
+		path = get_path(cmd, exec->envp);
 	if (!path)
 	{
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);

@@ -12,7 +12,7 @@ int	main(int ac, char **av, char **envp)
 
 	// Initialisation du shell + a proteger
 	init_env(&env, envp);
-	char **copy_envp = copy_env(envp);
+	// char **copy_envp = copy_env(envp);
 	handle_interactive_signal();
 	while (1)
 	{
@@ -38,7 +38,8 @@ int	main(int ac, char **av, char **envp)
 
 			// printf("\n\n\n\n\n");
 			// ft_print_list(head);
-			init_parser(&env, &head, &command, exit_status);
+			if (init_parser(&env, &head, &command, exit_status) != 0)
+				exit(1);
 			// while (command)
 			// {
 			// 	i = 0;
@@ -56,25 +57,25 @@ int	main(int ac, char **av, char **envp)
 			// 	}
 			// 	command = command->next;
 			// }
-			execute(command, env);
+			exit_status = execute(command, env);
 			// if (access(command->args[0], F_OK) == 0)
 			// 	execve(command->args[0], command->args, envp);
 
 			//BUILTINS
-			// if (command->args)
-			// {
-			// 	if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
-			// 		exit_status = exec_builtins(command, &copy_envp);
-			// 	if (is_builtin(command->args[0]) == EXIT)
-			// 	{
-			// 		int	ex_code = bltin_exit(command->args, exit_status);
-			// 		ft_free_list(head);
-			// 		free_commands(command);
-			// 		free(input);
-			// 		free_env(env);
-			// 		exit(ex_code);
-			// 	}
-			// }
+			if (command->args)
+			{
+				if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
+					exit_status = exec_builtins(command, &copy_envp);
+				if (is_builtin(command->args[0]) == EXIT)
+				{
+					int	ex_code = bltin_exit(command->args, exit_status);
+					ft_free_list(head);
+					free_commands(command);
+					free(input);
+					free_env(env);
+					exit(ex_code);
+				}
+			}
 			ft_free_list(head);
 			free_commands(command);
 		}
