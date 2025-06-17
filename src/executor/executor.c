@@ -112,6 +112,13 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		return (127);
 	}
 	//add builtins
+	if (is_builtin(cmd->args[0]) != NOT_BUILTIN && is_parent_builtin(cmd->args[0]))
+	{
+		if (apply_redirection(cmd, exec) == -1)
+			return (1);
+		exec->last_exit_status = exec_builtins(cmd, &exec->envp);
+		return (exec->last_exit_status);
+	}
 	if (ft_strchr(cmd->args[0], '/') && access(cmd->args[0], X_OK) == 0)
 		path = ft_strdup(cmd->args[0]);
 	else
@@ -151,7 +158,10 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 			safe_close(&exec->outfile_fd);
 		}
 		close_all_heredoc_fds(cmd);
-		execve(path, cmd->args, exec->envp);
+		if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
+			exit(exec_builtins(cmd, &exec->envp));
+		else
+			execve(path, cmd->args, exec->envp);
 		perror("execve failed");
 		free(path);
 		exit(127);
@@ -257,9 +267,14 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				safe_close(&exec->outfile_fd);
 			}
 			//close_all_heredoc_fds(cmd);
-			execve(path, cmd->args, exec->envp);
-			perror("execve failed");
-			exit(127);
+			if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
+				exit(exec_builtins(cmd, &exec->envp));
+			else
+			{
+				execve(path, cmd->args, exec->envp);
+				perror("execve failed");
+				exit(127);
+			}
 		}
 		else
 		{
