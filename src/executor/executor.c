@@ -134,6 +134,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	if (pid == 0)
 	{
 		// child --> apply redirection
+		handle_child_signal();
 		if (apply_redirection(cmd, exec) == -1)
 		{
 			perror("redirection failed");
@@ -307,6 +308,7 @@ int	execute(t_command *command, t_env *env)
 	int		error_code;
 	t_exec	exec;
 
+	handle_exec_signal();
 	error_code = init_exec(env, &exec, command);
 	if (error_code != ER_OK)
 		return (error_code);
