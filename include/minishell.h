@@ -10,6 +10,7 @@
 # include <stdbool.h>
 # include <limits.h>
 # include <dirent.h>
+# include <errno.h>
 
 # include "../libft/libft.h"
 # include "token.h"

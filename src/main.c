@@ -44,7 +44,8 @@ int	main(int ac, char **av, char **envp)
 			
 			//EXECUTION
 			exit_status = execute(command, env);
-			//parent signal?
+			//restore interactive signals?
+			handle_interactive_signal();
 
 			//BUILTINS
 			// if (command->args)

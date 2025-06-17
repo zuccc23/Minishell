@@ -4,7 +4,7 @@
 # include "minishell.h"
 
 typedef struct sigaction	t_sa;
-
+extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_shell_mode {
     MODE_INTERACTIVE,// En attente d'une commande

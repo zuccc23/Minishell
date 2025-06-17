@@ -169,7 +169,22 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	}
 	else
 	{
-		waitpid(pid, &wstatus, 0);
+		while (waitpid(pid, &wstatus, 0) == -1)
+		{
+			if (errno == EINTR)
+			{
+				if (g_signal == SIGINT)
+				{
+					kill(pid, SIGINT);
+					g_signal = 0;
+				}
+				else
+				{
+					perror("waitpid");
+					break;
+				}
+			}
+		}
 		exec->last_exit_status = WEXITSTATUS(wstatus);
 		if (exec->infile_fd != -1)
 		{
@@ -204,6 +219,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	int		wstatus;
 
 	i = -1;
+	handle_exec_signal();
 	while (cmd)
 	{
 		path = get_path(cmd, exec->envp);
@@ -234,6 +250,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		else if (exec->pidarray[i] == 0)
 		{
 			// Child
+			handle_child_signal();
 			if (apply_redirection(cmd, exec) == -1)
 			{
 				perror("redirection failed");
@@ -308,7 +325,23 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	j = 0;
 	while (j <= i)
 	{
-		waitpid(exec->pidarray[j], &wstatus, 0);
+		// waitpid(exec->pidarray[j], &wstatus, 0);
+		while (waitpid(exec->pidarray[j], &wstatus, 0) == -1)
+		{
+			if (errno == EINTR)
+			{
+				if (g_signal == SIGINT)
+				{
+					kill(exec->pidarray[j], SIGINT);
+					g_signal = 0;
+				}
+				else
+				{
+					perror("waitpid");
+					break;
+				}
+			}
+		}
 		if (j == i)
 			exec->last_exit_status = WEXITSTATUS(wstatus);
 		j++;
