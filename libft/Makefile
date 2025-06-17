@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dahmane <dahmane@student.42.fr>            +#+  +:+       +#+         #
+#    By: mdodevsk <mdodevsk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/12 18:37:01 by mdodevsk          #+#    #+#              #
-#    Updated: 2025/04/19 19:05:00 by dahmane          ###   ########.fr        #
+#    Updated: 2025/06/17 11:00:35 by mdodevsk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #COMPILER AND FLAGS
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fPIC
 
 AR = ar -rcs
 
@@ -60,7 +60,7 @@ $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 #BASIC RULES
-clean: 
+clean:
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean

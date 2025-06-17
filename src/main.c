@@ -62,20 +62,20 @@ int	main(int ac, char **av, char **envp)
 			// 	execve(command->args[0], command->args, envp);
 
 			//BUILTINS
-			if (command->args)
-			{
-				if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
-					exit_status = exec_builtins(command, &copy_envp);
-				if (is_builtin(command->args[0]) == EXIT)
-				{
-					int	ex_code = bltin_exit(command->args, exit_status);
-					ft_free_list(head);
-					free_commands(command);
-					free(input);
-					free_env(env);
-					exit(ex_code);
-				}
-			}
+			// if (command->args)
+			// {
+			// 	if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
+			// 		exit_status = exec_builtins(command, &copy_env);
+			// 	if (is_builtin(command->args[0]) == EXIT)
+			// 	{
+			// 		int	ex_code = bltin_exit(command->args, exit_status);
+			// 		ft_free_list(head);
+			// 		free_commands(command);
+			// 		free(input);
+			// 		free_env(env);
+			// 		exit(ex_code);
+			// 	}
+			// }
 			ft_free_list(head);
 			free_commands(command);
 		}
