@@ -3,10 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dahmane <dahmane@student.42.fr>            +#+  +:+       +#+         #
+#    By: mdodevsk <mdodevsk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/12 18:37:01 by mdodevsk          #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2025/06/17 11:10:50 by dahmane          ###   ########.fr        #
+=======
+#    Updated: 2025/06/17 11:00:35 by mdodevsk         ###   ########.fr        #
+>>>>>>> e2477e00d85a5ffa61af6eca7f8ab16ea7641ffc
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +64,7 @@ $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 #BASIC RULES
-clean: 
+clean:
 	@rm -rf $(OBJ_DIR)
 
 fclean: clean

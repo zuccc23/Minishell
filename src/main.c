@@ -50,7 +50,8 @@ int	main(int ac, char **av, char **envp)
 			// if (command->args)
 			// {
 			// 	if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
-			// 		exit_status = exec_builtins(command, &copy_envp);
+
+			// 		exit_status = exec_builtins(command, &copy_env);
 			// 	if (is_builtin(command->args[0]) == EXIT)
 			// 	{
 			// 		int	ex_code = bltin_exit(command->args, exit_status);

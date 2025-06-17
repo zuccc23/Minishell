@@ -7,7 +7,7 @@ typedef enum e_builtin_type {
     PWD,
 	EXPORT,
 	UNSET,
-	ENV, 
+	ENV,
 	EXIT,
 	NOT_BUILTIN
 } t_builtin_type;
@@ -53,6 +53,7 @@ int		is_same_var_exp(char *str1, char *str2);
 int		exec_builtins(t_command *cmd, char ***env);
 int		is_builtin(char *cmd);
 int		invalid_option(char **args, char *cmd);
+bool	is_parent_builtin(const char *cmd_name);
 
 
 
