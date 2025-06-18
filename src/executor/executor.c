@@ -159,6 +159,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 			safe_close(&exec->outfile_fd);
 		}
 		close_all_heredoc_fds(cmd);
+		//add builtins
 		if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
 			exit(exec_builtins(cmd, &exec->envp));
 		else
