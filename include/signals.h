@@ -19,5 +19,6 @@ void	exec_handle_sigint(int sig);
 void	handle_child_signal(void);
 void	handle_interactive_signal(void);
 void	handle_exec_signal(void);
+void	handle_sigquit(int sig);
 
 #endif
