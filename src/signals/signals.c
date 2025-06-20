@@ -6,7 +6,8 @@ volatile sig_atomic_t	g_signal;
 //gere SIGINT en mode interactif
 void	handle_sigint(int sig)
 {
-	g_signal = sig;
+	(void)sig;
+	g_signal = 130;
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	write (1, "\n", 1);
@@ -26,7 +27,6 @@ void	exec_handle_sigint(int sig)
 void	handle_interactive_signal(void)
 {
 	t_sa	sa;
-	// t_sa	sa_quit;
 
 	sa.sa_handler = handle_sigint;
 	sigemptyset(&sa.sa_mask);

@@ -34,15 +34,18 @@ int	main(int ac, char **av, char **envp)
 		if (*input)
 		{
 			add_history(input);
-			
 			//PARSING
 			t_token *head = NULL;
 			head = tokenize(input);
 			free(input);
 			if (head)
 			{
-				if (init_parser(env, &head, &command, exit_status) == 0)
+				// printf("%d\n", g_signal);
+				if (g_signal != 0)
+					exit_status = g_signal;
+				if (init_parser(exec->envp, &head, &command, exit_status) == 0)
 				{
+					g_signal = 0;
 					ft_free_list(head);
 					//EXIT BUILTIN
 					if (command->args && !command->next)
@@ -67,3 +70,8 @@ int	main(int ac, char **av, char **envp)
 	}
 	return (0);
 }
+
+//ctrl C signal <3
+//export $USER, echo $USER <3
+//Unset USER, echo $USER <3
+//Export test= « ls -l » !

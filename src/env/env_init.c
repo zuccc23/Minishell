@@ -8,6 +8,10 @@ char	*ft_getenv(char *str, char **env)
 
 	i = 0;
 	expand = NULL;
+	if (!str)
+		return (NULL);
+	if (!env || !env[i])
+		return (NULL);
 	while (env[i])
 	{
 		if (ft_strncmp(str, env[i], ft_strlen(str)) == 0)
