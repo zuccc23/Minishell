@@ -12,7 +12,6 @@ int	main(int ac, char **av, char **envp)
 
 	// Initialisation du shell + a proteger
 	init_env(&env, envp);
-	// char **copy_envp = copy_env(envp);
 	handle_interactive_signal();
 	while (1)
 	{
@@ -20,15 +19,15 @@ int	main(int ac, char **av, char **envp)
 		if (!input)
 		{
 			write (1, "exit\n", 5);
-			free_env(env);
 			break;
 		}
 		if (*input)
 		{
 			add_history(input);
-			
+
 			//PARSING
 			t_token *head = NULL;
+			command = NULL;
 			head = tokenize(input);
 			if (!head)
 			{
@@ -39,34 +38,37 @@ int	main(int ac, char **av, char **envp)
 			// printf("\n\n\n\n\n");
 			// ft_print_list(head);
 
-			if (init_parser(&env, &head, &command, exit_status) != 0)
+			int parser_result = init_parser(&env, &head, &command, exit_status);
+			if (parser_result != 0)
+			{
+				if (head)
+					ft_free_list(head);
+				if (command)
+					free_commands(command);
+				if (parser_result == 130)
+				{
+					exit_status = 130;
+					continue;
+				}
+				free(input);
+				free_env(env);
 				exit(1);
-			
+			}
 			//EXECUTION
-			exit_status = execute(command, env);
+			exit_status = execute(command, env, head);
 			//restore interactive signals?
 			handle_interactive_signal();
-
-			//BUILTINS
-			// if (command->args)
-			// {
-			// 	if (is_builtin(command->args[0]) >= 0 && is_builtin(command->args[0]) <= 5)
-
-			// 		exit_status = exec_builtins(command, &copy_env);
-			// 	if (is_builtin(command->args[0]) == EXIT)
-			// 	{
-			// 		int	ex_code = bltin_exit(command->args, exit_status);
-			// 		ft_free_list(head);
-			// 		free_commands(command);
-			// 		free(input);
-			// 		free_env(env);
-			// 		exit(ex_code);
-			// 	}
-			// }
-			ft_free_list(head);
-			free_commands(command);
+			if (head)
+			{
+			    printf("Freeing tokens...\n");
+    			ft_free_list(head);
+  				printf("Tokens freed\n");
+			}
+			if (command)
+				free_commands(command);
 		}
 		free(input);
 	}
+	free_env(env);
 	return (0);
 }

@@ -1,6 +1,6 @@
 #include "../../include/minishell.h"
 
-int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, t_env *env)
+int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, t_env *env, t_exec *exec)
 {
 	int		pipe_fd[2];
 	char	*line;
@@ -52,6 +52,8 @@ int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *
 			free(line);
 		}
 		close(pipe_fd[1]);
+		free_commands(cmd);
+		free_env(env);
 		exit(0);
 	}
 	close(pipe_fd[1]);

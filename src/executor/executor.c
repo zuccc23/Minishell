@@ -43,7 +43,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			{
 				ft_putstr_fd("failed opening infile", 2);
 				exec->last_exit_status = 1;
-				return (-1);
+				exit(-1);
 			}
 			if (exec->infile_fd != -1)
 				safe_close(&exec->infile_fd);
@@ -94,12 +94,13 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 }
 
 // Gere le cas ou nous avons une seule commande
-int	execute_single_command(t_command *cmd, t_exec *exec)
+int	execute_single_command(t_command *cmd, t_exec *exec, t_token *head)
 {
 	int		pid;
 	char	*path;
 	int		wstatus;
 
+	path = NULL;
 	if (!cmd->args || !cmd->args[0])
 	{
 		if (has_valid_redirections(cmd))
@@ -117,12 +118,15 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		if (apply_redirection(cmd, exec) == -1)
 			return (1);
 		exec->last_exit_status = exec_builtins(cmd, &exec->envp);
+		// free_commands(cmd);
 		return (exec->last_exit_status);
 	}
+	// Obtenir le chemin
 	if (ft_strchr(cmd->args[0], '/') && access(cmd->args[0], X_OK) == 0)
 		path = ft_strdup(cmd->args[0]);
 	else
 		path = get_path(cmd, exec->envp);
+
 	if (!path)
 	{
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
@@ -146,8 +150,10 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		{
 			perror("redirection failed");
 			free(path);
+			//free_exec(exec);
 			return (-1);
 		}
+
 		if(exec->infile_fd != -1)
 		{
 			dup2(exec->infile_fd, STDIN_FILENO);
@@ -159,13 +165,23 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 			safe_close(&exec->outfile_fd);
 		}
 		close_all_heredoc_fds(cmd);
+		// Builtins qui SEXECUTENT env
 		if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-			exit(exec_builtins(cmd, &exec->envp));
+		{
+			exec->last_exit_status = exec_builtins(cmd, &exec->envp);
+			free(path);
+			free_exec(exec);
+			free_commands(cmd);
+			ft_free_list(head);
+			exit(exec->last_exit_status);
+		}
 		else
+		{
 			execve(path, cmd->args, exec->envp);
-		perror("execve failed");
-		free(path);
-		exit(127);
+			perror("execve failed");
+			free(path);
+			exit(127);
+		}
 	}
 	else
 	{
@@ -193,7 +209,6 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		}
 	}
 	free(path);
-	//free_exec(exec);
 	return (0);
 }
 
@@ -211,7 +226,7 @@ int	count_commands(t_command *cmd)
 	return (count);
 }
 
-static int	execute_pipeline(t_command *cmd, t_exec *exec)
+static int	execute_pipeline(t_command *cmd, t_exec *exec, t_token *head)
 {
 	int		i;
 	int		j;
@@ -254,7 +269,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			if (apply_redirection(cmd, exec) == -1)
 			{
 				perror("redirection failed");
-				free_exec(exec);
+				//free_exec(exec);
 				free(path);
 				exit(1);
 			}
@@ -286,11 +301,19 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			}
 			//close_all_heredoc_fds(cmd);
 			if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-				exit(exec_builtins(cmd, &exec->envp));
+			{
+				exec->last_exit_status = exec_builtins(cmd, &exec->envp);
+				free(path);
+				free_exec(exec);
+				free_commands(cmd);
+				ft_free_list(head);
+				exit(exec->last_exit_status);
+			}
 			else
 			{
 				execve(path, cmd->args, exec->envp);
 				perror("execve failed");
+				free(path);
 				exit(127);
 			}
 		}
@@ -351,7 +374,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 }
 
 // Fonction principale qui orchestre toute lexec
-int	execute(t_command *command, t_env *env)
+int	execute(t_command *command, t_env *env, t_token *head)
 {
 	int		error_code;
 	t_exec	exec;
@@ -378,10 +401,12 @@ int	execute(t_command *command, t_env *env)
 		}
 	}
 	if (command->next == NULL)
-		error_code = execute_single_command(command, &exec);
+		error_code = execute_single_command(command, &exec, head);
 	else
-		error_code = execute_pipeline(command, &exec);
+		error_code = execute_pipeline(command, &exec, head);
 	close_all_heredoc_fds(command);
 	free_exec(&exec);
+	// if (command)
+	// 	free_commands(command);
 	return (error_code);
 }

@@ -83,7 +83,8 @@ void	free_word_list(t_word *word)
 	while (word)
 	{
 		tmp = word->next;
-		free(word->value);
+		if (word->value)
+			free(word->value);
 		free(word);
 		word = tmp;
 	}
@@ -98,7 +99,10 @@ void	ft_free_list(t_token *token)
 	{
 		tmp = token->next;
 		if (token->word)
+		{
 			free_word_list(token->word);
+			token->word = NULL;
+		}
 		free(token);
 		token = tmp;
 	}

@@ -20,8 +20,8 @@ typedef struct s_exex
 	pid_t	*pidarray;  // Tableau de tous les pids (si plusieurs commandes)
 }	t_exec;
 
-int			execute(t_command *command, t_env *env);
-int			execute_single_command(t_command *cmd, t_exec *exec);
+int			execute(t_command *command, t_env *env, t_token *head);
+int			execute_single_command(t_command *cmd, t_exec *exec, t_token *head);
 int			apply_redirection(t_command *cmd, t_exec *exec);
 
 // UTILS
