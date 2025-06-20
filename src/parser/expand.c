@@ -1,7 +1,7 @@
 #include "../../include/minishell.h"
 
 //expand les variables expandables
-int	expand_vars(t_token **token, t_env *env, int ex_code)
+int	expand_vars(t_token **token, char **env, int ex_code)
 {
 	t_token	*head;
 
@@ -24,7 +24,7 @@ int	expand_vars(t_token **token, t_env *env, int ex_code)
 }
 
 //remplace les expands de toute la liste chainee
-int	replace_expands(t_word **word, t_env *env, int ex_code)
+int	replace_expands(t_word **word, char **env, int ex_code)
 {
 	t_word	*head;
 
@@ -43,7 +43,7 @@ int	replace_expands(t_word **word, t_env *env, int ex_code)
 }
 
 //change l'ancienne value en son expand
-int	replace_value(char **value, t_env *env, int ex_code)
+int	replace_value(char **value, char **env, int ex_code)
 {
 	int		i;
 	char	*leftover;

@@ -24,7 +24,7 @@ int	is_builtin(char *cmd)
 }
 
 //execute the right function depending on the builtin called
-int	exec_builtins(t_command *cmd, char ***env)
+int	exec_builtins(t_command *cmd, char ***env, int ex_status)
 {
 	int	exit_status;
 
@@ -41,6 +41,8 @@ int	exec_builtins(t_command *cmd, char ***env)
 		exit_status = bltin_export(cmd, &(*env));
 	if (is_builtin(cmd->args[0]) == UNSET)
 		exit_status = bltin_unset(cmd, &(*env));
+	if (is_builtin(cmd->args[0]) == EXIT)
+		exit_status = return_exit_s(cmd->args, ex_status);
 	return (exit_status);
 }
 

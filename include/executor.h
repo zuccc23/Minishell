@@ -20,14 +20,13 @@ typedef struct s_exex
 	pid_t	*pidarray;  // Tableau de tous les pids (si plusieurs commandes)
 }	t_exec;
 
-int			execute(t_command *command, t_env *env);
+int			execute(t_command *command, char **env, t_exec **exec);
 int			execute_single_command(t_command *cmd, t_exec *exec);
 int			apply_redirection(t_command *cmd, t_exec *exec);
 
 // UTILS
 
-int 		init_exec(t_env *env, t_exec *exec, t_command *cmd);
-char		**lst_to_char_star(t_env *env);
+int 		init_exec(char **env, t_exec *exec, t_command *cmd);
 void		free_exec(t_exec *exec);
 int			count_commands(t_command *cmd);
 

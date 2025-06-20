@@ -23,6 +23,7 @@ int		bltin_echo(t_command *cmd); //echo
 int		is_n(char *str);
 
 int		bltin_exit(char **cmd, int exit_status); //exit
+int		return_exit_s(char **cmd, int exit_status);
 int		ft_is_number(char *str);
 int		check_long(char *str);
 
@@ -50,7 +51,7 @@ int		is_same_var_exp(char *str1, char *str2);
 
 //utils
 
-int		exec_builtins(t_command *cmd, char ***env);
+int		exec_builtins(t_command *cmd, char ***env, int ex_status);
 int		is_builtin(char *cmd);
 int		invalid_option(char **args, char *cmd);
 bool	is_parent_builtin(const char *cmd_name);

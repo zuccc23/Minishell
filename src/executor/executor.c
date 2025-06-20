@@ -1,37 +1,9 @@
 #include "../../include/minishell.h"
 
-// Passer de la structure a un char** pour execve
-char	**lst_to_char_star(t_env *env)
-{
-	int		size;
-	int		i;
-	char	**envp;
-	t_env	*tmp;
-
-	size = 0;
-	tmp = env;
-	while (tmp)
-	{
-		size++;
-		tmp = tmp->next;
-	}
-	i = 0;
-	envp = malloc(sizeof(char *) * (size + 1));
-	if (!envp)
-		return (NULL);
-	while (i < size)
-	{
-		envp[i++] = env->value;
-		env = env->next;
-	}
-	envp[i] = NULL;
-	return (envp);
-}
-
 int	apply_redirection(t_command *cmd, t_exec *exec)
 {
-	t_redirection	*redir;
-	int				fd;
+	t_redirection	*redir = NULL;
+	int				fd = -1;
 
 	redir = cmd->redirections;
 	while (redir)
@@ -96,9 +68,9 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 // Gere le cas ou nous avons une seule commande
 int	execute_single_command(t_command *cmd, t_exec *exec)
 {
-	int		pid;
-	char	*path;
-	int		wstatus;
+	int		pid = 0;
+	char	*path = NULL;
+	int		wstatus = 0;
 
 	if (!cmd->args || !cmd->args[0])
 	{
@@ -116,19 +88,21 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	{
 		if (apply_redirection(cmd, exec) == -1)
 			return (1);
-		exec->last_exit_status = exec_builtins(cmd, &exec->envp);
+		exec->last_exit_status = exec_builtins(cmd, &exec->envp, exec->last_exit_status);
 		return (exec->last_exit_status);
 	}
-	if (ft_strchr(cmd->args[0], '/') && access(cmd->args[0], X_OK) == 0)
-		path = ft_strdup(cmd->args[0]);
-	else
-		path = get_path(cmd, exec->envp);
-	if (!path)
+	if (is_builtin(cmd->args[0]) == NOT_BUILTIN)
 	{
-		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		exec->last_exit_status = 127;
-		return (exec->last_exit_status);
+		if (ft_strchr(cmd->args[0], '/') && access(cmd->args[0], X_OK) == 0)
+			path = ft_strdup(cmd->args[0]);
+		else
+			path = get_path(cmd, exec->envp);
+		if (!path)
+		{
+			ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+			ft_putstr_fd(": command not found\n", STDERR_FILENO);
+			return (127);
+		}
 	}
 	pid = fork();
 	if (pid < 0)
@@ -146,7 +120,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		{
 			perror("redirection failed");
 			free(path);
-			return (-1);
+			exit(-1);
 		}
 		if(exec->infile_fd != -1)
 		{
@@ -159,9 +133,10 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 			safe_close(&exec->outfile_fd);
 		}
 		close_all_heredoc_fds(cmd);
+
 		//add builtins
 		if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-			exit(exec_builtins(cmd, &exec->envp));
+			exit(exec_builtins(cmd, &(exec->envp), exec->last_exit_status));
 		else
 			execve(path, cmd->args, exec->envp);
 		perror("execve failed");
@@ -186,7 +161,20 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 				}
 			}
 		}
-		exec->last_exit_status = WEXITSTATUS(wstatus);
+		//GET EXIT STATUS OF CHILD
+		if (WIFEXITED(wstatus))
+		{
+			exec->last_exit_status = WEXITSTATUS(wstatus);
+		}
+		else if (WIFSIGNALED(wstatus))
+		{
+			// Process was terminated by signal
+			exec->last_exit_status =  128 + WTERMSIG(wstatus);
+		}
+		else
+		{
+			exec->last_exit_status = 1; // Unknown termination
+		}
 		if (exec->infile_fd != -1)
 		{
 			safe_close(&exec->infile_fd);
@@ -194,8 +182,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		}
 	}
 	free(path);
-	//free_exec(exec);
-	return (0);
+	return (exec->last_exit_status);
 }
 
 // Compter le nombre de commande
@@ -223,40 +210,33 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	handle_exec_signal();
 	while (cmd)
 	{
-		path = get_path(cmd, exec->envp);
-		if (!path)
-		{
-			ft_putstr_fd(cmd->args[0], STDERR_FILENO);
-			ft_putstr_fd(": command not found\n", STDERR_FILENO);
-			exec->last_exit_status = 127;
-			return (127);
-		}
 		if (cmd->next)
 		{
+			//PIPE
 			if (pipe(exec->pipe_fd) == -1)
 			{
 				perror("pipe");
-				exec->last_exit_status = 1;
-				return (-1);
+				// exec->last_exit_status = 1;
+				exit(-1);
 			}
 		}
+		//FORK
 		exec->pidarray[++i] = fork();
 		if (exec->pidarray[i] < 0)
 		{
 			perror("fork");
-			exec->last_exit_status = 1;
-			free(path);
-			return (-1);
+			// exec->last_exit_status = 1;
+			exit(-1);
 		}
 		else if (exec->pidarray[i] == 0)
 		{
-			// Child
+			// CHILD
 			handle_child_signal();
+			//REDIRECTIONS
 			if (apply_redirection(cmd, exec) == -1)
 			{
 				perror("redirection failed");
 				free_exec(exec);
-				free(path);
 				exit(1);
 			}
 			// Setup input
@@ -286,10 +266,21 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				safe_close(&exec->outfile_fd);
 			}
 			//close_all_heredoc_fds(cmd);
+			
+			//BUILTINS
 			if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-				exit(exec_builtins(cmd, &exec->envp));
+				exit(exec_builtins(cmd, &exec->envp, exec->last_exit_status));
 			else
 			{
+				//EXECVE
+				path = get_path(cmd, exec->envp);
+				if (!path)
+				{
+					ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+					ft_putstr_fd(": command not found\n", STDERR_FILENO);
+					// exec->last_exit_status = 127;
+					exit(127);
+				}
 				execve(path, cmd->args, exec->envp);
 				perror("execve failed");
 				exit(127);
@@ -298,7 +289,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 		else
 		{
 			// Parent
-			free(path);
+			// free(path);
 
 			// Close the current input fd if not stdin
 			if (exec->input_fd != STDIN_FILENO)
@@ -326,7 +317,6 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	j = 0;
 	while (j <= i)
 	{
-		// waitpid(exec->pidarray[j], &wstatus, 0);
 		while (waitpid(exec->pidarray[j], &wstatus, 0) == -1)
 		{
 			if (errno == EINTR)
@@ -336,36 +326,52 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 					kill(exec->pidarray[j], SIGINT);
 					g_signal = 0;
 				}
-				else
-				{
-					perror("waitpid");
-					break;
-				}
+				continue; // Try waitpid again
+			}
+			else
+			{
+				perror("waitpid");
+				break;
 			}
 		}
+		
+		// Only get exit status from the last command
 		if (j == i)
-			exec->last_exit_status = WEXITSTATUS(wstatus);
+		{
+			if (WIFEXITED(wstatus))
+			{
+				exec->last_exit_status = WEXITSTATUS(wstatus);
+			}
+			else if (WIFSIGNALED(wstatus))
+			{
+				// Process was terminated by signal
+				exec->last_exit_status =  128 + WTERMSIG(wstatus);
+			}
+			else
+			{
+				exec->last_exit_status = 1; // Unknown termination
+			}
+		}
 		j++;
 	}
-	//free_exec(exec);
-	return (0);
+	return (exec->last_exit_status);
 }
 
 // Fonction principale qui orchestre toute lexec
-int	execute(t_command *command, t_env *env)
+int	execute(t_command *command, char **env, t_exec **exec)
 {
 	int		error_code;
-	t_exec	exec;
 
+	(void)env;
 	handle_exec_signal();
-	error_code = init_exec(env, &exec, command);
+	error_code = init_exec(env, &(**exec), command);
 	if (error_code != ER_OK)
 		return (error_code);
-	error_code = collect_all_heredocs(command, &exec.last_exit_status, env);
+	error_code = collect_all_heredocs(command, &(**exec).last_exit_status, env);
 	if (error_code != ER_OK)
 	{
-		exec.last_exit_status = error_code;
-		free_exec(&exec);
+		(**exec).last_exit_status = error_code;
+		free_exec(&(**exec));
 		return (error_code);
 	}
 	if (!command->args || !command->args[0])
@@ -373,16 +379,16 @@ int	execute(t_command *command, t_env *env)
 		if (!has_valid_redirections(command))
 		{
 			ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
-			exec.last_exit_status = 2;
-			free_exec(&exec);
+			(**exec).last_exit_status = 2;
+			free_exec(&(**exec));
 			return (2);
 		}
 	}
 	if (command->next == NULL)
-		error_code = execute_single_command(command, &exec);
+		error_code = execute_single_command(command, &(**exec));
 	else
-		error_code = execute_pipeline(command, &exec);
+		error_code = execute_pipeline(command, &(**exec));
 	close_all_heredoc_fds(command);
-	free_exec(&exec);
+	// free_exec(&exec);
 	return (error_code);
 }

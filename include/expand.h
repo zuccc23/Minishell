@@ -4,22 +4,16 @@
 typedef struct s_token	t_token;
 typedef struct s_word	t_word;
 
-typedef struct s_expand_ctx {
-	t_env	*env;
-	int		*exit_code;
-	int		j;
-}	t_expand_ctx;
-
 //expand les variables
 
-int		expand_vars(t_token **token, t_env *env, int ex_code);
-int		replace_value(char **value, t_env *env, int ex_code);
-int		replace_expands(t_word **word, t_env *env, int ex_code);
+int		expand_vars(t_token **token, char **env, int ex_code);
+int		replace_value(char **value, char **env, int ex_code);
+int		replace_expands(t_word **word, char **env, int ex_code);
 
 // expand utils
 
 char	*get_var_name(char **value, int *i);
-char	*get_expand(char *varname, t_env *env, int ex_code);
+char	*get_expand(char *varname, char **env, int ex_code);
 char	*get_leftover(char **value, int *i);
 char	*join_expand(char *s1, char *s2);
 char	*dup_value(char *s1);

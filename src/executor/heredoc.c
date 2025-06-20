@@ -1,6 +1,6 @@
 #include "../../include/minishell.h"
 
-int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, t_env *env)
+int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, char **env)
 {
 	int		pipe_fd[2];
 	char	*line;
@@ -81,7 +81,7 @@ void	heredoc_handle_signal(int sig)
 	}
 }
 
-int	collect_all_heredocs(t_command *cmd, int *exitcode, t_env *env)
+int	collect_all_heredocs(t_command *cmd, int *exitcode, char **env)
 {
 	t_redirection	*redir;
 	int				heredoc_fd;
