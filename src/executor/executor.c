@@ -15,7 +15,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			{
 				ft_putstr_fd("failed opening infile", 2);
 				exec->last_exit_status = 1;
-				return (-1);
+				exit(-1);
 			}
 			if (exec->infile_fd != -1)
 				safe_close(&exec->infile_fd);
@@ -71,7 +71,10 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	int		pid = 0;
 	char	*path = NULL;
 	int		wstatus = 0;
+	int		exit_status;
 
+	exit_status = 0;
+	path = NULL;
 	if (!cmd->args || !cmd->args[0])
 	{
 		if (has_valid_redirections(cmd))
@@ -122,6 +125,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 			free(path);
 			exit(-1);
 		}
+
 		if(exec->infile_fd != -1)
 		{
 			dup2(exec->infile_fd, STDIN_FILENO);
@@ -136,12 +140,21 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 
 		//add builtins
 		if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-			exit(exec_builtins(cmd, &(exec->envp), exec->last_exit_status));
+		{
+			exit_status = exec_builtins(cmd, &exec->envp, exec->last_exit_status);
+			if (path)
+				free(path);
+			free_exec(exec);
+			free_commands(cmd);
+			exit(exit_status);
+		}
 		else
+		{
 			execve(path, cmd->args, exec->envp);
-		perror("execve failed");
-		free(path);
-		exit(127);
+			perror("execve failed");
+			free(path);
+			exit(127);
+		}
 	}
 	else
 	{
@@ -205,7 +218,10 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 	int		j;
 	char	*path;
 	int		wstatus;
+	int		exit_code;
+	t_command *cmd_head = cmd;
 
+	exit_code = 0;
 	i = -1;
 	handle_exec_signal();
 	while (cmd)
@@ -266,10 +282,15 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				safe_close(&exec->outfile_fd);
 			}
 			//close_all_heredoc_fds(cmd);
-			
+
 			//BUILTINS
 			if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-				exit(exec_builtins(cmd, &exec->envp, exec->last_exit_status));
+			{
+				exit_code = exec_builtins(cmd, &exec->envp, exec->last_exit_status);
+				free_exec(exec);
+				free_commands(cmd_head);
+				exit(exit_code);
+			}
 			else
 			{
 				//EXECVE
@@ -283,6 +304,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				}
 				execve(path, cmd->args, exec->envp);
 				perror("execve failed");
+				free(path);
 				exit(127);
 			}
 		}
@@ -334,7 +356,7 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 				break;
 			}
 		}
-		
+
 		// Only get exit status from the last command
 		if (j == i)
 		{
@@ -367,7 +389,7 @@ int	execute(t_command *command, char **env, t_exec **exec)
 	error_code = init_exec(env, &(**exec), command);
 	if (error_code != ER_OK)
 		return (error_code);
-	error_code = collect_all_heredocs(command, &(**exec).last_exit_status, env);
+	error_code = collect_all_heredocs(command, &(**exec).last_exit_status, env, exec);
 	if (error_code != ER_OK)
 	{
 		(**exec).last_exit_status = error_code;

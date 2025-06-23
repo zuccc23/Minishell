@@ -11,12 +11,17 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 
 	// Initialisation du shell + a proteger
+
 	env = copy_env(envp);
 	if (!env)
 		return (1);
 	exec = malloc(sizeof(t_exec));
 	if (!exec)
+	{
+		free_strs(env);
 		return (1);
+	}
+	ft_memset(exec, 0, sizeof(t_exec));
 	exec->envp = env;
 
 	// Init signaux
@@ -28,7 +33,8 @@ int	main(int ac, char **av, char **envp)
 		if (!input)
 		{
 			write (1, "exit\n", 5);
-			free_strs(exec->envp);
+			free_exec(exec);
+			exec = NULL;
 			break;
 		}
 		if (*input)
@@ -36,6 +42,7 @@ int	main(int ac, char **av, char **envp)
 			add_history(input);
 			//PARSING
 			t_token *head = NULL;
+			command = NULL;
 			head = tokenize(input);
 			free(input);
 			if (head)
@@ -56,7 +63,7 @@ int	main(int ac, char **av, char **envp)
 							{
 								exit_status = bltin_exit(command->args, exit_status);
 								free_commands(command);
-								free_strs(exec->envp);
+								free_exec(exec);
 								exit(exit_status);
 							}
 						}
@@ -71,6 +78,8 @@ int	main(int ac, char **av, char **envp)
 			}
 		}
 	}
+	if (exec)
+		free_exec(exec);
 	return (0);
 }
 
