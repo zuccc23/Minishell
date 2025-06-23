@@ -50,18 +50,20 @@ int	main(int ac, char **av, char **envp)
 					//EXIT BUILTIN
 					if (command->args && !command->next)
 					{
-						if (is_builtin(command->args[0]) == EXIT)
+						if (command->args[0])
 						{
-							exit_status = bltin_exit(command->args, exit_status);
-							free_commands(command);
-							free_strs(exec->envp);
-							exit(exit_status);
+							if (is_builtin(command->args[0]) == EXIT)
+							{
+								exit_status = bltin_exit(command->args, exit_status);
+								free_commands(command);
+								free_strs(exec->envp);
+								exit(exit_status);
+							}
 						}
 					}
 					//EXECUTION
 					exit_status = execute(command, env, &exec);
 					free_commands(command);
-
 					//restore interactive signals
 					handle_interactive_signal();
 				}

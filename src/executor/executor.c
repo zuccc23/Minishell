@@ -374,16 +374,16 @@ int	execute(t_command *command, char **env, t_exec **exec)
 		free_exec(&(**exec));
 		return (error_code);
 	}
-	if (!command->args || !command->args[0])
-	{
-		if (!has_valid_redirections(command))
-		{
-			ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
-			(**exec).last_exit_status = 2;
-			free_exec(&(**exec));
-			return (2);
-		}
-	}
+	// if (!command->args || !command->args[0])
+	// {
+	// 	if (!has_valid_redirections(command))
+	// 	{
+	// 		ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
+	// 		(**exec).last_exit_status = 2;
+	// 		free_exec(&(**exec));
+	// 		return (2);
+	// 	}
+	// }
 	if (command->next == NULL)
 		error_code = execute_single_command(command, &(**exec));
 	else

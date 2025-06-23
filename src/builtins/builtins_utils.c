@@ -5,6 +5,8 @@
 // takes 'command->args[0]' as parameter
 int	is_builtin(char *cmd)
 {
+	if (!cmd)
+		return (NOT_BUILTIN);
 	if (ft_strnstr(cmd, "cd", 2) != 0 && ft_strlen(cmd) == 2)
 		return (CD);
 	else if (ft_strnstr(cmd, "echo", 4) != 0 && ft_strlen(cmd) == 4)
