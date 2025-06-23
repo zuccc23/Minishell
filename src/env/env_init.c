@@ -14,7 +14,7 @@ char	*ft_getenv(char *str, char **env)
 		return (NULL);
 	while (env[i])
 	{
-		if (ft_strncmp(str, env[i], ft_strlen(str)) == 0)
+		if (is_same_var(env[i], str) == 1)
 		{
 			expand = copy_path(env[i], ft_strlen(str) + 1);
 			if (!expand)

@@ -83,6 +83,8 @@ char	**copy_and_remove(char **env, char *cmd)
 }
 
 //returns 1 if same vars, 0 if not
+//str1 = env
+//str2 = variable name you want to check
 int	is_same_var(char *str1, char *str2)
 {
 	size_t	len;

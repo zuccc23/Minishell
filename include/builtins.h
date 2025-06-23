@@ -40,7 +40,7 @@ int		bltin_export(t_command *cmd, char ***env); //export
 int		get_new_env(char ***env, char *cmd);
 char	**copy_and_add(char **env, char *cmd);
 char	**copy_and_replace(char **env, char *cmd);
-char	**copy_env(char **env); //delete later
+char	**copy_env(char **env);
 
 //export utils
 

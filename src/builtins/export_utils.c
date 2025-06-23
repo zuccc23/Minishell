@@ -56,7 +56,8 @@ int	check_export(char *cmd)
 		return (1);
 	while (cmd[i])
 	{
-		if (ft_isalnum(cmd[i]) == 0 && cmd[i] != '_' && cmd[i] != '=')
+		if (ft_isalnum(cmd[i]) == 0 && cmd[i] != '_' && cmd[i] != '=' \
+&& cmd[i] != ' ' && cmd[i] != '-')
 			return (1);
 		if (cmd[i] == '=')
 			count = 1;
