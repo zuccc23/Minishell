@@ -1,6 +1,6 @@
 #include "../../include/minishell.h"
 
-int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, char **env)
+int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, char **env, t_exec **exec)
 {
 	int		pipe_fd[2];
 	char	*line;
@@ -53,7 +53,7 @@ int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *
 		}
 		close(pipe_fd[1]);
 		free_commands(cmd);
-		free_env(env);
+		free_exec(*exec);
 		exit(0);
 	}
 	close(pipe_fd[1]);
@@ -83,7 +83,7 @@ void	heredoc_handle_signal(int sig)
 	}
 }
 
-int	collect_all_heredocs(t_command *cmd, int *exitcode, char **env)
+int	collect_all_heredocs(t_command *cmd, int *exitcode, char **env, t_exec **exec)
 {
 	t_redirection	*redir;
 	int				heredoc_fd;
@@ -96,8 +96,11 @@ int	collect_all_heredocs(t_command *cmd, int *exitcode, char **env)
 		{
 			if (redir->type == REDIR_HEREDOC)
 			{
-				if (handle_heredoc(cmd, redir->file, &heredoc_fd, exitcode, env) == -1)
+				if (handle_heredoc(cmd, redir->file, &heredoc_fd, exitcode, env, exec) == -1)
+				{
+					close_all_heredoc_fds(cmd);
 					return (-1);
+				}
 				if (redir->fd >= 0)
 					close(redir->fd);
 				redir->fd = heredoc_fd;
@@ -107,7 +110,7 @@ int	collect_all_heredocs(t_command *cmd, int *exitcode, char **env)
 		cmd = cmd->next;
 	}
 	return (0);
-}
+}//at Makefile | grep l | ls | export po=123 > out4 > out9>ouy9
 
 void	close_all_heredoc_fds(t_command *cmd)
 {

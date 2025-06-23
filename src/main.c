@@ -17,7 +17,11 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	exec = malloc(sizeof(t_exec));
 	if (!exec)
+	{
+		free_strs(env);
 		return (1);
+	}
+	ft_memset(exec, 0, sizeof(t_exec));
 	exec->envp = env;
 
 	// Init signaux
@@ -29,7 +33,8 @@ int	main(int ac, char **av, char **envp)
 		if (!input)
 		{
 			write (1, "exit\n", 5);
-			free_strs(exec->envp);
+			free_exec(exec);
+			exec = NULL;
 			break;
 		}
 		if (*input)
@@ -56,21 +61,21 @@ int	main(int ac, char **av, char **envp)
 						{
 							exit_status = bltin_exit(command->args, exit_status);
 							free_commands(command);
-							free_strs(exec->envp);
+							free_exec(exec);
 							exit(exit_status);
 						}
 					}
 					//EXECUTION
 					exit_status = execute(command, env, &exec);
 					free_commands(command);
-
 					//restore interactive signals
 					handle_interactive_signal();
 				}
 			}
 		}
 	}
-	free_env(env);
+	if (exec)
+		free_exec(exec);
 	return (0);
 }
 

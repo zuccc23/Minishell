@@ -66,12 +66,14 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 }
 
 // Gere le cas ou nous avons une seule commande
-int	execute_single_command(t_command *cmd, t_exec *exec, t_token *head)
+int	execute_single_command(t_command *cmd, t_exec *exec)
 {
 	int		pid = 0;
 	char	*path = NULL;
 	int		wstatus = 0;
+	int		exit_status;
 
+	exit_status = 0;
 	path = NULL;
 	if (!cmd->args || !cmd->args[0])
 	{
@@ -138,7 +140,14 @@ int	execute_single_command(t_command *cmd, t_exec *exec, t_token *head)
 
 		//add builtins
 		if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-			exit(exec_builtins(cmd, &(exec->envp), exec->last_exit_status));
+		{
+			exit_status = exec_builtins(cmd, &exec->envp, exec->last_exit_status);
+			if (path)
+				free(path);
+			free_exec(exec);
+			free_commands(cmd);
+			exit(exit_status);
+		}
 		else
 		{
 			execve(path, cmd->args, exec->envp);
@@ -203,13 +212,16 @@ int	count_commands(t_command *cmd)
 	return (count);
 }
 
-static int	execute_pipeline(t_command *cmd, t_exec *exec, t_token *head)
+static int	execute_pipeline(t_command *cmd, t_exec *exec)
 {
 	int		i;
 	int		j;
 	char	*path;
 	int		wstatus;
+	int		exit_code;
+	t_command *cmd_head = cmd;
 
+	exit_code = 0;
 	i = -1;
 	handle_exec_signal();
 	while (cmd)
@@ -273,7 +285,12 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec, t_token *head)
 
 			//BUILTINS
 			if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-				exit(exec_builtins(cmd, &exec->envp, exec->last_exit_status));
+			{
+				exit_code = exec_builtins(cmd, &exec->envp, exec->last_exit_status);
+				free_exec(exec);
+				free_commands(cmd_head);
+				exit(exit_code);
+			}
 			else
 			{
 				//EXECVE
@@ -372,7 +389,7 @@ int	execute(t_command *command, char **env, t_exec **exec)
 	error_code = init_exec(env, &(**exec), command);
 	if (error_code != ER_OK)
 		return (error_code);
-	error_code = collect_all_heredocs(command, &(**exec).last_exit_status, env);
+	error_code = collect_all_heredocs(command, &(**exec).last_exit_status, env, exec);
 	if (error_code != ER_OK)
 	{
 		(**exec).last_exit_status = error_code;
