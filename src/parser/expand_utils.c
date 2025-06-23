@@ -30,7 +30,7 @@ char	*get_var_name(char **value, int *i)
 }
 
 // recupere le resultat de l'expansion
-char	*get_expand(char *varname, t_env *env, int ex_code)
+char	*get_expand(char *varname, char **env, int ex_code)
 {
 	char	*expand;
 

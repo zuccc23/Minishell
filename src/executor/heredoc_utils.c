@@ -1,23 +1,25 @@
 #include "../../include/minishell.h"
 
-static char	*get_env_value(const char *var_name, t_env *env)
+static char	*get_env_value(const char *var_name, char **env)
 {
-	t_env	*tmp;
+	char	**tmp;
 	char	*equals_pos;
 	size_t	var_len;
+	int		i;
 
+	i = 0;
 	var_len = ft_strlen(var_name);
 	tmp = env;
-	while (tmp)
+	while (tmp[i])
 	{
-		equals_pos = ft_strchr(tmp->value, '=');
+		equals_pos = ft_strchr(tmp[i], '=');
 		if (equals_pos)
 		{
-			if (ft_strncmp(tmp->value, var_name, var_len) == 0
-				&& tmp->value[var_len] == '=')
+			if (ft_strncmp(tmp[i], var_name, var_len) == 0
+				&& tmp[i][var_len] == '=')
 				return (equals_pos + 1);
 		}
-		tmp = tmp->next;
+		i++;
 	}
 	return ("");
 }
@@ -35,7 +37,7 @@ static int	get_var_name_len(const char *str, int start)
 	return (len);
 }
 
-static size_t	expanded_len(const char *line, t_env *env, int error_code)
+static size_t	expanded_len(const char *line, char **env, int error_code)
 {
 	size_t	len;
 	int		i;
@@ -81,7 +83,7 @@ static size_t	expanded_len(const char *line, t_env *env, int error_code)
 	return (len);
 }
 
-char *expand_variables(const char *line, t_env *env, int error_code)
+char *expand_variables(const char *line, char **env, int error_code)
 {
 	size_t	i;
 	size_t	j;

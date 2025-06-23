@@ -33,6 +33,31 @@ int	bltin_exit(char **cmd, int exit_status)
 	return (ft_atoll(cmd[1]) % 256);
 }
 
+//same as bltin_exit, but doesnt print "exit",
+//just returns the exit code
+//or error message if necessary
+int	return_exit_s(char **cmd, int exit_status)
+{
+	if (!cmd[1])
+		return (exit_status);
+	if (ft_is_number(cmd[1]) == 0)
+	{
+		ft_printf("minishell: exit: %s: numeric argument required\n", cmd[1]);
+		return (2);
+	}
+	if (check_long(cmd[1]) == 1)
+	{
+		ft_printf("minishell: exit: %s: numeric argument required\n", cmd[1]);
+		return (2);
+	}
+	if (cmd[2])
+	{
+		ft_printf("exit\nminishell: exit: too many arguments\n");
+		return (1);
+	}
+	return (ft_atoll(cmd[1]) % 256);
+}
+
 // check if a string only has numbers
 // returns 1 if its a number, and 0 if it has other characters
 int	ft_is_number(char *str)

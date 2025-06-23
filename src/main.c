@@ -2,73 +2,79 @@
 
 int	main(int ac, char **av, char **envp)
 {
-	char		*input;
-	t_env		*env = NULL;
+	char		*input = NULL;
+	char		**env = NULL;
 	t_command	*command = NULL;
+	t_exec		*exec = NULL;
 	int			exit_status = 0;
 	(void)ac;
 	(void)av;
-	(void)envp;
 
 	// Initialisation du shell + a proteger
-	init_env(&env, envp);
+
+	env = copy_env(envp);
+	if (!env)
+		return (1);
+	exec = malloc(sizeof(t_exec));
+	if (!exec)
+		return (1);
+	exec->envp = env;
+
+	// Init signaux
 	handle_interactive_signal();
+
 	while (1)
 	{
-		input = readline("minishell-1.0# ");
+		input = readline("minishell-1.0$ ");
 		if (!input)
 		{
 			write (1, "exit\n", 5);
+			free_strs(exec->envp);
 			break;
 		}
 		if (*input)
 		{
 			add_history(input);
-
 			//PARSING
 			t_token *head = NULL;
 			command = NULL;
 			head = tokenize(input);
-			if (!head)
-			{
-				free(input);
-				return (1);
-			}
-			// ft_print_list(head);
-			// printf("\n\n\n\n\n");
-			// ft_print_list(head);
-
-			int parser_result = init_parser(&env, &head, &command, exit_status);
-			if (parser_result != 0)
-			{
-				if (head)
-					ft_free_list(head);
-				if (command)
-					free_commands(command);
-				if (parser_result == 130)
-				{
-					exit_status = 130;
-					continue;
-				}
-				free(input);
-				free_env(env);
-				exit(1);
-			}
-			//EXECUTION
-			exit_status = execute(command, env, head);
-			//restore interactive signals?
-			handle_interactive_signal();
+			free(input);
 			if (head)
 			{
-			    printf("Freeing tokens...\n");
-    			ft_free_list(head);
-  				printf("Tokens freed\n");
+				// printf("%d\n", g_signal);
+				if (g_signal != 0)
+					exit_status = g_signal;
+				if (init_parser(exec->envp, &head, &command, exit_status) == 0)
+				{
+					g_signal = 0;
+					ft_free_list(head);
+					//EXIT BUILTIN
+					if (command->args && !command->next)
+					{
+						if (is_builtin(command->args[0]) == EXIT)
+						{
+							exit_status = bltin_exit(command->args, exit_status);
+							free_commands(command);
+							free_strs(exec->envp);
+							exit(exit_status);
+						}
+					}
+					//EXECUTION
+					exit_status = execute(command, env, &exec);
+					free_commands(command);
+
+					//restore interactive signals
+					handle_interactive_signal();
+				}
 			}
-			if (command)
-				free_commands(command);
 		}
-		free(input);
 	}
 	free_env(env);
 	return (0);
 }
+
+//ctrl C signal <3
+//export $USER, echo $USER <3
+//Unset USER, echo $USER <3
+//Export test= « ls -l » !

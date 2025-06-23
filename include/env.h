@@ -10,9 +10,7 @@ typedef struct s_env
 
 //recupere l'env
 
-int		init_env(t_env **env, char **envp);
-char	*ft_getenv(char *str, t_env *env);
+char	*ft_getenv(char *str, char **env);
 char	*copy_path(const char *s1, int start);
-t_env	*create_env_node(char *value);
 
 #endif

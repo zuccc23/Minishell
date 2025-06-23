@@ -2,13 +2,8 @@
 
 void free_exec(t_exec *exec)
 {
-	if (!exec)
-		return;
-	if (exec->envp)
-	{
-		free(exec->envp);
-		exec->envp = NULL;
-	}
+	// if (exec->envp)
+	// 	free(exec->envp);
 	if (exec->pidarray)
 	{
 		free(exec->pidarray);
@@ -25,8 +20,9 @@ void free_exec(t_exec *exec)
 }
 
 // Initialiser la structure de lexec
-int init_exec(t_env *env, t_exec *exec, t_command *cmd)
+int init_exec(char **env, t_exec *exec, t_command *cmd)
 {
+	(void)env;
 	exec->count_cmd = count_commands(cmd);
 	exec->pipe_fd[0] = -1;
 	exec->pipe_fd[1] = -1;
@@ -34,9 +30,6 @@ int init_exec(t_env *env, t_exec *exec, t_command *cmd)
 	exec->output_fd = STDOUT_FILENO;
 	exec->infile_fd = -1;
 	exec->outfile_fd = -1;
-	exec->envp = lst_to_char_star(env);
-	if (!exec->envp)
-		return (-1);
 	exec->last_exit_status = 0;
 	exec->pidarray = malloc(sizeof(pid_t) * exec->count_cmd);
 	if (!exec->pidarray)

@@ -117,7 +117,7 @@ char	**copy_and_add(char **env, char *cmd)
 	return (tmp);
 }
 
-//delete later
+//returns a copy of the envp
 char	**copy_env(char **env)
 {
 	char	**tmp;

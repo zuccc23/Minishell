@@ -2,7 +2,7 @@
 
 bool	is_parent_builtin(const char *cmd_name)
 {
-	if (cmd_name)
+	if (!cmd_name)
 		return (false);
 	if (ft_strnstr(cmd_name, "cd", 2) != 0 && ft_strlen(cmd_name) == 2)
 		return (true);
