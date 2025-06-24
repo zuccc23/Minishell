@@ -93,7 +93,7 @@ int	is_same_var(char *str1, char *str2)
 	if (len == 0)
 		return (0);
 	if (ft_strncmp(str1, str2, len) == 0 \
-&& len == ft_strlen(str2))
+	&& len == ft_strlen(str2))
 		return (1);
 	return (0);
 }

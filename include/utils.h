@@ -6,7 +6,6 @@
 void	add_token_to_list(t_token **token, t_token *new);
 t_token	*ft_token_last(t_token *token);
 int		extract_operator_value(t_lexer *lexer);
-void	ft_print_list(t_token *token);
 void	ft_free_list(t_token *token);
 void	free_word_list(t_word *word);
 int		get_cleaned_word_length(char *input);

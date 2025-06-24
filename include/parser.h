@@ -5,7 +5,7 @@ typedef struct s_token	t_token;
 
 // init parser
 
-int	init_parser(char **env, t_token **token, t_command **command, int ex_code);
+int		init_parser(char **env, t_token **token, t_command **cmd, int ex_code);
 
 //check parsing errors
 

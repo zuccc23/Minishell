@@ -42,39 +42,6 @@ const char	*token_type_to_str(t_token_type type)
 	return ("UNKNOWN");
 }
 
-void	ft_print_list(t_token *token)
-{
-	int		token_index = 0;
-	t_word	*word;
-
-	while (token)
-	{
-		printf("=== Token #%d ===\n", token_index++);
-		printf("Type          : %s\n", token_type_to_str(token->type));
-		if (token->type == TOKEN_WORD && token->word)
-		{
-			printf("Raw value     : %s\n", token->word->value);
-			int word_index = 0;
-			word = token->word;
-			while (word)
-			{
-				printf("  └─ Word #%d: %s (expandable: ", word_index++, word->value);
-				if (word->expandable == 1)
-					printf("yes)\n");
-				else
-					printf("no)\n");
-				word = word->next;
-			}
-		}
-		else
-		{
-			printf("Operator is a %s\n", token_type_to_str(token->type));
-		}
-		printf("\n\n");
-		token = token->next;
-	}
-}
-
 // Free la liste chainee WORD
 void	free_word_list(t_word *word)
 {

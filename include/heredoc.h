@@ -11,7 +11,7 @@ typedef struct s_expand_context
 	t_env		*env;
 	int			error_code;
 	char		*exit_str;
-}   t_expand_context;
+}	t_expand_context;
 
 int			collect_all_heredocs(t_command *cmd, int *exticode, char **env, t_exec **exec);
 void		heredoc_handle_signal(int sig);

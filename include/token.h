@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 # define TOKEN_H
 
-typedef struct s_lexer t_lexer;
+typedef struct s_lexer	t_lexer;
 
 typedef enum token_type
 {
@@ -40,10 +40,11 @@ void			check_double_quotes(char *str, int *i, int *count);
 t_token_type	get_operator_type(t_lexer *lexer);
 int				is_word_expandable(char *str);
 int				extract_word_length(t_lexer *lexer);
-int				init_lexer_preprocess(t_lexer **lexer, char **p_input ,char *input);
-void			free_tok_error(t_lexer *lexer, t_token *h, char *value, char *p_input);
+int				init_lexer_preprocess(t_lexer **lexer, \
+char **p_input, char *input);
+void			free_tok_error(t_lexer *lexer, t_token *h, char *value, \
+char *p_input);
 t_token			*create_operator_token(t_token_type type);
 t_token			*create_word_token(t_token_type type, t_word *word);
-
 
 #endif

@@ -117,26 +117,3 @@ char	**copy_and_add(char **env, char *cmd)
 	return (tmp);
 }
 
-//returns a copy of the envp
-char	**copy_env(char **env)
-{
-	char	**tmp;
-	int		i;
-
-	i = 0;
-	tmp = malloc(sizeof(char *) * (count_strings(env) + 1));
-	if (!tmp)
-		return (NULL);
-	while (env[i])
-	{
-		tmp[i] = ft_strdup(env[i]);
-		if (!tmp[i])
-		{
-			free_strs(tmp);
-			return (NULL);
-		}
-		i++;
-	}
-	tmp[i] = NULL;
-	return (tmp);
-}

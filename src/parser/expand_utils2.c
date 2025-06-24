@@ -20,7 +20,7 @@ char	*check_value(size_t *j, char *value, int *i)
 		(*i) += 2;
 	}
 	if (value[(*i)] != '\0' && value[(*i) + 1] != '\0' \
-&& value[(*i) + 1] == '?')
+	&& value[(*i) + 1] == '?')
 	{
 		str = return_q_mark(&(*j), &(*i));
 		return (str);

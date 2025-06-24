@@ -17,13 +17,15 @@ int	bltin_cd(t_command *cmd)
 	}
 	if (chdir(cmd->args[1]) == -1)
 	{
-		ft_putstr_fd("minishell: cd: error changing directories\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd("cd: error changing directories\n", STDERR_FILENO);
 		closedir(dir);
 		return (1);
 	}
 	if (closedir(dir) == -1)
 	{
-		ft_putstr_fd("minishell: cd: error closing directory stream\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: \n", STDERR_FILENO);
+		ft_putstr_fd("cd: error closing directory stream\n", STDERR_FILENO);
 		return (1);
 	}
 	return (ER_OK);

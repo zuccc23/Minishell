@@ -28,7 +28,7 @@ int	is_same_var_exp(char *str1, char *str2)
 	if (len == 0 || len2 == 0)
 		return (0);
 	if (ft_strncmp(str1, str2, len) == 0 \
-&& len == len2)
+	&& len == len2)
 		return (1);
 	return (0);
 }
@@ -57,7 +57,7 @@ int	check_export(char *cmd)
 	while (cmd[i])
 	{
 		if (ft_isalnum(cmd[i]) == 0 && cmd[i] != '_' && cmd[i] != '=' \
-&& cmd[i] != ' ' && cmd[i] != '-')
+		&& cmd[i] != ' ' && cmd[i] != '-')
 			return (1);
 		if (cmd[i] == '=')
 			count = 1;

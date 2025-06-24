@@ -27,6 +27,7 @@ static char	*extract_word_with_quotes(t_lexer *lexer)
 // Initialise le lexer et traite une premiere fois la chaine
 int	init_lexer_preprocess(t_lexer **lexer, char **p_input, char *input)
 {
+	*p_input = NULL;
 	*lexer = init_lexer(input);
 	if (!*lexer)
 		return (0);
@@ -76,13 +77,11 @@ static t_token	*word_step(t_lexer *lexer, t_token *head, char *p_input)
 		free_tok_error(lexer, head, value, p_input);
 		return (NULL);
 	}
-	free(value);
 	new_token = create_word_token(TOKEN_WORD, word);
 	if (!new_token)
 	{
 		free_word_list(word);
 		free_tok_error(lexer, head, value, p_input);
-		return (NULL);
 	}
 	return (new_token);
 }
@@ -97,15 +96,12 @@ t_token	*tokenize(char *input)
 
 	head = NULL;
 	if (!init_lexer_preprocess(&lexer, &processed_input, input))
-	{
-		processed_input = NULL;
 		return (free_tok_error(lexer, head, NULL, processed_input), NULL);
-	}
 	while (lexer->pos < lexer->length)
 	{
 		skip_whitespace(lexer);
 		if (lexer->pos >= lexer->length)
-			break;
+			break ;
 		if (is_delimiter_start(lexer->current))
 			new_token = operator_step(lexer, head, processed_input);
 		else

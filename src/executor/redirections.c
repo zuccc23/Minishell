@@ -19,8 +19,8 @@ int	has_valid_redirections(t_command *cmd)
 	redir = cmd->redirections;
 	while (redir)
 	{
-		if (redir->type == REDIR_HEREDOC || redir->type == REDIR_INPUT ||
-			redir->type == REDIR_OUTPUT || redir->type == REDIR_APPEND)
+		if (redir->type == REDIR_HEREDOC || redir->type == REDIR_INPUT
+			|| redir->type == REDIR_OUTPUT || redir->type == REDIR_APPEND)
 			return (1);
 		redir = redir->next;
 	}

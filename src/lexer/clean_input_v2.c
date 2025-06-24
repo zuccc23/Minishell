@@ -17,6 +17,7 @@ int	clean_words(char *input, t_word **word)
 		(*word) = (*word)->next;
 	}
 	*word = head;
+	free(input);
 	return (0);
 }
 

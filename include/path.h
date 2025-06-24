@@ -1,7 +1,7 @@
 #ifndef PATH_H
 # define PATH_H
 
-typedef struct s_command t_command;
+typedef struct s_command	t_command;
 
 // get the path
 
@@ -12,8 +12,7 @@ int		join_paths(char **paths, char *command, char ***j_path);
 
 // path utils 
 
-void	init_paths(char ***paths, char ***j_paths, char **f_path, char **cmd_tmp);
+void	init_paths(char ***paths, char ***jpaths, char **fpath, char **cmdtmp);
 char	*free_paths(char ***paths, char ***j_paths, char **cmd_tmp);
 
 #endif
-

@@ -29,5 +29,3 @@ char	*get_path(t_command *command, char **env)
 	free_paths(&paths, &joined_paths, &cmd_tmp);
 	return (final_path);
 }
-
-

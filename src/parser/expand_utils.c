@@ -65,7 +65,6 @@ char	*get_leftover(char **value, int *i)
 		(*i)++;
 		j++;
 	}
-	// if (!(*value)[(*i)])
 	leftover[j] = '\0';
 	while (j < ft_strlen(&(*value)[*i]))
 	{

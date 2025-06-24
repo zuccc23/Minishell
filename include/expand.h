@@ -18,7 +18,6 @@ char	*get_leftover(char **value, int *i);
 char	*join_expand(char *s1, char *s2);
 char	*dup_value(char *s1);
 
-
 //more utils
 
 char	*question_mark(char *varname, int ex_code);

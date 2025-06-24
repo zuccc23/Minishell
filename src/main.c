@@ -15,7 +15,7 @@ int	main(int ac, char **av, char **envp)
 	if (!isatty(0))
 	{
 		ft_putstr_fd("minishell: a tty is expected\n", STDERR_FILENO);
-		return (1);
+		exit(1);
 	}
 
 	// Initialisation du shell + a proteger
@@ -54,7 +54,6 @@ int	main(int ac, char **av, char **envp)
 			free(input);
 			if (head)
 			{
-				// printf("%d\n", g_signal);
 				if (g_signal != 0)
 					exit_status = g_signal;
 				if (init_parser(exec->envp, &head, &command, exit_status) == 0)
@@ -76,7 +75,6 @@ int	main(int ac, char **av, char **envp)
 						}
 					}
 					//EXECUTION
-					// printf("test: %s\n", command->args[1]);
 					exit_status = execute(command, env, &exec);
 					free_commands(command);
 
@@ -91,7 +89,3 @@ int	main(int ac, char **av, char **envp)
 	return (0);
 }
 
-//ctrl C signal <3
-//export $USER, echo $USER <3
-//Unset USER, echo $USER <3
-//Export test= « ls -l » !

@@ -1,5 +1,29 @@
 #include "../../include/minishell.h"
 
+//returns a copy of the envp
+char	**copy_env(char **env)
+{
+	char	**tmp;
+	int		i;
+
+	i = 0;
+	tmp = malloc(sizeof(char *) * (count_strings(env) + 1));
+	if (!tmp)
+		return (NULL);
+	while (env[i])
+	{
+		tmp[i] = ft_strdup(env[i]);
+		if (!tmp[i])
+		{
+			free_strs(tmp);
+			return (NULL);
+		}
+		i++;
+	}
+	tmp[i] = NULL;
+	return (tmp);
+}
+
 //recree la fonction getenv pour recuperer le bon environnement
 char	*ft_getenv(char *str, char **env)
 {

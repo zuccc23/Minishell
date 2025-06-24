@@ -2,15 +2,15 @@
 # define BUILTINS_H
 
 typedef enum e_builtin_type {
-    CD,
-    ECHO,
-    PWD,
+	CD,
+	ECHO,
+	PWD,
 	EXPORT,
 	UNSET,
 	ENV,
 	EXIT,
 	NOT_BUILTIN
-} t_builtin_type;
+}	t_builtin_type;
 
 //builtins
 
@@ -40,7 +40,6 @@ int		bltin_export(t_command *cmd, char ***env); //export
 int		get_new_env(char ***env, char *cmd);
 char	**copy_and_add(char **env, char *cmd);
 char	**copy_and_replace(char **env, char *cmd);
-char	**copy_env(char **env);
 
 //export utils
 
@@ -55,8 +54,5 @@ int		exec_builtins(t_command *cmd, char ***env, int ex_status);
 int		is_builtin(char *cmd);
 int		invalid_option(char **args, char *cmd);
 bool	is_parent_builtin(const char *cmd_name);
-
-
-
 
 #endif
