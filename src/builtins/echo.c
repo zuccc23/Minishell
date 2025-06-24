@@ -17,13 +17,13 @@ int	bltin_echo(t_command *cmd)
 	}
 	while (cmd->args[i])
 	{
-		ft_printf("%s", cmd->args[i]);
+		printf("%s", cmd->args[i]);
 		if (cmd->args[i + 1])
-			ft_printf(" ");
+			printf(" ");
 		i++;
 	}
 	if (n == 0)
-		ft_printf("\n");
+		printf("\n");
 	return (ER_OK);
 }
 

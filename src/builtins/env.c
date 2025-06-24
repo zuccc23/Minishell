@@ -13,7 +13,7 @@ int	bltin_env(t_command *cmd, char **env)
 		return (125);
 	if (cmd->args[1])
 	{
-		ft_printf("minishell: env: too many arguments\n");
+		ft_putstr_fd("minishell: env: too many arguments\n", 1);
 		return (1);
 	}
 	return (ER_OK);

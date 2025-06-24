@@ -37,7 +37,7 @@ void	handle_interactive_signal(void)
 
 void	handle_sigquit(int sig)
 {
-	printf("Quit (core dumped)\n");
+	ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
 	(void)sig;
 	rl_replace_line("", 0);
 	rl_on_new_line();

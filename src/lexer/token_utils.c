@@ -30,7 +30,7 @@ int	extract_word_length(t_lexer *lexer)
 		{
 			if (quote == 0)
 				quote = c;
-			else if (quote != 0)
+			else if (quote != 0 && c == quote)
 				quote = 0;
 			i++;
 			continue ;

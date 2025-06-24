@@ -16,8 +16,8 @@ int	bltin_export(t_command *cmd, char ***env)
 		{
 			if (check_export(cmd->args[i]) == 1)
 			{
-				ft_printf("minishell: export: %s:", cmd->args[i]);
-				ft_printf(" not a valid identifier\n");
+				putstr_err("minishell: export: ", cmd->args[i], ":");
+				ft_putstr_fd(" not a valid identifier\n", STDERR_FILENO);
 				er_code = 1;
 			}
 			i++;

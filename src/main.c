@@ -10,8 +10,15 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 
-	// Initialisation du shell + a proteger
+	//checks if the file descriptor is connected to a terminal (like your terminal window or console)
+	// or if the file descriptor is not connected to a terminal (like a file, a pipe, or a redirected output)
+	if (!isatty(0))
+	{
+		ft_putstr_fd("minishell: a tty is expected\n", STDERR_FILENO);
+		return (1);
+	}
 
+	// Initialisation du shell + a proteger
 	env = copy_env(envp);
 	if (!env)
 		return (1);
@@ -69,9 +76,10 @@ int	main(int ac, char **av, char **envp)
 						}
 					}
 					//EXECUTION
+					// printf("test: %s\n", command->args[1]);
 					exit_status = execute(command, env, &exec);
 					free_commands(command);
-					
+
 					//restore interactive signals
 					handle_interactive_signal();
 				}

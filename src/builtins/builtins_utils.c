@@ -53,7 +53,11 @@ int	invalid_option(char **args, char *cmd)
 {
 	if (args[1] && args[1][0] == '-' && args[1][1])
 	{
-		printf("minishell: %s: -%c: invalid option\n", cmd, args[1][1]);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd, STDERR_FILENO);
+		ft_putstr_fd(": -", STDERR_FILENO);
+		ft_putchar_fd(args[1][1], STDERR_FILENO);
+		ft_putstr_fd(": invalid option\n", STDERR_FILENO);
 		return (2);
 	}
 	return (ER_OK);

@@ -23,7 +23,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 		}
 		else if (redir->type == REDIR_OUTPUT)
 		{
-			printf("Opening outfile: %s\n", redir->file);
+			// printf("Opening outfile: %s\n", redir->file);
 			fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd == -1)
 			{
@@ -294,7 +294,10 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			else
 			{
 				//EXECVE
-				path = get_path(cmd, exec->envp);
+				if (ft_strchr(cmd->args[0], '/') && access(cmd->args[0], X_OK) == 0)
+					path = ft_strdup(cmd->args[0]);
+				else
+					path = get_path(cmd, exec->envp);
 				if (!path)
 				{
 					ft_putstr_fd(cmd->args[0], STDERR_FILENO);

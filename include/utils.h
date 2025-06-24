@@ -33,4 +33,8 @@ void	free_env(t_env *env);
 // clean path
 char	*free_paths(char ***paths, char ***j_paths, char **cmd_tmp);
 
+// errors
+
+void	putstr_err(char *s1, char *s2, char *s3);
+
 #endif

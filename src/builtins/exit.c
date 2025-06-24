@@ -16,17 +16,18 @@ int	bltin_exit(char **cmd, int exit_status)
 	}
 	if (ft_is_number(cmd[1]) == 0)
 	{
-		ft_printf("minishell: exit: %s: numeric argument required\n", cmd[1]);
+		putstr_err("minishell: exit: ", cmd[1], ": numeric argument required\n");
 		return (2);
 	}
 	if (check_long(cmd[1]) == 1)
 	{
-		ft_printf("minishell: exit: %s: numeric argument required\n", cmd[1]);
+		putstr_err("minishell: exit: ", cmd[1], ": numeric argument required\n");
 		return (2);
 	}
 	if (cmd[2])
 	{
-		ft_printf("exit\nminishell: exit: too many arguments\n");
+		ft_printf("exit\n");
+		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}
 	ft_printf("exit\n");
@@ -42,17 +43,17 @@ int	return_exit_s(char **cmd, int exit_status)
 		return (exit_status);
 	if (ft_is_number(cmd[1]) == 0)
 	{
-		ft_printf("minishell: exit: %s: numeric argument required\n", cmd[1]);
+		putstr_err("minishell: exit: ", cmd[1], ": numeric argument required\n");
 		return (2);
 	}
 	if (check_long(cmd[1]) == 1)
 	{
-		ft_printf("minishell: exit: %s: numeric argument required\n", cmd[1]);
+		putstr_err("minishell: exit: ", cmd[1], ": numeric argument required\n");
 		return (2);
 	}
 	if (cmd[2])
 	{
-		ft_printf("exit\nminishell: exit: too many arguments\n");
+		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}
 	return (ft_atoll(cmd[1]) % 256);

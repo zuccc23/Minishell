@@ -39,7 +39,7 @@ SRC = ./src/main.c ./src/signals/signals.c \
 	./src/builtins/builtins_utils.c \
 	./src/builtins/cd.c ./src/builtins/pwd.c ./src/builtins/echo.c ./src/builtins/exit.c \
 	./src/builtins/env.c ./src/builtins/unset.c ./src/builtins/export.c ./src/builtins/export_utils.c \
-	./src/builtins/builtins.c
+	./src/builtins/builtins.c ./src/utils/errors.c
 
 # DIRECTORIES
 OBJ_DIR = obj

@@ -6,21 +6,21 @@ void	print_token_value(t_word *word, t_token *token)
 	t_word	*head;
 
 	head = word;
-	ft_printf("`");
+	ft_putstr_fd("`", STDERR_FILENO);
 	while (word)
 	{
-		ft_printf("%s", word->value);
+		ft_putstr_fd(word->value, STDERR_FILENO);
 		word = word->next;
 	}
 	if (token->type == TOKEN_REDIRECT_IN)
-		ft_printf("<");
+		ft_putstr_fd("<", STDERR_FILENO);
 	if (token->type == TOKEN_REDIRECT_OUT)
-		ft_printf(">");
+		ft_putstr_fd(">", STDERR_FILENO);
 	if (token->type == TOKEN_HEREDOC)
-		ft_printf("<<");
+		ft_putstr_fd("<<", STDERR_FILENO);
 	if (token->type == TOKEN_REDIRECT_APPEND)
-		ft_printf(">>");
-	ft_printf("'\n");
+		ft_putstr_fd(">>", STDERR_FILENO);
+	ft_putstr_fd("'\n", STDERR_FILENO);
 	word = head;
 }
 
@@ -31,13 +31,15 @@ int	check_single_operator(t_token *token)
 	{
 		if (is_pipe(token) == 1)
 		{
-			ft_printf("minishell: syntax error near unexpected token `|'\n");
+			ft_putstr_fd("minishell: syntax error ", STDERR_FILENO);
+			ft_putstr_fd("near unexpected token `|'\n", STDERR_FILENO);
 			return (ER_SINGLE_OPERATOR);
 		}
 		if (is_word(token) != 1)
 		{
-			ft_printf("minishell: ");
-			ft_printf("syntax error near unexpected token `newline'\n");
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd("syntax error near ", STDERR_FILENO);
+			ft_putstr_fd("unexpected token `newline'\n", STDERR_FILENO);
 			return (ER_SINGLE_OPERATOR);
 		}
 	}
@@ -51,7 +53,8 @@ int	check_content_before_pipe(t_token *token)
 
 	if (is_pipe(token) == 1)
 	{
-		ft_printf("minishell: syntax error near unexpected token `|'\n");
+		ft_putstr_fd("minishell: syntax error", STDERR_FILENO);
+		ft_putstr_fd(" near unexpected token `|'\n", STDERR_FILENO);
 		return (ER_PIPE_SYNTAX);
 	}
 	prev = token;
@@ -62,8 +65,8 @@ int	check_content_before_pipe(t_token *token)
 		{
 			if (is_word(prev) != 1)
 			{
-				ft_printf("minishell: ");
-				ft_printf("syntax error near unexpected token `|'\n");
+				ft_putstr_fd("minishell: syntax error", STDERR_FILENO);
+				ft_putstr_fd(" near unexpected token `|'\n", STDERR_FILENO);
 				return (ER_PIPE_SYNTAX);
 			}
 		}
@@ -86,12 +89,12 @@ int	check_content_after_operator(t_token *token)
 		{
 			if (is_word(next) != 1)
 			{
-				ft_printf("minishell: ");
+				ft_putstr_fd("minishell: syntax error near u", STDERR_FILENO);
 				if (!next)
-					ft_printf("syntax error near unexpected token `newline'\n");
+					ft_putstr_fd("nexpected token `newline'\n", STDERR_FILENO);
 				else
 				{
-					ft_printf("syntax error near unexpected token ");
+					ft_putstr_fd("nexpected token ", STDERR_FILENO);
 					print_token_value(token->next->word, token->next);
 				}
 				return (ER_OPERATOR_SYNTAX);
@@ -114,8 +117,9 @@ int	check_content_after_pipe(t_token *token)
 		{
 			if (!next)
 			{
-				ft_printf("minishell: ");
-				ft_printf("syntax error near unexpected token `newline'\n");
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd("syntax error near ", STDERR_FILENO);
+				ft_putstr_fd("unexpected token `newline'\n", STDERR_FILENO);
 				return (ER_OPERATOR_SYNTAX);
 			}
 		}
