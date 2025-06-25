@@ -2,7 +2,6 @@
 
 int	init_shell(t_data *minishell)
 {
-	(*minishell).env = NULL;
 	(*minishell).input = NULL;
 	(*minishell).token = NULL;
 	(*minishell).command = NULL;

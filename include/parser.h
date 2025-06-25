@@ -1,11 +1,12 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-typedef struct s_token	t_token;
+typedef struct s_token		t_token;
+typedef struct s_data		t_data;
 
 // init parser
 
-int		init_parser(char **env, t_token **token, t_command **cmd, int ex_code);
+int		init_parser(t_data *shell);
 
 //check parsing errors
 

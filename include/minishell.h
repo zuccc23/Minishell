@@ -34,7 +34,6 @@
 typedef struct s_data
 {
 	char		*input;
-	char		**env;
 	t_command	*command;
 	t_exec		*exec;
 	t_token 	*token;

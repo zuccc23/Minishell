@@ -381,37 +381,25 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 }
 
 // Fonction principale qui orchestre toute lexec
-int	execute(t_command *command, char **env, t_exec **exec)
+int	execute(t_data shell)
 {
-	int		error_code;
+	int	err_code = 0;
 
-	(void)env;
 	handle_exec_signal();
-	error_code = init_exec(env, &(**exec), command);
-	if (error_code != ER_OK)
-		return (error_code);
-	error_code = collect_all_heredocs(command, &(**exec).last_exit_status, env, exec);
-	if (error_code != ER_OK)
+	err_code = init_exec(shell.exec, shell.command);
+	if (err_code != ER_OK)
+		return (err_code);
+	err_code = collect_all_heredocs(shell);
+	if (err_code != ER_OK)
 	{
-		(**exec).last_exit_status = error_code;
-		free_exec(&(**exec));
-		return (error_code);
+		shell.exec->last_exit_status = err_code;
+		free_exec(shell.exec);
+		return (err_code);
 	}
-	// if (!command->args || !command->args[0])
-	// {
-	// 	if (!has_valid_redirections(command))
-	// 	{
-	// 		ft_putstr_fd("minishell: syntax error near unexpected token\n", STDERR_FILENO);
-	// 		(**exec).last_exit_status = 2;
-	// 		free_exec(&(**exec));
-	// 		return (2);
-	// 	}
-	// }
-	if (command->next == NULL)
-		error_code = execute_single_command(command, &(**exec));
+	if (shell.command->next == NULL)
+		err_code = execute_single_command(shell.command, shell.exec);
 	else
-		error_code = execute_pipeline(command, &(**exec));
-	close_all_heredoc_fds(command);
-	// free_exec(&exec);
-	return (error_code);
+		err_code = execute_pipeline(shell.command, shell.exec);
+	close_all_heredoc_fds(shell.command);
+	return (err_code);
 }

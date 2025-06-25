@@ -2,13 +2,7 @@
 
 int	main(int ac, char **av, char **envp)
 {
-	char		*input = NULL;
-	char		**env = NULL;
-	t_command	*command = NULL;
-	t_exec		*exec = NULL;
-	t_token 	*head = NULL;
-	int			exit_status = 0;
-	t_data		minishell;
+	t_data		shell;
 	(void)ac;
 	(void)av;
 
@@ -21,67 +15,62 @@ int	main(int ac, char **av, char **envp)
 	}
 
 	// Initialisation du shell + a proteger
-	init_shell(&minishell);
+	init_shell(&shell);
 
-
-
-	minishell.env = copy_env(envp);
-	if (!minishell.env)
-		return (1);
-	minishell.exec = malloc(sizeof(t_exec));
-	if (!exec)
-	{
-		free_strs(minishell.env);
-		return (1);
-	}
-	ft_memset(exec, 0, sizeof(t_exec));
-	exec->envp = minishell.env;
+	shell.exec = malloc(sizeof(t_exec));
+	if (!shell.exec)
+		return (ER_MALLOC);
+	ft_memset(shell.exec, 0, sizeof(t_exec));
+	shell.exec->envp = copy_env(envp);
+	if (!shell.exec->envp)
+		return (ER_MALLOC);
 
 	// Init signaux
 	handle_interactive_signal();
 
 	while (1)
 	{
-		input = readline("minishell-1.0$ ");
-		if (!input)
+		shell.input = readline("minishell-1.0$ ");
+		if (!shell.input)
 		{
 			write (1, "exit\n", 5);
-			free_exec(exec);
-			exec = NULL;
+			free_exec(shell.exec);
+			shell.exec = NULL;
 			break;
 		}
-		if (*input)
+		if (*shell.input)
 		{
-			add_history(input);
+			add_history(shell.input);
 			//PARSING
-			command = NULL;
-			head = tokenize(input);
-			free(input);
-			if (head)
+			shell.command = NULL;
+			shell.token = tokenize(shell.input);
+			free(shell.input);
+			if (shell.token)
 			{
-				if (g_signal != 0)
-					exit_status = g_signal;
-				if (init_parser(exec->envp, &head, &command, exit_status) == 0)
+				if (g_signal == SIGINT)
+					shell.exit_status = 130;
+				shell.exit_status = init_parser(&shell);
+				if (shell.exit_status == 0)
 				{
 					g_signal = 0;
-					ft_free_list(head);
+					ft_free_list(shell.token);
 					//EXIT BUILTIN
-					if (command->args && !command->next)
+					if (shell.command->args && !shell.command->next)
 					{
-						if (command->args[0])
+						if (shell.command->args[0])
 						{
-							if (is_builtin(command->args[0]) == EXIT)
+							if (is_builtin(shell.command->args[0]) == EXIT)
 							{
-								exit_status = bltin_exit(command->args, exit_status);
-								free_commands(command);
-								free_exec(exec);
-								exit(exit_status);
+								shell.exit_status = bltin_exit(shell.command->args, shell.exit_status);
+								free_commands(shell.command);
+								free_exec(shell.exec);
+								exit(shell.exit_status);
 							}
 						}
 					}
 					//EXECUTION
-					exit_status = execute(command, env, &exec);
-					free_commands(command);
+					shell.exit_status = execute(shell);
+					free_commands(shell.command);
 
 					//restore interactive signals
 					handle_interactive_signal();
@@ -89,8 +78,8 @@ int	main(int ac, char **av, char **envp)
 			}
 		}
 	}
-	if (exec)
-		free_exec(exec);
+	if (shell.exec)
+		free_exec(shell.exec);
 	return (0);
 }
 

@@ -13,10 +13,10 @@ typedef struct s_expand_context
 	char		*exit_str;
 }	t_expand_context;
 
-int			collect_all_heredocs(t_command *cmd, int *exticode, char **env, t_exec **exec);
+int			collect_all_heredocs(t_data shell);
 void		heredoc_handle_signal(int sig);
 void		close_all_heredoc_fds(t_command *cmd);
-int			handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, char **env, t_exec **exec);
-char 		*expand_variables(const char *line, char **env, int error_code);
+int			handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd);
+char 		*expand_variables(const char *line, t_data shell);
 
 #endif

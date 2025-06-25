@@ -1,13 +1,12 @@
 #include "../../include/minishell.h"
 
-int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *exit_code, char **env, t_exec **exec)
+int handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd)
 {
 	int		pipe_fd[2];
 	char	*line;
 	int		status;
 	pid_t	pid;
 
-	// (void)exit_code;
 	if (pipe(pipe_fd) == -1)
 		return (-1);
 	pid = fork();
@@ -19,7 +18,7 @@ int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *
 	}
 	if (pid == 0)
 	{
-		close_all_heredoc_fds(cmd);
+		close_all_heredoc_fds(shell.command);
 		signal(SIGINT, heredoc_handle_signal);
 		signal(SIGQUIT, SIG_IGN);
 		close(pipe_fd[0]);
@@ -37,7 +36,7 @@ int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *
 			}
 			// write(pipe_fd[1], line, ft_strlen(line));
 			// write(pipe_fd[1], "\n", 1);
-			char *expanded = expand_variables(line, env, *exit_code);
+			char *expanded = expand_variables(line, shell);
 			if (expanded)
 			{
 				write(pipe_fd[1], expanded, ft_strlen(expanded));
@@ -52,8 +51,8 @@ int handle_heredoc(t_command *cmd, const char *delimiter, int *heredoc_fd, int *
 			free(line);
 		}
 		close(pipe_fd[1]);
-		free_commands(cmd);
-		free_exec(*exec);
+		free_commands(shell.command);
+		free_exec(shell.exec);
 		exit(0);
 	}
 	close(pipe_fd[1]);
@@ -83,22 +82,22 @@ void	heredoc_handle_signal(int sig)
 	}
 }
 
-int	collect_all_heredocs(t_command *cmd, int *exitcode, char **env, t_exec **exec)
+int	collect_all_heredocs(t_data shell)
 {
 	t_redirection	*redir;
 	int				heredoc_fd;
 
 	heredoc_fd = 0;
-	while (cmd)
+	while (shell.command)
 	{
-		redir = cmd->redirections;
+		redir = shell.command->redirections;
 		while (redir)
 		{
 			if (redir->type == REDIR_HEREDOC)
 			{
-				if (handle_heredoc(cmd, redir->file, &heredoc_fd, exitcode, env, exec) == -1)
+				if (handle_heredoc(shell, redir->file, &heredoc_fd) == -1)
 				{
-					close_all_heredoc_fds(cmd);
+					close_all_heredoc_fds(shell.command);
 					return (-1);
 				}
 				if (redir->fd >= 0)
@@ -107,7 +106,7 @@ int	collect_all_heredocs(t_command *cmd, int *exitcode, char **env, t_exec **exe
 			}
 			redir = redir->next;
 		}
-		cmd = cmd->next;
+		shell.command = shell.command->next;
 	}
 	return (0);
 }//at Makefile | grep l | ls | export po=123 > out4 > out9>ouy9

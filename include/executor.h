@@ -7,6 +7,8 @@
 # include <fcntl.h>
 # include <time.h>
 
+typedef struct s_data		t_data;
+
 typedef struct s_exex
 {
 	int		pipe_fd[2]; // fd[0] = lecture, fd[1] = ecriture
@@ -20,13 +22,13 @@ typedef struct s_exex
 	pid_t	*pidarray;  // Tableau de tous les pids (si plusieurs commandes)
 }	t_exec;
 
-int			execute(t_command *command, char **env, t_exec **exec);
+int			execute(t_data shell);
 int			execute_single_command(t_command *cmd, t_exec *exec);
 int			apply_redirection(t_command *cmd, t_exec *exec);
 
 // UTILS
 
-int 		init_exec(char **env, t_exec *exec, t_command *cmd);
+int 		init_exec(t_exec *exec, t_command *cmd);
 void		free_exec(t_exec *exec);
 int			count_commands(t_command *cmd);
 

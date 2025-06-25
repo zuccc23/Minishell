@@ -23,9 +23,8 @@ void free_exec(t_exec *exec)
 }
 
 // Initialiser la structure de lexec
-int init_exec(char **env, t_exec *exec, t_command *cmd)
+int init_exec(t_exec *exec, t_command *cmd)
 {
-	(void)env;
 	exec->count_cmd = count_commands(cmd);
 	exec->pipe_fd[0] = -1;
 	exec->pipe_fd[1] = -1;

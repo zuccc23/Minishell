@@ -83,7 +83,7 @@ static size_t	expanded_len(const char *line, char **env, int error_code)
 	return (len);
 }
 
-char *expand_variables(const char *line, char **env, int error_code)
+char *expand_variables(const char *line, t_data shell)
 {
 	size_t	i;
 	size_t	j;
@@ -95,8 +95,8 @@ char *expand_variables(const char *line, char **env, int error_code)
 		return (NULL);
 	i = 0;
 	j = 0;
-	exit_str = ft_itoa(error_code);
-	new_len = expanded_len(line, env, error_code);
+	exit_str = ft_itoa(shell.exec->last_exit_status);
+	new_len = expanded_len(line, shell.exec->envp, shell.exec->last_exit_status);
 	res = malloc(sizeof(char) * (new_len + 1));
 	if (!res || !exit_str)
 		return (free(exit_str), NULL);
@@ -115,7 +115,7 @@ char *expand_variables(const char *line, char **env, int error_code)
 			{
 				int var_len = get_var_name_len(line, i);
 				char *var_name = ft_substr(line, i, var_len);
-				char *var_value = get_env_value(var_name, env);
+				char *var_value = get_env_value(var_name, shell.exec->envp);
 
 				j += ft_strlcpy(res + j, var_value, ft_strlen(var_value) + 1);
 				// j += ft_strlen(var_value);
