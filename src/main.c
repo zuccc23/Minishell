@@ -25,17 +25,17 @@ int	main(int ac, char **av, char **envp)
 
 
 
-	env = copy_env(envp);
-	if (!env)
+	minishell.env = copy_env(envp);
+	if (!minishell.env)
 		return (1);
-	exec = malloc(sizeof(t_exec));
+	minishell.exec = malloc(sizeof(t_exec));
 	if (!exec)
 	{
-		free_strs(env);
+		free_strs(minishell.env);
 		return (1);
 	}
 	ft_memset(exec, 0, sizeof(t_exec));
-	exec->envp = env;
+	exec->envp = minishell.env;
 
 	// Init signaux
 	handle_interactive_signal();
