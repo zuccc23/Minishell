@@ -29,5 +29,16 @@
 # include "test.h"
 # include "path.h"
 # include "heredoc.h"
+# include "init.h"
+
+typedef struct s_data
+{
+	char		*input;
+	char		**env;
+	t_command	*command;
+	t_exec		*exec;
+	t_token 	*token;
+	int			exit_status;
+}	t_data;
 
 #endif

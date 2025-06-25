@@ -6,7 +6,9 @@ int	main(int ac, char **av, char **envp)
 	char		**env = NULL;
 	t_command	*command = NULL;
 	t_exec		*exec = NULL;
+	t_token 	*head = NULL;
 	int			exit_status = 0;
+	t_data		minishell;
 	(void)ac;
 	(void)av;
 
@@ -19,6 +21,10 @@ int	main(int ac, char **av, char **envp)
 	}
 
 	// Initialisation du shell + a proteger
+	init_shell(&minishell);
+
+
+
 	env = copy_env(envp);
 	if (!env)
 		return (1);
@@ -48,7 +54,6 @@ int	main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 			//PARSING
-			t_token *head = NULL;
 			command = NULL;
 			head = tokenize(input);
 			free(input);

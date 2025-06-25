@@ -13,7 +13,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			fd = open(redir->file, O_RDONLY);
 			if (fd == -1)
 			{
-				ft_putstr_fd("failed opening infile", 2);
+				putstr_err("minishell: ", redir->file, ": Permission denied\n");
 				exec->last_exit_status = 1;
 				exit(-1);
 			}
@@ -27,7 +27,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (fd == -1)
 			{
-				ft_putstr_fd("erreur ouverture outfile", 2);
+				putstr_err("minishell: ", redir->file, ": Permission denied\n");
 				exec->last_exit_status = 1;
 				return (-1);
 			}
@@ -40,7 +40,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 			fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
 			{
-				ft_putstr_fd("erreur ouverture append", 2);
+				putstr_err("minishell: ", redir->file, ": Permission denied\n");
 				exec->last_exit_status = 1;
 				return (-1);
 			}
@@ -52,7 +52,7 @@ int	apply_redirection(t_command *cmd, t_exec *exec)
 		{
 			if (redir->fd == -1)
 			{
-			    ft_putstr_fd("heredoc error\n", STDERR_FILENO);
+			    ft_putstr_fd("minishell: heredoc error\n", STDERR_FILENO);
 				exec->last_exit_status = 1;
         		return (-1);
 			}
@@ -121,7 +121,6 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		handle_child_signal();
 		if (apply_redirection(cmd, exec) == -1)
 		{
-			perror("redirection failed");
 			free(path);
 			exit(-1);
 		}
@@ -251,7 +250,6 @@ static int	execute_pipeline(t_command *cmd, t_exec *exec)
 			//REDIRECTIONS
 			if (apply_redirection(cmd, exec) == -1)
 			{
-				perror("redirection failed");
 				free_exec(exec);
 				exit(1);
 			}
