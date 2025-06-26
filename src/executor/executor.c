@@ -175,18 +175,14 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 		}
 		//GET EXIT STATUS OF CHILD
 		if (WIFEXITED(wstatus))
-		{
 			exec->last_exit_status = WEXITSTATUS(wstatus);
-		}
 		else if (WIFSIGNALED(wstatus))
 		{
 			// Process was terminated by signal
 			exec->last_exit_status =  128 + WTERMSIG(wstatus);
 		}
 		else
-		{
 			exec->last_exit_status = 1; // Unknown termination
-		}
 		if (exec->infile_fd != -1)
 		{
 			safe_close(&exec->infile_fd);
@@ -393,7 +389,7 @@ int	execute(t_data shell)
 	if (err_code != ER_OK)
 	{
 		shell.exec->last_exit_status = err_code;
-		free_exec(shell.exec);
+		//free_exec(shell.exec);
 		return (err_code);
 	}
 	if (shell.command->next == NULL)

@@ -53,6 +53,9 @@ int handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd)
 		close(pipe_fd[1]);
 		free_commands(shell.command);
 		free_exec(shell.exec);
+		rl_clear_history();
+		if (g_signal == SIGINT)
+			exit(130);
 		exit(0);
 	}
 	close(pipe_fd[1]);
@@ -77,8 +80,9 @@ void	heredoc_handle_signal(int sig)
 {
 	if (sig == SIGINT)
 	{
-		write (STDOUT_FILENO, "\n", 1);
-		exit(130);
+		printf("\n");
+		close(STDIN_FILENO);
+		g_signal = SIGINT;
 	}
 }
 

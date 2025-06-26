@@ -30,6 +30,10 @@ int init_exec(t_exec *exec, t_command *cmd)
 	exec->pipe_fd[1] = -1;
 	exec->input_fd = STDIN_FILENO;
 	exec->output_fd = STDOUT_FILENO;
+	if (exec->infile_fd != -1)
+		safe_close(&exec->infile_fd);
+	if (exec->outfile_fd != -1)
+		safe_close(&exec->outfile_fd);
 	exec->infile_fd = -1;
 	exec->outfile_fd = -1;
 	exec->last_exit_status = 0;

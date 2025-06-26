@@ -78,6 +78,7 @@ int	main(int ac, char **av, char **envp)
 			}
 		}
 	}
+	rl_clear_history();
 	if (shell.exec)
 		free_exec(shell.exec);
 	return (0);

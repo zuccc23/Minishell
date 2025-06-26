@@ -7,9 +7,10 @@ volatile sig_atomic_t	g_signal;
 void	handle_sigint(int sig)
 {
 	(void)sig;
+	g_signal = 130;
+	write (1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
-	write (1, "\n", 1);
 	rl_redisplay();
 }
 
@@ -17,12 +18,9 @@ void	handle_sigint(int sig)
 void	exec_handle_sigint(int sig)
 {
 	g_signal = sig;
-	if (!isatty(0))
-	{
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		write(1, "\n", 1);
-	}
+	// write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
 }
 
 void	handle_sigquit(int sig)
