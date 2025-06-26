@@ -7,5 +7,6 @@ int	init_shell(t_data *minishell)
 	(*minishell).command = NULL;
 	(*minishell).exec = NULL;
 	(*minishell).exit_status = 0;
+	(*minishell).parser_status = 0;
 	return (ER_OK);
 }

@@ -38,6 +38,7 @@ typedef struct s_data
 	t_exec		*exec;
 	t_token 	*token;
 	int			exit_status;
+	int			parser_status;
 }	t_data;
 
 #endif

@@ -49,10 +49,9 @@ int	main(int ac, char **av, char **envp)
 			{
 				if (g_signal == SIGINT)
 					shell.exit_status = 130;
-				shell.exit_status = init_parser(&shell);
-				if (shell.exit_status == 0)
+				shell.parser_status = init_parser(&shell);
+				if (shell.parser_status == 0)
 				{
-					g_signal = 0;
 					ft_free_list(shell.token);
 					//EXIT BUILTIN
 					if (shell.command->args && !shell.command->next)
@@ -75,6 +74,8 @@ int	main(int ac, char **av, char **envp)
 					//restore interactive signals
 					handle_interactive_signal();
 				}
+				else
+					shell.exit_status = shell.parser_status;
 			}
 		}
 	}
