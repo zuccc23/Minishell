@@ -4,9 +4,8 @@
 //returns 1 if any error occurs, 0 if ok
 int	bltin_cd(t_command *cmd, char ***env)
 {
-	DIR	*dir;
+	DIR		*dir;
 
-	(void)*env;
 	if (cd_errors(cmd) != ER_OK)
 		return (1);
 	dir = opendir(cmd->args[1]);
@@ -23,6 +22,7 @@ int	bltin_cd(t_command *cmd, char ***env)
 		closedir(dir);
 		return (1);
 	}
+	change_env(&(*env));
 	if (closedir(dir) == -1)
 	{
 		ft_putstr_fd("minishell: \n", STDERR_FILENO);
@@ -32,6 +32,7 @@ int	bltin_cd(t_command *cmd, char ***env)
 	return (ER_OK);
 }
 
+//handles errors messages of cd
 int	cd_errors(t_command *cmd)
 {
 	if (!cmd->args[1])
@@ -48,20 +49,75 @@ int	cd_errors(t_command *cmd)
 	return (ER_OK);
 }
 
-char	**return_dir(void)
+// returns a char ** with the result of pwd
+char	**return_pwd(void)
 {
 	char	**dir;
 	char	buff[1024];
 
-	if (invalid_option(cmd->args, "pwd") == 2)
-		return (2);
-	str = getcwd(buff, 1024);
-	if (!str)
+	dir = malloc(sizeof(char *) * 3);
+	if (!dir)
+		return (NULL);
+	dir[0] = ft_strdup("export");
+	if (!dir[0])
 	{
-		perror("pwd: getcwd");
-		return (1);
+		free(dir);
+		return (NULL);
 	}
-	if (str)
-		ft_printf("%s\n", str);
+	dir[1] = ft_strjoin("PWD=", getcwd(buff, 1024));
+	if (!dir[1])
+	{
+		free_strs(dir);
+		return (NULL);
+	}
+	dir[2] = NULL;
 	return (dir);
+}
+
+// returns a char ** with the result of oldpwd
+char	**return_oldpwd(char **env)
+{
+	char	**dir;
+	char	*getenv_res;
+
+	dir = malloc(sizeof(char *) * 3);
+	if (!dir)
+		return (NULL);
+	getenv_res = ft_getenv("PWD", env);
+	dir[0] = ft_strdup("export");
+	if (!dir[0])
+	{
+		free(dir);
+		return (NULL);
+	}
+	dir[1] = ft_strjoin("OLDPWD=", getenv_res);
+	free(getenv_res);
+	if (!dir[1])
+	{
+		free_strs(dir);
+		return (NULL);
+	}
+	dir[2] = NULL;
+	return (dir);
+}
+
+int	change_env(char ***env)
+{
+	char	**pwd;
+	char	**oldpwd;
+
+	pwd = return_pwd();
+	if (!pwd)
+		return (ER_MALLOC);
+	oldpwd = return_oldpwd(*env);
+	if (!oldpwd)
+	{
+		free_strs(pwd);
+		return (ER_MALLOC);
+	}
+	bltin_export(pwd, env);
+	bltin_export(oldpwd, env);
+	free_strs(pwd);
+	free_strs(oldpwd);
+	return (ER_OK);
 }

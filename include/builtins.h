@@ -18,6 +18,9 @@ int		bltin_pwd(t_command *cmd); //pwd
 
 int		bltin_cd(t_command *cmd, char ***env); //cd
 int		cd_errors(t_command *cmd);
+char	**return_pwd(void);
+char	**return_oldpwd(char **env);
+int		change_env(char ***env);
 
 int		bltin_echo(t_command *cmd); //echo
 int		is_n(char *str);
