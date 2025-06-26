@@ -49,6 +49,7 @@ int	main(int ac, char **av, char **envp)
 			{
 				if (g_signal == SIGINT)
 					shell.exit_status = 130;
+				g_signal = 0;
 				shell.parser_status = init_parser(&shell);
 				if (shell.parser_status == 0)
 				{

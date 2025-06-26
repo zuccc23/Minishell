@@ -2,10 +2,11 @@
 
 //changes current working directory
 //returns 1 if any error occurs, 0 if ok
-int	bltin_cd(t_command *cmd)
+int	bltin_cd(t_command *cmd, char ***env)
 {
 	DIR	*dir;
 
+	(void)*env;
 	if (cd_errors(cmd) != ER_OK)
 		return (1);
 	dir = opendir(cmd->args[1]);
@@ -45,4 +46,22 @@ int	cd_errors(t_command *cmd)
 		return (1);
 	}
 	return (ER_OK);
+}
+
+char	**return_dir(void)
+{
+	char	**dir;
+	char	buff[1024];
+
+	if (invalid_option(cmd->args, "pwd") == 2)
+		return (2);
+	str = getcwd(buff, 1024);
+	if (!str)
+	{
+		perror("pwd: getcwd");
+		return (1);
+	}
+	if (str)
+		ft_printf("%s\n", str);
+	return (dir);
 }

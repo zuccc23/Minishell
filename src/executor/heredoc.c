@@ -7,6 +7,8 @@ int handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd)
 	int		status;
 	pid_t	pid;
 
+	// signal(SIGINT, heredoc_handle_signal);
+	signal(SIGQUIT, SIG_IGN);
 	if (pipe(pipe_fd) == -1)
 		return (-1);
 	pid = fork();
@@ -20,7 +22,7 @@ int handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd)
 	{
 		close_all_heredoc_fds(shell.command);
 		signal(SIGINT, heredoc_handle_signal);
-		signal(SIGQUIT, SIG_IGN);
+		// signal(SIGQUIT, SIG_IGN);
 		close(pipe_fd[0]);
 		while (1)
 		{

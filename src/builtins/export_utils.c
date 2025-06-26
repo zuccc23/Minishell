@@ -34,11 +34,11 @@ int	is_same_var_exp(char *str1, char *str2)
 }
 
 //check for empty args or invalid options
-int	check_args(t_command *cmd)
+int	check_args(char **args)
 {
-	if (!cmd->args[1])
+	if (args[1])
 		return (ER_OK);
-	if (invalid_option(cmd->args, "env") == 2)
+	if (invalid_option(args, "env") == 2)
 		return (2);
 	return (0);
 }

@@ -16,7 +16,7 @@ typedef enum e_builtin_type {
 
 int		bltin_pwd(t_command *cmd); //pwd
 
-int		bltin_cd(t_command *cmd); //cd
+int		bltin_cd(t_command *cmd, char ***env); //cd
 int		cd_errors(t_command *cmd);
 
 int		bltin_echo(t_command *cmd); //echo
@@ -36,7 +36,7 @@ char	**copy_and_remove(char **env, char *cmd);
 int		is_same_var(char *str1, char *str2);
 size_t	char_position(char *str, char c);
 
-int		bltin_export(t_command *cmd, char ***env); //export
+int		bltin_export(char **args, char ***env); //export
 int		get_new_env(char ***env, char *cmd);
 char	**copy_and_add(char **env, char *cmd);
 char	**copy_and_replace(char **env, char *cmd);
@@ -44,7 +44,7 @@ char	**copy_and_replace(char **env, char *cmd);
 //export utils
 
 int		count_strings(char **strs);
-int		check_args(t_command *cmd);
+int		check_args(char **args);
 int		check_export(char *cmd);
 int		is_same_var_exp(char *str1, char *str2);
 

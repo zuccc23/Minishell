@@ -21,10 +21,12 @@ void	handle_exec_signal(void)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = handle_sigquit;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sigaction(SIGQUIT, &sa, NULL);
+
+	signal(SIGQUIT, handle_sigquit);
+	// sa.sa_handler = handle_sigquit;
+	// sigemptyset(&sa.sa_mask);
+	// sa.sa_flags = SA_RESTART;
+	// sigaction(SIGQUIT, &sa, NULL);
 }
 
 //gere les signaux dans le process enfant
