@@ -38,7 +38,6 @@ int	read_input(t_data *shell)
 	{
 		shell->exit_status = 130;
 		g_signal = 0;
-		return (0);
 	}
 	if (!shell->input)
 	{
