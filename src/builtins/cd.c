@@ -49,14 +49,17 @@ int	cd_errors(t_command *cmd)
 }
 
 // returns a char ** with the result of pwd
-char	**return_pwd(void)
+char	**return_pwd(char **env)
 {
 	char	**dir;
 	char	buff[1024];
+	char	*getenv_res;
 
+	getenv_res = ft_getenv("PWD", env);
 	dir = malloc(sizeof(char *) * 3);
-	if (!dir)
+	if (!dir || !getenv_res)
 		return (NULL);
+	free(getenv_res);
 	dir[0] = ft_strdup("export");
 	if (!dir[0])
 	{
@@ -84,7 +87,7 @@ char	**return_oldpwd(char **env)
 		return (NULL);
 	getenv_res = ft_getenv("PWD", env);
 	dir[0] = ft_strdup("export");
-	if (!dir[0])
+	if (!dir[0] || !getenv_res)
 	{
 		free(dir);
 		return (NULL);
@@ -105,25 +108,20 @@ int	change_env(char ***env)
 	char	**pwd;
 	char	**oldpwd;
 
-	if (ft_getenv("OLDPWD", *env) != NULL)
+	oldpwd = return_oldpwd(*env);
+	if (!oldpwd)
+		return (0);
+	bltin_export(oldpwd, env);
+	free_strs(oldpwd);
+
+	pwd = return_pwd(*env);
+	if (!pwd)
 	{
-		oldpwd = return_oldpwd(*env);
-		if (!oldpwd)
-			return (ER_MALLOC);
-		bltin_export(oldpwd, env);
-		free_strs(oldpwd);
+		if (oldpwd)
+			free_strs(oldpwd);
+		return (0);
 	}
-	if (ft_getenv("PWD", *env) != NULL)
-	{
-		pwd = return_pwd();
-		if (!pwd)
-		{
-			if (oldpwd)
-				free_strs(oldpwd);
-			return (ER_MALLOC);
-		}
-		bltin_export(pwd, env);
-		free_strs(pwd);
-	}
+	bltin_export(pwd, env);
+	free_strs(pwd);
 	return (ER_OK);
 }

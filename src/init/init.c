@@ -8,13 +8,13 @@ int	init_shell(t_data *shell, char **envp)
 		ft_putstr_fd("minishell: a tty is expected\n", STDERR_FILENO);
 		exit(1);
 	}
-	init_vars(&(*shell));
-	(*shell).exec = malloc(sizeof(t_exec));
-	if (!(*shell).exec)
+	init_vars(shell);
+	shell->exec = malloc(sizeof(t_exec));
+	if (!shell->exec)
 		return (ER_MALLOC);
-	ft_memset((*shell).exec, 0, sizeof(t_exec));
-	(*shell).exec->envp = copy_env(envp);
-	if (!(*shell).exec->envp)
+	ft_memset(shell->exec, 0, sizeof(t_exec));
+	shell->exec->envp = copy_env(envp);
+	if (!shell->exec->envp)
 		return (ER_MALLOC);
 	handle_interactive_signal();
 	g_signal = 0;
