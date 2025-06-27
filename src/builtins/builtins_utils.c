@@ -36,11 +36,11 @@ int	exec_builtins(t_command *cmd, char ***env, int ex_status)
 	if (is_builtin(cmd->args[0]) == ECHO)
 		exit_status = bltin_echo(cmd);
 	if (is_builtin(cmd->args[0]) == CD)
-		exit_status = bltin_cd(cmd);
+		exit_status = bltin_cd(cmd, &(*env));
 	if (is_builtin(cmd->args[0]) == ENV)
 		exit_status = bltin_env(cmd, *env);
 	if (is_builtin(cmd->args[0]) == EXPORT)
-		exit_status = bltin_export(cmd, &(*env));
+		exit_status = bltin_export(cmd->args, &(*env));
 	if (is_builtin(cmd->args[0]) == UNSET)
 		exit_status = bltin_unset(cmd, &(*env));
 	if (is_builtin(cmd->args[0]) == EXIT)

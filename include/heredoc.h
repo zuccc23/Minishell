@@ -18,7 +18,6 @@ void		heredoc_handle_signal(int sig);
 void		close_all_heredoc_fds(t_command *cmd);
 int			handle_heredoc(t_data shell, char *delimiter, int *heredoc_fd);
 char		*expand_variables(const char *line, t_data shell);
-void		heredoc_handle_signal(int sig);
 void		write_heredoc_line(int fd, char *line, char *expanded);
 int			is_heredoc_interrupted(int status, int fd);
 

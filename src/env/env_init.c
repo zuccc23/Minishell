@@ -6,6 +6,8 @@ char	**copy_env(char **env)
 	char	**tmp;
 	int		i;
 
+	if (!env || !env[0])
+		return (mini_env());
 	i = 0;
 	tmp = malloc(sizeof(char *) * (count_strings(env) + 1));
 	if (!tmp)
@@ -22,6 +24,31 @@ char	**copy_env(char **env)
 	}
 	tmp[i] = NULL;
 	return (tmp);
+}
+
+char	**mini_env(void)
+{
+	char	**env;
+
+	env = malloc(sizeof(char *) * 5);
+	if (!env)
+		return (NULL);
+	env[0] = ft_strdup("USER=dahmane");
+	if (!env[0])
+		return (NULL);
+	env[1] = ft_strdup("PATH=/home/dahmane/.local/funcheck/host:/home/\
+dahmane/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin\
+:/bin:/usr/games:/usr/local/games:/snap/bin");
+	if (!env[1])
+		return (NULL);
+	env[2] = ft_strdup("HOME=/home/dahmane");
+	if (!env[2])
+		return (NULL);
+	env[3] = ft_strdup("LOGNAME=dahmane");
+	if (!env[3])
+		return (NULL);
+	env[4] = NULL;
+	return (env);
 }
 
 //recree la fonction getenv pour recuperer le bon environnement

@@ -34,11 +34,11 @@ int	is_same_var_exp(char *str1, char *str2)
 }
 
 //check for empty args or invalid options
-int	check_args(t_command *cmd)
+int	check_args(char **args)
 {
-	if (!cmd->args[1])
+	if (args[1])
 		return (ER_OK);
-	if (invalid_option(cmd->args, "env") == 2)
+	if (invalid_option(args, "env") == 2)
 		return (2);
 	return (0);
 }
@@ -57,7 +57,7 @@ int	check_export(char *cmd)
 	while (cmd[i])
 	{
 		if (ft_isalnum(cmd[i]) == 0 && cmd[i] != '_' && cmd[i] != '=' \
-		&& cmd[i] != ' ' && cmd[i] != '-')
+		&& cmd[i] != ' ' && cmd[i] != '-' && cmd[i] != '/')
 			return (1);
 		if (cmd[i] == '=')
 			count = 1;

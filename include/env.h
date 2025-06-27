@@ -13,5 +13,6 @@ typedef struct s_env
 char	*ft_getenv(char *str, char **env);
 char	*copy_path(const char *s1, int start);
 char	**copy_env(char **env);
+char	**mini_env(void);
 
 #endif

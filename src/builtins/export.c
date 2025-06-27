@@ -1,30 +1,30 @@
 #include "../../include/minishell.h"
 
 //export a variable in the environment
-int	bltin_export(t_command *cmd, char ***env)
+int	bltin_export(char **args, char ***env)
 {
 	int	er_code;
 	int	i;
 
 	er_code = 0;
 	i = 1;
-	if (check_args(cmd) == 2)
+	if (check_args(args) == 2)
 		return (2);
-	while (cmd->args[i])
+	while (args[i])
 	{
-		while (cmd->args[i] && check_export(cmd->args[i]) != 0)
+		while (args[i] && check_export(args[i]) != 0)
 		{
-			if (check_export(cmd->args[i]) == 1)
+			if (check_export(args[i]) == 1)
 			{
-				putstr_err("minishell: export: ", cmd->args[i], ":");
+				putstr_err("minishell: export: ", args[i], ":");
 				ft_putstr_fd(" not a valid identifier\n", STDERR_FILENO);
 				er_code = 1;
 			}
 			i++;
 		}
-		if (cmd->args[i] && get_new_env(&(*env), cmd->args[i]) == 1)
+		if (args[i] && get_new_env(&(*env), args[i]) == 1)
 			return (1);
-		if (cmd->args[i])
+		if (args[i])
 			i++;
 	}
 	return (er_code);
@@ -116,4 +116,3 @@ char	**copy_and_add(char **env, char *cmd)
 	tmp[i + 1] = NULL;
 	return (tmp);
 }
-

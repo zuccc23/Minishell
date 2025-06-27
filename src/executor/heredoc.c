@@ -1,6 +1,5 @@
 #include "../../include/minishell.h"
 
-// Traite tous les heredocs et les convertit en pipes avec leur contenu
 int	collect_all_heredocs(t_data shell)
 {
 	t_redirection	*redir;
