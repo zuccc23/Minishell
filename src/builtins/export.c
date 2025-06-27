@@ -116,4 +116,3 @@ char	**copy_and_add(char **env, char *cmd)
 	tmp[i + 1] = NULL;
 	return (tmp);
 }
-

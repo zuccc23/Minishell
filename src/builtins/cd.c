@@ -17,8 +17,7 @@ int	bltin_cd(t_command *cmd, char ***env)
 	}
 	if (chdir(cmd->args[1]) == -1)
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd("cd: error changing directories\n", STDERR_FILENO);
+		putstr_err("minishell: ", "cd: error changing", " directories\n");
 		closedir(dir);
 		return (1);
 	}
@@ -106,18 +105,25 @@ int	change_env(char ***env)
 	char	**pwd;
 	char	**oldpwd;
 
-	pwd = return_pwd();
-	if (!pwd)
-		return (ER_MALLOC);
-	oldpwd = return_oldpwd(*env);
-	if (!oldpwd)
+	if (ft_getenv("OLDPWD", *env) != NULL)
 	{
-		free_strs(pwd);
-		return (ER_MALLOC);
+		oldpwd = return_oldpwd(*env);
+		if (!oldpwd)
+			return (ER_MALLOC);
+		bltin_export(oldpwd, env);
+		free_strs(oldpwd);
 	}
-	bltin_export(pwd, env);
-	bltin_export(oldpwd, env);
-	free_strs(pwd);
-	free_strs(oldpwd);
+	if (ft_getenv("PWD", *env) != NULL)
+	{
+		pwd = return_pwd();
+		if (!pwd)
+		{
+			if (oldpwd)
+				free_strs(oldpwd);
+			return (ER_MALLOC);
+		}
+		bltin_export(pwd, env);
+		free_strs(pwd);
+	}
 	return (ER_OK);
 }

@@ -7,6 +7,9 @@ typedef struct s_data		t_data;
 // init parser
 
 int		init_parser(t_data *shell);
+int		is_minishell(t_data shell);
+int		is_same_word(char *str1, char *str2);
+void	print_symbol(void);
 
 //check parsing errors
 
