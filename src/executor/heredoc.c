@@ -1,91 +1,6 @@
 #include "../../include/minishell.h"
 
-int handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd)
-{
-	int		pipe_fd[2];
-	char	*line;
-	int		status;
-	pid_t	pid;
-
-	if (pipe(pipe_fd) == -1)
-		return (-1);
-	pid = fork();
-	if (pid == -1)
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		close_all_heredoc_fds(shell.command);
-		signal(SIGINT, heredoc_handle_signal);
-		signal(SIGQUIT, SIG_IGN);
-		close(pipe_fd[0]);
-		while (1)
-		{
-			line = readline("> ");
-			//line = expand_variables(line, env, );
-			if (!line)
-				break ;
-			if ((ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
-				&& line[ft_strlen(delimiter)] == '\0')
-			{
-				free(line);
-				break;
-			}
-			// write(pipe_fd[1], line, ft_strlen(line));
-			// write(pipe_fd[1], "\n", 1);
-			char *expanded = expand_variables(line, shell);
-			if (expanded)
-			{
-				write(pipe_fd[1], expanded, ft_strlen(expanded));
-				write(pipe_fd[1], "\n", 1);
-				free(expanded);
-			}
-			else
-			{
-				write(pipe_fd[1], line, ft_strlen(line));
-				write(pipe_fd[1], "\n", 1);
-			}
-			free(line);
-		}
-		close(pipe_fd[1]);
-		free_commands(shell.command);
-		free_exec(shell.exec);
-		rl_clear_history();
-		if (g_signal == SIGINT)
-			exit(130);
-		exit(0);
-	}
-	close(pipe_fd[1]);
-	waitpid(pid, &status, 0);
-	// Vérifier si le processus enfant a été interrompu par un signal
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		close(pipe_fd[0]);
-		return (-1);
-	}
-	// Vérifier si le processus enfant a échoué
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-	{
-		close(pipe_fd[0]);
-		return (-1);
-	}
-	*heredoc_fd = pipe_fd[0];
-	return (0);
-}
-
-void	heredoc_handle_signal(int sig)
-{
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		close(STDIN_FILENO);
-		g_signal = SIGINT;
-	}
-}
-
+// Traite tous les heredocs et les convertit en pipes avec leur contenu
 int	collect_all_heredocs(t_data shell)
 {
 	t_redirection	*redir;
@@ -113,21 +28,78 @@ int	collect_all_heredocs(t_data shell)
 		shell.command = shell.command->next;
 	}
 	return (0);
-}//at Makefile | grep l | ls | export po=123 > out4 > out9>ouy9
+}
 
-void	close_all_heredoc_fds(t_command *cmd)
+// Lit l'entrée utilisateur jusqu'au délimiteur et écrit dans le pipe
+void	process_hd_input(int fd, const char *delimiter, t_data shell)
 {
-	t_redirection *redir;
+	char	*line;
+	char	*expanded;
 
-	while (cmd)
+	while (1)
 	{
-		redir = cmd->redirections;
-		while (redir)
+		line = readline("> ");
+		if (!line)
+			break ;
+		if ((ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+			&& line[ft_strlen(delimiter)] == '\0')
 		{
-			if (redir->type == REDIR_HEREDOC && redir->fd >= 0)
-				safe_close(&redir->fd);
-			redir = redir->next;
+			free(line);
+			break ;
 		}
-		cmd = cmd->next;
+		expanded = expand_variables(line, shell);
+		write_heredoc_line(fd, line, expanded);
+		free(line);
 	}
+}
+
+// Routine du processus enfant pour gérer les signaux et traiter heredoc
+void	heredoc_child_routine(t_data shell, const char *delimiter, int *pipe_fd)
+{
+	close_all_heredoc_fds(shell.command);
+	signal(SIGINT, heredoc_handle_signal);
+	signal(SIGQUIT, SIG_IGN);
+	close(pipe_fd[0]);
+	process_hd_input(pipe_fd[1], delimiter, shell);
+	close(pipe_fd[1]);
+	free_commands(shell.command);
+	free_exec(shell.exec);
+	rl_clear_history();
+}
+
+// Ferme les deux extrémités d'un pipe (lecture et écriture)
+static void	close_pipe_ends(int *pipe_fd)
+{
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+}
+
+// Crée un processus enfant pour gérer un heredoc et retourne le fd
+int	handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd)
+{
+	int		pipe_fd[2];
+	int		status;
+	pid_t	pid;
+
+	if (pipe(pipe_fd) == -1)
+		return (-1);
+	pid = fork();
+	if (pid == -1)
+	{
+		close_pipe_ends(pipe_fd);
+		return (-1);
+	}
+	if (pid == 0)
+	{
+		heredoc_child_routine(shell, delimiter, pipe_fd);
+		if (g_signal == SIGINT)
+			exit(130);
+		exit(0);
+	}
+	close(pipe_fd[1]);
+	waitpid(pid, &status, 0);
+	if (is_heredoc_interrupted(status, pipe_fd[0]))
+		return (-1);
+	*heredoc_fd = pipe_fd[0];
+	return (0);
 }

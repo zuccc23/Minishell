@@ -1,137 +1,66 @@
 #include "../../include/minishell.h"
 
-static char	*get_env_value(const char *var_name, char **env)
+// Gestionnaire SIGINT pour heredocs qui ferme stdin et définit g_signal
+void	heredoc_handle_signal(int sig)
 {
-	char	**tmp;
-	char	*equals_pos;
-	size_t	var_len;
-	int		i;
-
-	i = 0;
-	var_len = ft_strlen(var_name);
-	tmp = env;
-	while (tmp[i])
+	if (sig == SIGINT)
 	{
-		equals_pos = ft_strchr(tmp[i], '=');
-		if (equals_pos)
-		{
-			if (ft_strncmp(tmp[i], var_name, var_len) == 0
-				&& tmp[i][var_len] == '=')
-				return (equals_pos + 1);
-		}
-		i++;
+		printf("\n");
+		close(STDIN_FILENO);
+		g_signal = SIGINT;
 	}
-	return ("");
 }
 
-static int	get_var_name_len(const char *str, int start)
+// Ferme tous les file descriptors des heredocs dans toutes les commandes
+void	close_all_heredoc_fds(t_command *cmd)
 {
-	int	len;
+	t_redirection	*redir;
 
-	len = 0;
-	if (str[start] == '?')
+	while (cmd)
+	{
+		redir = cmd->redirections;
+		while (redir)
+		{
+			if (redir->type == REDIR_HEREDOC && redir->fd >= 0)
+				safe_close(&redir->fd);
+			redir = redir->next;
+		}
+		cmd = cmd->next;
+	}
+}
+
+// Vérifie si le processus heredoc a été interrompu par SIGINT
+int	is_heredoc_interrupted(int status, int fd)
+{
+	if ((WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		|| (WIFEXITED(status) && WEXITSTATUS(status) == 130))
+	{
+		close(fd);
 		return (1);
-	while (str[start + len] && (ft_isalnum(str[start + len])
-		|| str[start + len] == '_'))
-		len++;
-	return (len);
+	}
+	return (0);
 }
 
-static size_t	expanded_len(const char *line, char **env, int error_code)
+// Écrit une ligne dans le heredoc avec expansion si disponible
+void	write_heredoc_line(int fd, char *line, char *expanded)
 {
-	size_t	len;
-	int		i;
-	char	*exit_str;
-
-	len = 0;
-	i = 0;
-	exit_str = ft_itoa(error_code);
-	if (!exit_str)
-		return (ft_strlen(exit_str));
-	while (line[i])
+	if (expanded)
 	{
-		if (line[i] == '$' && line[i + 1])
-		{
-			i++;
-			if (line[i] == '?')
-			{
-				len += ft_strlen(exit_str);
-				i++;
-			}
-			else if (ft_isalpha(line[i]) || line[i] == '_')
-			{
-				int var_len = get_var_name_len(line, i);
-				char *var_name = ft_substr(line, i, var_len);
-				char *var_value = get_env_value(var_name, env);
-				len += ft_strlen(var_value);
-				free(var_name);
-				i += var_len;
-			}
-			else
-			{
-				len += 2;
-				i++;
-			}
-		}
-		else
-		{
-			len++;
-			i++;
-		}
+		write(fd, expanded, ft_strlen(expanded));
+		write(fd, "\n", 1);
+		free(expanded);
 	}
-	free(exit_str);
-	return (len);
+	else
+	{
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+	}
 }
 
-char *expand_variables(const char *line, t_data shell)
+// Traite l'expansion de $?
+void	handle_exit_code(const char *line, size_t *i, t_expand_data *data)
 {
-	size_t	i;
-	size_t	j;
-	char	*res;
-	char	*exit_str;
-	size_t	new_len;
-
-	if (!line)
-		return (NULL);
-	i = 0;
-	j = 0;
-	exit_str = ft_itoa(shell.exec->last_exit_status);
-	new_len = expanded_len(line, shell.exec->envp, shell.exec->last_exit_status);
-	res = malloc(sizeof(char) * (new_len + 1));
-	if (!res || !exit_str)
-		return (free(exit_str), NULL);
-	while (line[i])
-	{
-		if (line[i] == '$' && line[i + 1])
-		{
-			i++;
-			if (line[i] == '?')
-			{
-				j += ft_strlcpy(res + j, exit_str, ft_strlen(exit_str) + 1);
-				//j += ft_strlen(exit_str);
-				i++;
-			}
-			else if (ft_isalpha(line[i]) || line[i] == '_')
-			{
-				int var_len = get_var_name_len(line, i);
-				char *var_name = ft_substr(line, i, var_len);
-				char *var_value = get_env_value(var_name, shell.exec->envp);
-
-				j += ft_strlcpy(res + j, var_value, ft_strlen(var_value) + 1);
-				// j += ft_strlen(var_value);
-				i += var_len;
-				free(var_name);
-			}
-			else
-			{
-				res[j++] = '$';
-				res[j++] = line[i++];
-			}
-		}
-		else
-			res[j++] = line[i++];
-	}
-	res[j] = '\0';
-	free(exit_str);
-	return (res);
+	(void)line;
+	copy_to_result(data, data->exit_str);
+	(*i)++;
 }

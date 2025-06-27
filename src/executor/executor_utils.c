@@ -1,11 +1,11 @@
 #include "../../include/minishell.h"
 
-void free_exec(t_exec *exec)
+void	free_exec(t_exec *exec)
 {
 	if (!exec)
 		return ;
 	if (exec->envp)
-	 	free_strs(exec->envp);
+		free_strs(exec->envp);
 	if (exec->pidarray)
 	{
 		free(exec->pidarray);
@@ -23,7 +23,7 @@ void free_exec(t_exec *exec)
 }
 
 // Initialiser la structure de lexec
-int init_exec(t_exec *exec, t_command *cmd)
+int	init_exec(t_exec *exec, t_command *cmd)
 {
 	exec->count_cmd = count_commands(cmd);
 	exec->pipe_fd[0] = -1;
@@ -50,4 +50,18 @@ int init_exec(t_exec *exec, t_command *cmd)
 		return (-1);
 	}
 	return (0);
+}
+
+// Compter le nombre de commande
+int	count_commands(t_command *cmd)
+{
+	int	count;
+
+	count = 0;
+	while (cmd)
+	{
+		count++;
+		cmd = cmd->next;
+	}
+	return (count);
 }

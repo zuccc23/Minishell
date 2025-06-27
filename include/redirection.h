@@ -30,6 +30,9 @@ int				get_redir_file(t_token *token, t_redirection **redir);
 int				join_redir(t_word *word, t_redirection **redir, char *tmp);
 t_redirection	*lstlast_redir(t_redirection *lst);
 int				has_valid_redirections(t_command *cmd);
+int				apply_redirection(t_command *cmd, t_exec *exec);
+
+// UTILS
 
 void			safe_close(int *fd);
 
