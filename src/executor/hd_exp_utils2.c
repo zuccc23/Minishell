@@ -1,7 +1,7 @@
 #include "../../include/minishell.h"
 
 // Traite l'expansion d'une variable d'environnement
-void	handle_env_variable(const char *line, size_t *i, t_expand_data *data)
+void	handle_env_var(const char *line, size_t *i, t_expand_data *data)
 {
 	int		var_len;
 	char	*var_name;
@@ -26,19 +26,19 @@ static void	hdl_literal_dollar(const char *line, size_t *i, t_expand_data *data)
 }
 
 // Traite l'expansion d'une variable ($ suivi de quelque chose)
-void	handle_variable_exp(const char *line, size_t *i, t_expand_data *data)
+void	handle_var_exp(const char *line, size_t *i, t_expand_data *data)
 {
 	(*i)++;
 	if (line[*i] == '?')
 		handle_exit_code(line, i, data);
 	else if (ft_isalpha(line[*i]) || line[*i] == '_')
-		handle_env_variable(line, i, data);
+		handle_env_var(line, i, data);
 	else
 		hdl_literal_dollar(line, i, data);
 }
 
 // Copie un caractère normal dans le résultat
-void	handle_normal_char(const char *line, size_t *i, t_expand_data *data)
+void	handle_char(const char *line, size_t *i, t_expand_data *data)
 {
 	data->result[data->result_pos++] = line[*i];
 	(*i)++;

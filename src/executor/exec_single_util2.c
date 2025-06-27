@@ -2,7 +2,7 @@
 
 // Prépare l'exécution : gère les builtins parent et résout le chemin
 // Retourne : 0 = continuer avec fork, autre = retourner ce code
-int	prepare_command_execution(t_command *cmd, t_exec *exec, char **path)
+int	prepare_cmd_execution(t_command *cmd, t_exec *exec, char **path)
 {
 	int	result;
 

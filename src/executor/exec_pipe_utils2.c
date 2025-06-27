@@ -1,7 +1,7 @@
 #include "../../include/minishell.h"
 
 // Exécute un builtin dans le processus enfant du pipeline
-void	execute_pipe_builtin(t_command *cmd, t_exec *exec, t_command *cmd_head)
+void	exec_pipe_bltin(t_command *cmd, t_exec *exec, t_command *cmd_head)
 {
 	int	exit_code;
 
@@ -13,7 +13,7 @@ void	execute_pipe_builtin(t_command *cmd, t_exec *exec, t_command *cmd_head)
 }
 
 // Résout le chemin d'une commande externe
-char	*resolve_command_path(t_command *cmd, t_exec *exec)
+char	*resolve_cmd_path(t_command *cmd, t_exec *exec)
 {
 	char	*path;
 
@@ -25,7 +25,7 @@ char	*resolve_command_path(t_command *cmd, t_exec *exec)
 }
 
 // Nettoie et exit en cas d'erreur de commande
-void	cleanup_exit_error(t_command *cmd, t_exec *exec, t_command *cmd_head)
+void	clean_exit_error(t_command *cmd, t_exec *exec, t_command *cmd_head)
 {
 	ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 	ft_putstr_fd(": command not found\n", STDERR_FILENO);
@@ -40,7 +40,7 @@ void	cleanup_exit_error(t_command *cmd, t_exec *exec, t_command *cmd_head)
 }
 
 // Exécute une commande externe avec execve
-void	exec_ext(t_command *cmd, char *path, t_exec *exec, t_command *cmd_hd)
+void	ex_ext(t_command *cmd, char *path, t_exec *exec, t_command *cmd_hd)
 {
 	execve(path, cmd->args, exec->envp);
 	perror("execve failed");
@@ -56,8 +56,8 @@ void	execute_pipe_ext(t_command *cmd, t_exec *exec, t_command *cmd_head)
 {
 	char	*path;
 
-	path = resolve_command_path(cmd, exec);
+	path = resolve_cmd_path(cmd, exec);
 	if (!path)
-		cleanup_exit_error(cmd, exec, cmd_head);
-	exec_ext(cmd, path, exec, cmd_head);
+		clean_exit_error(cmd, exec, cmd_head);
+	ex_ext(cmd, path, exec, cmd_head);
 }

@@ -1,7 +1,8 @@
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
-typedef enum e_builtin_type {
+typedef enum e_builtin_type
+{
 	CD,
 	ECHO,
 	PWD,

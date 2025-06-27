@@ -37,7 +37,7 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	result = validate_command(cmd, exec);
 	if (result != 0)
 		return (result);
-	result = prepare_command_execution(cmd, exec, &path);
+	result = prepare_cmd_execution(cmd, exec, &path);
 	if (result != 0)
 		return (result);
 	result = handle_fork(&pid, exec, path);
@@ -71,7 +71,7 @@ int	execute_pipeline(t_command *cmd, t_exec *exec)
 			setup_child_input_redirections(cmd, exec);
 			setup_child_output_pipes(cmd, exec);
 			if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
-				execute_pipe_builtin(cmd, exec, cmd_head);
+				exec_pipe_bltin(cmd, exec, cmd_head);
 			else
 				execute_pipe_ext(cmd, exec, cmd_head);
 		}

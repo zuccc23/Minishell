@@ -104,9 +104,9 @@ char	*expand_variables(const char *line, t_data shell)
 	while (line[i])
 	{
 		if (line[i] == '$' && line[i + 1])
-			handle_variable_exp(line, &i, data);
+			handle_var_exp(line, &i, data);
 		else
-			handle_normal_char(line, &i, data);
+			handle_char(line, &i, data);
 	}
 	data->result[data->result_pos] = '\0';
 	result = data->result;

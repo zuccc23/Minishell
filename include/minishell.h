@@ -36,7 +36,7 @@ typedef struct s_data
 	char		*input;
 	t_command	*command;
 	t_exec		*exec;
-	t_token 	*token;
+	t_token		*token;
 	int			exit_status;
 }	t_data;
 

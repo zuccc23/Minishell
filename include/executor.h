@@ -7,19 +7,19 @@
 # include <fcntl.h>
 # include <time.h>
 
-typedef struct s_data		t_data;
+typedef struct s_data	t_data;
 
 typedef struct s_exex
 {
-	int		pipe_fd[2]; // fd[0] = lecture, fd[1] = ecriture
-	int		count_cmd; // Savoir combien tu as de commande pour gerer la derniere differement
-	int		input_fd;   // Ce que la commande lira (STDIN ou pipe precedent)
-	int		output_fd;  // Ce que la commande ecrira (STDOUT ou pipe suivant)
+	int		pipe_fd[2];
+	int		count_cmd;
+	int		input_fd;
+	int		output_fd;
 	int		infile_fd;
 	int		outfile_fd;
 	char	**envp;
-	int		last_exit_status; // Code d'exit
-	pid_t	*pidarray;  // Tableau de tous les pids (si plusieurs commandes)
+	int		last_exit_status;
+	pid_t	*pidarray;
 }	t_exec;
 
 int			execute(t_data shell);
@@ -28,7 +28,7 @@ int			execute_pipeline(t_command *cmd, t_exec *exec);
 
 // UTILS
 
-int 		init_exec(t_exec *exec, t_command *cmd);
+int			init_exec(t_exec *exec, t_command *cmd);
 void		free_exec(t_exec *exec);
 int			count_commands(t_command *cmd);
 int			validate_command(t_command *cmd, t_exec *exec);
@@ -41,7 +41,7 @@ int			setup_child_redirections(t_command *cmd, t_exec *exec, char *path);
 void		execute_child_builtin(t_command *cmd, t_exec *exec, char *path);
 void		execute_child_external(t_command *cmd, char *path, t_exec *exec);
 void		handle_child_process(t_command *cmd, t_exec *exec, char *path);
-int			prepare_command_execution(t_command *cmd, t_exec *exec, char **path);
+int			prepare_cmd_execution(t_command *cmd, t_exec *exec, char **path);
 int			wait_for_child(int pid, int *wstatus);
 int			get_exit_status_from_wstatus(int wstatus);
 void		cleanup_parent_fds(t_exec *exec);
@@ -53,10 +53,10 @@ void		setup_pipe_if_needed(t_command *cmd, t_exec *exec);
 void		fork_command(t_exec *exec, int *i);
 void		setup_child_input_redirections(t_command *cmd, t_exec *exec);
 void		setup_child_output_pipes(t_command *cmd, t_exec *exec);
-void		execute_pipe_builtin(t_command *cmd, t_exec *exec, t_command *cmd_head);
-char		*resolve_command_path(t_command *cmd, t_exec *exec);
-void		cleanup_exit_error(t_command *cmd, t_exec *exec, t_command *cmd_head);
-void		exec_ext(t_command *cmd, char *path, t_exec *exec, t_command *cmd_hd);
+void		exec_pipe_bltin(t_command *cmd, t_exec *exec, t_command *cmd_head);
+char		*resolve_cmd_path(t_command *cmd, t_exec *exec);
+void		clean_exit_error(t_command *cmd, t_exec *exec, t_command *cmd_head);
+void		ex_ext(t_command *cmd, char *path, t_exec *exec, t_command *cmd_hd);
 void		execute_pipe_ext(t_command *cmd, t_exec *exec, t_command *cmd_head);
 void		init_pipe_var(int *i, char **path);
 void		clean_parent_fds(t_exec *exec);

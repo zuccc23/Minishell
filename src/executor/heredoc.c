@@ -75,7 +75,7 @@ static void	close_pipe_ends(int *pipe_fd)
 }
 
 // Crée un processus enfant pour gérer un heredoc et retourne le fd
-int	handle_heredoc(t_data shell, const char *delimiter, int *heredoc_fd)
+int	handle_heredoc(t_data shell, char *delimiter, int *heredoc_fd)
 {
 	int		pipe_fd[2];
 	int		status;
