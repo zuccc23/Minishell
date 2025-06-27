@@ -46,7 +46,7 @@ int	wait_for_child(int pid, int *wstatus)
 			else
 			{
 				perror("waitpid");
-				break;
+				break ;
 			}
 		}
 	}
