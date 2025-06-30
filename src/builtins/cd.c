@@ -113,7 +113,6 @@ int	change_env(char ***env)
 		return (0);
 	bltin_export(oldpwd, env);
 	free_strs(oldpwd);
-
 	pwd = return_pwd(*env);
 	if (!pwd)
 	{

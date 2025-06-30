@@ -57,7 +57,7 @@ void	execute_child_external(t_command *cmd, char *path, t_exec *exec)
 	execve(path, cmd->args, exec->envp);
 	perror("execve failed");
 	free(path);
-	exit(127);
+	exit(126);
 }
 
 // Gère tout le processus enfant

@@ -57,7 +57,7 @@ int	check_export(char *cmd)
 	while (cmd[i])
 	{
 		if (ft_isalnum(cmd[i]) == 0 && cmd[i] != '_' && cmd[i] != '=' \
-		&& cmd[i] != ' ' && cmd[i] != '-' && cmd[i] != '/')
+		&& cmd[i] != ' ' && cmd[i] != '/' && is_ok_dash(cmd[i], count) != 1)
 			return (1);
 		if (cmd[i] == '=')
 			count = 1;
@@ -65,5 +65,15 @@ int	check_export(char *cmd)
 	}
 	if (count == 0)
 		return (2);
+	return (0);
+}
+
+//returns 1 if ok -, 0 if not
+int	is_ok_dash(char c, int count)
+{
+	if (c == '-' && count == 1)
+		return (1);
+	if (c == '-' && count == 0)
+		return (0);
 	return (0);
 }

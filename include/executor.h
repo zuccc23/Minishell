@@ -34,6 +34,7 @@ void		free_exec(t_exec *exec);
 int			count_commands(t_command *cmd);
 int			validate_command(t_command *cmd, t_exec *exec);
 void		init_cmd_var(int *pid, char **path, int *wstatus, int *exit_status);
+int			check_result(int result);
 
 // SINGLE CMD UTIL
 

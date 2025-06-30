@@ -52,14 +52,15 @@ char	*get_leftover(char **value, int *i)
 	char		*leftover;
 	size_t		j;
 
-	if ((*value)[(*i)] == '\0' || (*value)[(*i)] == '$')
+	if ((*value)[(*i)] == '\0' || ((*value)[(*i)] == '$' \
+	&& check_single_dollar(value, i) == 1))
 		return (NULL);
 	j = 0;
 	leftover = NULL;
 	leftover = malloc(sizeof(char) * (ft_strlen(&(*value)[*i]) + 1));
 	if (!leftover)
 		return (NULL);
-	while ((*value)[(*i)] && (*value)[(*i)] != '$')
+	while ((*value)[(*i)] && check_single_dollar(value, i) == 0)
 	{
 		leftover[j] = (*value)[(*i)];
 		(*i)++;

@@ -44,6 +44,7 @@ int		bltin_export(char **args, char ***env); //export
 int		get_new_env(char ***env, char *cmd);
 char	**copy_and_add(char **env, char *cmd);
 char	**copy_and_replace(char **env, char *cmd);
+int		is_ok_dash(char c, int count);
 
 //export utils
 

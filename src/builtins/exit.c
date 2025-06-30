@@ -68,7 +68,7 @@ int	ft_is_number(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (ft_isdigit(str[i]) == 0 && str[i] != '-')
+		if (ft_isdigit(str[i]) == 0 && str[i] != '-' && str[i] != '+')
 			return (0);
 		i++;
 	}

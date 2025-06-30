@@ -45,13 +45,13 @@ static t_token	*operator_step(t_lexer *lexer, t_token *head, char *p_input)
 	type = get_operator_type(lexer);
 	if (!extract_operator_value(lexer))
 	{
-		free_tok_error(lexer, head, NULL, p_input);
+		free_tok_error(&lexer, &head, NULL, &p_input);
 		return (NULL);
 	}
 	new_token = create_operator_token(type);
 	if (!new_token)
 	{
-		free_tok_error(lexer, head, NULL, p_input);
+		free_tok_error(&lexer, &head, NULL, &p_input);
 		return (NULL);
 	}
 	return (new_token);
@@ -62,30 +62,26 @@ static t_token	*word_step(t_lexer *lexer, t_token *head, char *p_input)
 	char	*value;
 	t_word	*word;
 	t_token	*new_token;
+	int		er_code;
 
+	er_code = 0;
 	value = extract_word_with_quotes(lexer);
 	if (!value)
-	{
-		free_tok_error(lexer, head, NULL, p_input);
-		return (NULL);
-	}
-	printf("--TEST--\n");
+		return (free_tok_error(&lexer, &head, NULL, &p_input));
 	word = NULL;
-	clean_words(value, &word);
-	if (!word)
+	er_code = clean_words(value, &word);
+	if (er_code != 0)
 	{
 		free_word_list(word);
-		free_tok_error(lexer, head, value, p_input);
+		free_tok_error(&lexer, &head, &value, &p_input);
 		return (NULL);
 	}
-	printf("--TEST--\n");
 	new_token = create_word_token(TOKEN_WORD, word);
 	if (!new_token)
 	{
 		free_word_list(word);
-		free_tok_error(lexer, head, value, p_input);
+		free_tok_error(&lexer, &head, &value, &p_input);
 	}
-	printf("--TEST--\n");
 	return (new_token);
 }
 
@@ -99,7 +95,7 @@ t_token	*tokenize(char *input)
 
 	head = NULL;
 	if (!init_lexer_preprocess(&lexer, &processed_input, input))
-		return (free_tok_error(lexer, head, NULL, processed_input), NULL);
+		return (free_tok_error(&lexer, &head, NULL, &processed_input), NULL);
 	while (lexer->pos < lexer->length)
 	{
 		skip_whitespace(lexer);

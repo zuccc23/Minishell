@@ -25,3 +25,17 @@ int	validate_command(t_command *cmd, t_exec *exec)
 	}
 	return (0);
 }
+
+//check if you need to return, returns the right number if yes
+//returns 111 if no
+int	check_result(int result)
+{
+	if (result == 42)
+		return (0);
+	if (result == 127)
+		return (0);
+	if (result != 0)
+		return (result);
+	else
+		return (111);
+}

@@ -24,6 +24,7 @@ char	*question_mark(char *varname, int ex_code);
 char	*check_value(size_t *j, char *value, int *i);
 int		check_char_v(char c);
 char	*return_q_mark(size_t *j, int *i);
+int		check_single_dollar(char **value, int *i);
 
 // supprime les noeuds avec des valeurs vides
 

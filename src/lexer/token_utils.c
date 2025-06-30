@@ -43,17 +43,21 @@ int	extract_word_length(t_lexer *lexer)
 }
 
 // Fonction qui centralise la liberation de memoire pour tokenize
-void	free_tok_error(t_lexer *lexer, t_token *h, char *value, char *p_input)
+void	*free_tok_error(t_lexer **lex, t_token **h, char **value, char **p_inpu)
 {
-	if (lexer)
-		free(lexer);
-	if (h)
-		ft_free_list(h);
-	if (p_input)
-		free(p_input);
-	if (value)
-		free(value);
-	value =NULL;
+	if (*lex)
+		free(*lex);
+	*lex = NULL;
+	if (*h)
+		ft_free_list(*h);
+	*h = NULL;
+	if (*p_inpu)
+		free(*p_inpu);
+	*p_inpu = NULL;
+	if (*value)
+		free(*value);
+	*value = NULL;
+	return (NULL);
 }
 
 // Creation du token pour les types OPERATOR

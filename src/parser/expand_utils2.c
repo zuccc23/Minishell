@@ -43,7 +43,7 @@ char	*return_q_mark(size_t *j, int *i)
 	return (str);
 }
 
-//returns 0 if its a correct char, 0 if not
+//returns 0 if its a correct char, 1 if not
 int	check_char_v(char c)
 {
 	if (ft_isalnum(c) == 0 && (c != '_' && c != '?'))
@@ -61,4 +61,12 @@ char	*question_mark(char *varname, int ex_code)
 	if (!str)
 		return (NULL);
 	return (str);
+}
+
+//returns 1 if theres a $ with an expand after, 0 if not
+int	check_single_dollar(char **value, int *i)
+{
+	if ((*value)[(*i)] == '$' && check_char_v((*value)[(*i + 1)]) == 0)
+		return (1);
+	return (0);
 }

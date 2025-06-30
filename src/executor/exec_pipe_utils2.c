@@ -36,7 +36,7 @@ void	clean_exit_error(t_command *cmd, t_exec *exec, t_command *cmd_head)
 	free_commands(cmd_head);
 	free_exec(exec);
 	rl_clear_history();
-	exit(127);
+	exit(126);
 }
 
 // Exécute une commande externe avec execve
@@ -48,7 +48,7 @@ void	ex_ext(t_command *cmd, char *path, t_exec *exec, t_command *cmd_hd)
 	free_exec(exec);
 	rl_clear_history();
 	free(path);
-	exit(127);
+	exit(126);
 }
 
 // Gère l'exécution d'une commande externe dans le pipeline
