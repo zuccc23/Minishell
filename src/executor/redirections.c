@@ -9,7 +9,12 @@ static int	apply_input_redirection(t_redirection *redir, t_exec *exec)
 	fd = open(redir->file, O_RDONLY);
 	if (fd == -1)
 	{
-		putstr_err("minishell: ", redir->file, ": Permission denied\n");
+		if (errno == ENOENT)
+			putstr_err("minishell: ", redir->file, ": No such file or directory\n");
+		else if (errno == EACCES)
+			putstr_err("minishell: ", redir->file, ": Permission denied\n");
+		else
+			putstr_err("minishell: ", redir->file, ": Permission denied\n");
 		exec->last_exit_status = 1;
 		return (-1);
 	}

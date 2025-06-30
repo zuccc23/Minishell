@@ -53,8 +53,8 @@ int			handle_parent_process(int pid, t_exec *exec);
 
 void		setup_pipe_if_needed(t_command *cmd, t_exec *exec);
 void		fork_command(t_exec *exec, int *i);
-void		setup_child_input_redirections(t_command *cmd, t_exec *exec);
-void		setup_child_output_pipes(t_command *cmd, t_exec *exec);
+void		setup_child_input_redirections(t_command *cmd, t_exec *exec, t_command *cmd_head);
+void		setup_child_output_pipes(t_command *cmd, t_exec *exec, t_command *cmd_h);
 void		exec_pipe_bltin(t_command *cmd, t_exec *exec, t_command *cmd_head);
 char		*resolve_cmd_path(t_command *cmd, t_exec *exec);
 void		clean_exit_error(t_command *cmd, t_exec *exec, t_command *cmd_head);

@@ -21,6 +21,7 @@ void	handle_exec_signal(void)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
+	//signal(SIGPIPE, SIG_IGN);
 	signal(SIGQUIT, handle_sigquit);
 }
 
@@ -29,4 +30,5 @@ void	handle_child_signal(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	//signal(SIGPIPE, SIG_IGN);
 }
