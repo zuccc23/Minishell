@@ -8,7 +8,7 @@ void	setup_pipe_if_needed(t_command *cmd, t_exec *exec)
 		if (pipe(exec->pipe_fd) == -1)
 		{
 			perror("pipe");
-			exit(-1);
+			return ;
 		}
 	}
 }
@@ -20,7 +20,7 @@ void	fork_command(t_exec *exec, int *i)
 	if (exec->pidarray[*i] < 0)
 	{
 		perror("fork");
-		exit(-1);
+		return ;
 	}
 }
 
@@ -31,7 +31,7 @@ void	setup_child_input_redirections(t_command *cmd, t_exec *exec, t_command *cmd
 	if (apply_redirection(cmd, exec) == -1)
 	{
 		if (exec->input_fd != STDIN_FILENO)
-        	safe_close(&exec->input_fd);
+			safe_close(&exec->input_fd);
 		free_commands(cmd_head);
 		rl_clear_history();
 		free_exec(exec);
@@ -50,13 +50,22 @@ void	setup_child_input_redirections(t_command *cmd, t_exec *exec, t_command *cmd
 }
 
 // Setup des pipes de sortie dans le processus enfant
-void	setup_child_output_pipes(t_command *cmd, t_exec *exec)
+void	setup_child_output_pipes(t_command *cmd, t_exec *exec, t_command *cmd_h)
 {
 	if (cmd->next)
 	{
 		dup2(exec->pipe_fd[1], STDOUT_FILENO);
 		safe_close(&exec->pipe_fd[1]);
 		safe_close(&exec->pipe_fd[0]);
+	}
+	if (apply_redirection(cmd, exec) == -1)
+	{
+		if (exec->input_fd != STDIN_FILENO)
+			safe_close(&exec->input_fd);
+		free_commands(cmd_h);
+		rl_clear_history();
+		free_exec(exec);
+		exit(1);
 	}
 	if (exec->outfile_fd != -1)
 	{
