@@ -35,6 +35,8 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 
 	init_cmd_var(&pid, &path, &wstatus, &exit_status);
 	result = validate_command(cmd, exec);
+	if (result == 42)
+		return (0);
 	if (result != 0)
 		return (result);
 	result = prepare_cmd_execution(cmd, exec, &path);

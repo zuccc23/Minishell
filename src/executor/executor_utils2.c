@@ -19,7 +19,7 @@ int	validate_command(t_command *cmd, t_exec *exec)
 		{
 			if (apply_redirection(cmd, exec) == -1)
 				return (1);
-			return (0);
+			return (42);
 		}
 		return (127);
 	}
