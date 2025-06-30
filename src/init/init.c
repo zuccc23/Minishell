@@ -3,11 +3,11 @@
 //initialize minishell 
 int	init_shell(t_data *shell, char **envp)
 {
-	if (!isatty(0))
-	{
-		ft_putstr_fd("minishell: a tty is expected\n", STDERR_FILENO);
-		exit(1);
-	}
+	// if (!isatty(0))
+	// {
+	// 	ft_putstr_fd("minishell: a tty is expected\n", STDERR_FILENO);
+	// 	exit(1);
+	// }
 	init_vars(shell);
 	shell->exec = malloc(sizeof(t_exec));
 	if (!shell->exec)

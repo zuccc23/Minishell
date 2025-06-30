@@ -22,7 +22,7 @@ int	setup_child_redirections(t_command *cmd, t_exec *exec, char *path)
 	if (apply_redirection(cmd, exec) == -1)
 	{
 		free(path);
-		exit(-1);
+		exit(1);
 	}
 	if (exec->infile_fd != -1)
 	{

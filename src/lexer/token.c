@@ -69,6 +69,7 @@ static t_token	*word_step(t_lexer *lexer, t_token *head, char *p_input)
 		free_tok_error(lexer, head, NULL, p_input);
 		return (NULL);
 	}
+	printf("--TEST--\n");
 	word = NULL;
 	clean_words(value, &word);
 	if (!word)
@@ -77,12 +78,14 @@ static t_token	*word_step(t_lexer *lexer, t_token *head, char *p_input)
 		free_tok_error(lexer, head, value, p_input);
 		return (NULL);
 	}
+	printf("--TEST--\n");
 	new_token = create_word_token(TOKEN_WORD, word);
 	if (!new_token)
 	{
 		free_word_list(word);
 		free_tok_error(lexer, head, value, p_input);
 	}
+	printf("--TEST--\n");
 	return (new_token);
 }
 

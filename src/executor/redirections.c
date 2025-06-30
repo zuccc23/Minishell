@@ -11,7 +11,7 @@ static int	apply_input_redirection(t_redirection *redir, t_exec *exec)
 	{
 		putstr_err("minishell: ", redir->file, ": Permission denied\n");
 		exec->last_exit_status = 1;
-		exit(-1);
+		return (-1);
 	}
 	if (exec->infile_fd != -1)
 		safe_close(&exec->infile_fd);

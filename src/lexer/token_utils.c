@@ -53,6 +53,7 @@ void	free_tok_error(t_lexer *lexer, t_token *h, char *value, char *p_input)
 		free(p_input);
 	if (value)
 		free(value);
+	value =NULL;
 }
 
 // Creation du token pour les types OPERATOR
