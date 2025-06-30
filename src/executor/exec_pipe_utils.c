@@ -25,11 +25,15 @@ void	fork_command(t_exec *exec, int *i)
 }
 
 // Setup des redirections dans le processus enfant
-void	setup_child_input_redirections(t_command *cmd, t_exec *exec)
+void	setup_child_input_redirections(t_command *cmd, t_exec *exec, t_command *cmd_head)
 {
 	handle_child_signal();
 	if (apply_redirection(cmd, exec) == -1)
 	{
+		if (exec->input_fd != STDIN_FILENO)
+        	safe_close(&exec->input_fd);
+		free_commands(cmd_head);
+		rl_clear_history();
 		free_exec(exec);
 		exit(1);
 	}

@@ -35,6 +35,7 @@ int				apply_redirection(t_command *cmd, t_exec *exec);
 // UTILS
 
 void			safe_close(int *fd);
+// void			cleanup_and_exit_child(t_exec *exec, t_command *cmd_head);
 
 // check if redirections are valid (file can be opened, etc)
 

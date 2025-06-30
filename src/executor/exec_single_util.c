@@ -21,7 +21,11 @@ int	setup_child_redirections(t_command *cmd, t_exec *exec, char *path)
 	handle_child_signal();
 	if (apply_redirection(cmd, exec) == -1)
 	{
-		free(path);
+		if (path)
+			free(path);
+		free_commands(cmd);
+		free_exec(exec);
+		rl_clear_history();
 		exit(1);
 	}
 	if (exec->infile_fd != -1)
