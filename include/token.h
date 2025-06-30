@@ -47,5 +47,4 @@ char **p_inpu);
 t_token			*create_operator_token(t_token_type type);
 t_token			*create_word_token(t_token_type type, t_word *word);
 
-
 #endif

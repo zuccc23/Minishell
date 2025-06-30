@@ -10,7 +10,8 @@ static int	apply_input_redirection(t_redirection *redir, t_exec *exec)
 	if (fd == -1)
 	{
 		if (errno == ENOENT)
-			putstr_err("minishell: ", redir->file, ": No such file or directory\n");
+			putstr_err("minishell: ", redir->file, \
+			": No such file or directory\n");
 		else if (errno == EACCES)
 			putstr_err("minishell: ", redir->file, ": Permission denied\n");
 		else

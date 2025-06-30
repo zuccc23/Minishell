@@ -25,14 +25,14 @@ void	fork_command(t_exec *exec, int *i)
 }
 
 // Setup des redirections dans le processus enfant
-void	setup_child_input_redirections(t_command *cmd, t_exec *exec, t_command *cmd_head)
+void	set_child_in_redir(t_command *cmd, t_exec *exec, t_command *cmd_h)
 {
 	handle_child_signal();
 	if (apply_redirection(cmd, exec) == -1)
 	{
 		if (exec->input_fd != STDIN_FILENO)
 			safe_close(&exec->input_fd);
-		free_commands(cmd_head);
+		free_commands(cmd_h);
 		rl_clear_history();
 		free_exec(exec);
 		exit(1);
@@ -50,7 +50,7 @@ void	setup_child_input_redirections(t_command *cmd, t_exec *exec, t_command *cmd
 }
 
 // Setup des pipes de sortie dans le processus enfant
-void	setup_child_output_pipes(t_command *cmd, t_exec *exec, t_command *cmd_h)
+void	set_child_out_pipe(t_command *cmd, t_exec *exec, t_command *cmd_h)
 {
 	if (cmd->next)
 	{

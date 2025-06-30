@@ -26,4 +26,3 @@ int	has_valid_redirections(t_command *cmd)
 	}
 	return (0);
 }
-

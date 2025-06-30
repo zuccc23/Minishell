@@ -71,8 +71,8 @@ int	execute_pipeline(t_command *cmd, t_exec *exec)
 		fork_command(exec, &i);
 		if (exec->pidarray[i] == 0)
 		{
-			setup_child_input_redirections(cmd, exec, cmd_head);
-			setup_child_output_pipes(cmd, exec, cmd_head);
+			set_child_in_redir(cmd, exec, cmd_head);
+			set_child_out_pipe(cmd, exec, cmd_head);
 			if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
 				exec_pipe_bltin(cmd, exec, cmd_head);
 			else
