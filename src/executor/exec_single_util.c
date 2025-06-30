@@ -64,8 +64,9 @@ void	execute_child_external(t_command *cmd, char *path, t_exec *exec)
 void	handle_child_process(t_command *cmd, t_exec *exec, char *path)
 {
 	setup_child_redirections(cmd, exec, path);
-	if (is_builtin(cmd->args[0]) != NOT_BUILTIN)
+	if (is_builtin(cmd->args[0]) != NOT_BUILTIN \
+	&& !is_parent_builtin(cmd->args[0]))
 		execute_child_builtin(cmd, exec, path);
-	else
+	else if (is_builtin(cmd->args[0]) == NOT_BUILTIN)
 		execute_child_external(cmd, path, exec);
 }

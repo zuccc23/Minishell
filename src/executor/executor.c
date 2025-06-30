@@ -40,13 +40,16 @@ int	execute_single_command(t_command *cmd, t_exec *exec)
 	result = prepare_cmd_execution(cmd, exec, &path);
 	if (result != 0)
 		return (result);
-	result = handle_fork(&pid, exec, path);
-	if (result == -1)
-		return (-1);
-	if (pid == 0)
-		handle_child_process(cmd, exec, path);
-	else
-		result = handle_parent_process(pid, exec);
+	if (do_fork(cmd->args[0]) == 1)
+	{
+		result = handle_fork(&pid, exec, path);
+		if (result == -1)
+			return (-1);
+		if (pid == 0)
+			handle_child_process(cmd, exec, path);
+		else
+			result = handle_parent_process(pid, exec);
+	}
 	free(path);
 	return (exec->last_exit_status);
 }
@@ -103,4 +106,13 @@ void	wait_single_child(t_exec *exec, int j, int *wstatus)
 			break ;
 		}
 	}
+}
+
+//takes cmd->args[0] as param
+//returns 1 if you should fork, 0 if not
+int	do_fork(char *arg)
+{
+	if (is_builtin(arg) == NOT_BUILTIN || !is_parent_builtin(arg))
+		return (1);
+	return (0);
 }

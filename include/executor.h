@@ -25,6 +25,7 @@ typedef struct s_exex
 int			execute(t_data shell);
 int			execute_single_command(t_command *cmd, t_exec *exec);
 int			execute_pipeline(t_command *cmd, t_exec *exec);
+int			do_fork(char *arg);
 
 // UTILS
 

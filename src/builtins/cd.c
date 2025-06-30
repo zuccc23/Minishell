@@ -9,7 +9,7 @@ int	bltin_cd(t_command *cmd, char ***env)
 	if (cd_errors(cmd) != ER_OK)
 		return (1);
 	dir = opendir(cmd->args[1]);
-	if (!dir)
+	if (dir == NULL)
 	{
 		putstr_err("minishell: cd: ", cmd->args[1], ": ");
 		perror("");
