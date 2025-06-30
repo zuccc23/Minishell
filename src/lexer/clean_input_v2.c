@@ -9,11 +9,18 @@ int	clean_words(char *input, t_word **word)
 	i = 0;
 	if (get_partial_value(input, &(*word), &i) == -1)
 		return (-1);
+	if (!(*word))
+	{
+		free(input);
+		return (0);
+	}
 	head = (*word);
 	while (input[i])
 	{
 		if (get_partial_value(input, &(*word)->next, &i) == -1)
 			return (-1);
+		if (!(*word)->next)
+			break ;
 		(*word) = (*word)->next;
 	}
 	*word = head;
@@ -45,14 +52,22 @@ int	get_partial_value(char *input, t_word **word, int *i)
 {
 	int	er_code;
 
+	if (!input[*i])
+		return (0);
 	er_code = 0;
 	while (check_empty_quotes(input[*i], input[(*i) + 1]) == 1)
+	{
 		(*i) += 2;
+		if (!input[*i])
+			return (0);
+	}
 	if (is_double_quotes(input[*i]) == 1)
 		er_code = get_word_dq(&(*word), input, &(*i));
 	else if (is_single_quotes(input[*i]) == 1)
 		er_code = get_word_sq(&(*word), input, &(*i));
 	else if (is_ok_word(input[*i]) == 1)
 		er_code = get_word_nq(&(*word), input, &(*i));
+	else
+		return (0);
 	return (er_code);
 }

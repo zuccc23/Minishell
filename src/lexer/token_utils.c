@@ -54,9 +54,10 @@ void	*free_tok_error(t_lexer **lex, t_token **h, char **value, char **p_inpu)
 	if (*p_inpu)
 		free(*p_inpu);
 	*p_inpu = NULL;
-	if (*value)
+	if (value && *value)
 		free(*value);
-	*value = NULL;
+	if (value)
+		*value = NULL;
 	return (NULL);
 }
 
