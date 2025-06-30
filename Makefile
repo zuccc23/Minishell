@@ -32,7 +32,7 @@ SRC = ./src/main.c ./src/signals/signals.c \
 	./src/parser/expand.c ./src/parser/command_utils.c \
 	./src/parser/init_parsing.c ./src/executor/executor.c \
 	./src/executor/executor_utils.c \
-	./src/utils/exec_utils.c ./src/executor/redirections.c \
+	./src/executor/redirections.c \
 	./src/executor/heredoc.c ./src/executor/heredoc_utils.c \
 	./src/env/env_init.c ./src/parser/expand_utils.c ./src/parser/expand_utils2.c \
 	./src/executor/path.c ./src/executor/path_utils.c ./src/executor/valid_redir.c \

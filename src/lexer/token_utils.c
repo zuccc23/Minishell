@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dahmane <dahmane@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/30 18:35:47 by dahmane           #+#    #+#             */
+/*   Updated: 2025/06/30 18:49:20 by dahmane          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/minishell.h"
 
 t_token_type	get_operator_type(t_lexer *lexer)
@@ -54,9 +66,10 @@ void	*free_tok_error(t_lexer **lex, t_token **h, char **value, char **p_inpu)
 	if (*p_inpu)
 		free(*p_inpu);
 	*p_inpu = NULL;
-	if (*value)
+	if (value && *value)
 		free(*value);
-	*value = NULL;
+	if (value)
+		*value = NULL;
 	return (NULL);
 }
 
